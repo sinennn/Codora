@@ -7,9 +7,11 @@ import IndividualQuizCard from '../DashBoard/IndividualQuizCard';
 import GroupQuizCard from '../DashBoard/GroupQuizCard';
 import FooterNav from './Footer';
 import { auth } from '../../../firebase';
+import { useNavigate } from 'react-router-dom'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
+  const Navigate = useNavigate()
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(currentUser => {
@@ -20,19 +22,38 @@ export default function Dashboard() {
     
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(currentUser => {
+      if (currentUser) {
+        setUser(currentUser); 
+      } else {
+        Navigate('/login'); 
+      }
+    });
+
+    return () => unsubscribe();
+  }, [Navigate]);
+
+
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen min-h-screen flex flex-col md:flex-row">
+    <div className="overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black w-screen h-screen flex flex-col md:flex-row">
  <div  className="hidden md:block" >
   <Sidebar/> 
   </div>
-    <div className="flex-1 flex flex-col pb-16 md:pb-0">
+    <div className="flex-1 flex flex-col  md:pb-0">
     <Header user={user || undefined} />
-    <main className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 p-4 md:p-8">
-      <IndividualQuizCard />
-      <div className="hidden md:block p-4 md:p-8">
-        {/* Additional content can go here */}
-      </div>
-      <GroupQuizCard />
+    <main className="flex flex-col overflow-hidden md:flex-row justify-center items-center gap-6 md:gap-16 p-4 md:p-8 w-full max-w-7xl mx-auto ">
+   
+    <div className="pt-35 lg:pt-[0px]">
+  <IndividualQuizCard />
+</div>
+
+<div className="sm:hidden"> </div>
+
+<div className="pt-15 lg:pt-[0px] pb-30 lg:pb-[0px]  ">
+           <GroupQuizCard  />
+   </div>
+      
     </main>
     <div className="fixed bottom-0 left-0 w-full md:hidden" >
     <FooterNav /> 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Start from '/assets/Start.png';
+import { auth } from '../../../firebase'
 
 
 const Splash = () => {
@@ -10,13 +11,19 @@ const Splash = () => {
   const cast = import.meta.env.VITE_CAST;
 console.log(cast);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate('/login');
-    }, 2500);
+useEffect(() => {
+  const timer = setTimeout(() => {
+    auth.onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        navigate('/dashboard'); 
+      } else {
+        navigate('/login'); 
+      }
+    });
+  }, 2500);
 
-    return () => clearTimeout(timer); 
-  }, [navigate]);
+  return () => clearTimeout(timer); 
+}, [navigate]);
 
   return (
     <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen h-screen flex justify-center items-center p-4">

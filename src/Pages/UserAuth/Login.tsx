@@ -6,7 +6,7 @@ import {Lock} from 'lucide-react'
 import Start from '/assets/Start.png';
 import GoogleLogo from '/assets/google.png'; 
 import { ClipLoader } from 'react-spinners'; 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { signInWithPopup, googleProvider, auth, signInWithEmailAndPassword } from "../../../firebase";
 
 const containerVariants = {
@@ -45,6 +45,7 @@ export default function Login() {
   const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
   const Navigate= useNavigate() 
+
 
   const handleEmailLogin = async () => {
     setLoading1(true);
