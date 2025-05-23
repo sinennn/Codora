@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { User } from 'firebase/auth'; 
 import Sidebar from '../DashBoard/Sidebar';
@@ -8,6 +7,7 @@ import GroupQuizCard from '../DashBoard/GroupQuizCard';
 import FooterNav from './Footer';
 import { auth } from '../../../firebase';
 import { useNavigate } from 'react-router-dom'
+
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);

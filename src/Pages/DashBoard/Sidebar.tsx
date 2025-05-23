@@ -32,7 +32,7 @@ export default function Sidebar() {
 </div>
   
     <nav className="flex flex-col gap-6 text-white">
-      <SidebarLink to="/DashBoard" icon={<Home size={20} />} label="Home" currentPath={location.pathname} />
+      <SidebarLink to="/dashboard" icon={<Home size={20} />} label="Home" currentPath={location.pathname} />
       <SidebarLink to="/leaderboard" icon={<Trophy size={20} />} label="Leaderboard" currentPath={location.pathname} />
       <SidebarLink to="/settings" icon={<Settings size={20} />} label="Settings" currentPath={location.pathname} />
       <SidebarLink to="/profile" icon={<UserRound size={20} />} label="Profile" currentPath={location.pathname} />

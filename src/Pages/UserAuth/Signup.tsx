@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {User} from 'lucide-react'
 import {AtSign} from 'lucide-react'
 import {Lock} from 'lucide-react'

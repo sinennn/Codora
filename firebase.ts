@@ -10,7 +10,13 @@ interface ImportMetaEnv {
     readonly VITE_MEASUREMENT_ID: string;
   }
 
-  console.log()
+  declare global {
+    interface ImportMeta {
+        readonly env: ImportMetaEnv;
+    }
+}
+
+  console.log("God Abeg")
   
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
