@@ -27,6 +27,8 @@ function QuizCard() {
         > 
           <span className="flex gap-x-2">
             <UserRound className="w-[48px] h-[48px] stroke-orange-500" strokeWidth={0.75} />
+            <UserRound className="w-[48px] h-[48px] stroke-orange-500" strokeWidth={0.75} />
+            <UserRound className="w-[48px] h-[48px] stroke-orange-500" strokeWidth={0.75} />
           </span>
           <h3 className="text-xl font-bold text-orange-400 mb-2">Group Quizzes</h3>
           <p className="text-gray-400">Or find out who's the better dev in your friend group🙂</p>
