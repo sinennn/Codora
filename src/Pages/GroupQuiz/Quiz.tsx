@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import roomService from '../../Services/Rooms';
 
 export default function GroupQuiz() {
@@ -17,7 +17,7 @@ export default function GroupQuiz() {
       </div>
     );
   }
-  const { roomCode, isHost, username, questions, quizTime } = state;
+  const { roomCode, questions, quizTime } = state;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState(Array(questions.length).fill(null));
   const [quizSubmitted, setQuizSubmitted] = useState(false);
@@ -81,11 +81,16 @@ export default function GroupQuiz() {
     const participantResults = Object.values(allAnswers).map((entry) => {
       let participantScore = 0;
       questions.forEach((q, idx) => {
-        if (entry.answers && entry.answers[idx] !== null && q.options[entry.answers[idx]] && q.options[entry.answers[idx]].isCorrect) {
+        if ((entry as { answers?: (number | null)[] }).answers?.[idx] !== null && 
+            q.options[(entry as { answers?: (number | null)[] }).answers?.[idx] as number]?.isCorrect) {
           participantScore++;
         }
       });
-      return { username: entry.username, score: participantScore, answers: entry.answers };
+      return { 
+        username: (entry as { username: string }).username, 
+        score: participantScore, 
+        answers: (entry as { answers: (number | null)[] }).answers 
+      };
     });
     return (
       <div className="relative w-full h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">

@@ -6,16 +6,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../../components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggle-group";
 import { BookOpen, Clock, Settings, ChevronRight, List, Users } from "lucide-react";  
-import { toast } from '@/components/ui/toast';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { toast } from '../../components/ui/toast';
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import fieldsData from "../../Data/Fields.json";
 import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
 import { generateQuizQuestions } from '../../Services/aiService';
 import roomService from '../../Services/Rooms';
 
-interface QuizParams {
+export interface QuizParams {
   topic: string;
   optionType: 'field' | 'technology';
   difficulty: string;
@@ -32,7 +32,6 @@ export default function Index() {
   const [Spinning, isSpinning] = useState(false)
   const [numberOfQuestions, setNumberOfQuestions] = useState(10);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
 
   const options = useMemo(() => {
     console.log("Data Released")
@@ -50,8 +49,7 @@ export default function Index() {
 
   const handleCreateRoom = async () => {
     isSpinning(true);
-    
-    if (!roomName.trim()) {
+      if (!roomName.trim()) {
       toast.error('Please enter a room name');
       isSpinning(false);
       return;
@@ -73,7 +71,10 @@ export default function Index() {
         numberOfQuestions: numberOfQuestions
       };
   
-      const result = await generateQuizQuestions(quizParams);
+      const result = await generateQuizQuestions({
+        ...quizParams,
+        optionType: optionType as 'field' | 'technology'
+      });
       const questions = result.questions;
       const rawResponse = result.rawResponse;
 
@@ -112,8 +113,7 @@ export default function Index() {
       console.error('Error creating room:', error);
       toast.error(`Failed to create room: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
-      setIsGeneratingQuiz(false);
-      isSpinning(false);
+       isSpinning(false);
     }
   };
 

@@ -10,7 +10,7 @@ import SoloComplete from './Pages/SoloQuiz/SoloComplete';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom'
 import JoinRoom from './Pages/GroupQuiz/JoinRoom'
-import { ToastProvider } from '@/components/ui/toast';
+import { ToastProvider } from './components/ui/toast';
 
 function App() {
   return (
