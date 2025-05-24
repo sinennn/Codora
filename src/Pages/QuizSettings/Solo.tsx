@@ -9,7 +9,7 @@ import { toast } from '@/components/ui/toast';
 import fieldsData from "../../Data/Fields.json";
 import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
-import { generateQuizQuestions } from '../../Utils/aiService';
+import { generateQuizQuestions } from '../../Services/aiService';
 
 interface QuizParams {
   topic: string;

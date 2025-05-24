@@ -4,7 +4,8 @@ import Login from './Pages/UserAuth/Login';
 import DashBoard from './Pages/DashBoard/Dashboard';
 import SoloQuizSettings from './Pages/QuizSettings/Solo';
 import SoloQuiz from './Pages/SoloQuiz/Quiz'
-import GroupQuiz from './Pages/QuizSettings/Group'
+import GroupQuiz from './Pages/GroupQuiz/Quiz'
+import GroupQuizSettings from './Pages/QuizSettings/Group'
 import SoloComplete from './Pages/SoloQuiz/SoloComplete';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom'
@@ -22,8 +23,9 @@ function App() {
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/JoinRoom" element={<JoinRoom/>}/>
           <Route path="/WaitingRoom" element={<WaitingRoom/>}/>
+          <Route path="/Group-Quiz" element={<GroupQuiz/>}/>
           <Route path="/SoloSetting" element={<SoloQuizSettings />} />
-          <Route path="/GroupQuiz" element={<GroupQuiz />} />
+          <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
           <Route path="/SoloQuiz" element={<SoloQuiz />} />
           <Route path="/SoloComplete" element={<SoloComplete />} />
         </Routes>

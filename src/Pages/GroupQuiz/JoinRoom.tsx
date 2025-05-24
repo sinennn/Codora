@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/toast";
+import { auth } from "../../../firebase";
+import roomService from '../../Services/Rooms';
+import { ClipLoader } from 'react-spinners'; 
 
 export default function JoinRoom() {
   const navigate = useNavigate();
@@ -13,35 +16,47 @@ export default function JoinRoom() {
   const [username, setUsername] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   
+  useEffect(() => {
+    // Auto-populate username with Firebase user's display name if available
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user && user.displayName) {
+        setUsername(user.displayName.split(' ')[0]); // Get first name only
+      }
+    });
+    
+    return () => unsubscribe();
+  }, []);
+  
   const handleJoinRoom = async () => {
     if (!roomCode.trim()) {
       toast.error("Please enter a room code");
       return;
     }
     
-    if (!username.trim()) {
-      toast.error("Please enter your name");
-      return;
-    }
-    
     setIsJoining(true);
     
     try {
-      // In a real implementation, we would verify the room exists
-      // For now, we'll simulate this with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Get the current user's display name from Firebase Auth
+      const user = auth.currentUser;
+      const displayName = user?.displayName?.split(' ')[0] || 'Guest';
+      
+      // Verify and join the room in Firebase
+      const roomData = await roomService.joinRoom(roomCode, displayName);
       
       // Navigate to waiting room
-      navigate('/group-waiting-room', {
+      navigate('/WaitingRoom', {
         state: {
           roomCode,
-          username,
+          roomName: roomData.roomName,
+          questions: roomData.questions,
+          quizTime: roomData.quizTime,
+          username: displayName,
           isHost: false
         }
       });
     } catch (error) {
-      console.error("Error joining room:", error);
-      toast.error("Failed to join room. Please check the room code and try again.");
+      console.error('Error joining room:', error);
+      toast.error(`Failed to join room: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsJoining(false);
     }
@@ -73,9 +88,9 @@ export default function JoinRoom() {
             </motion.h2>
             
             <div className="space-y-4">
-            <Label htmlFor="roomCode" className="text-white">Room Code</Label>  
-              <div >
-                              <Input
+              <div className="space-y-2">
+                <Label htmlFor="roomCode" className="text-white">Room Code</Label>  
+                <Input
                   id="roomCode"
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
@@ -91,9 +106,11 @@ export default function JoinRoom() {
             <Button 
               onClick={handleJoinRoom}
               disabled={isJoining}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md w-full"
+              className="bg-orange-600 hover:bg-orange-600 text-white px-6 py-2 rounded-md w-full"
             >
-              {isJoining ? "Joining..." : "Join Room"}
+              {isJoining ?
+               <ClipLoader color="#FFFFFF" size={22} cssOverride={{ borderWidth: '4px' }} />
+               : "Join Room"}
             </Button>
           </CardFooter>
         </Card>

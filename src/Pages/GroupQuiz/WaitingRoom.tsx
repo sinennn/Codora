@@ -6,20 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { Users, Copy, Play } from "lucide-react";
 
-// Firebase mock for now - will be replaced with actual Firebase implementation
-const mockFirebase = {
-  listenForParticipants: (roomCode, callback) => {
-    // This will be replaced with actual Firebase listeners
-    console.log(`Listening for participants in room: ${roomCode}`);
-  },
-  startQuiz: (roomCode) => {
-    console.log(`Starting quiz in room: ${roomCode}`);
-    // Simulate quiz start
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent("quizStarted"));
-    }, 1000);
-  }
-};
+import roomService from '../../Services/Rooms';
 
 export default function WaitingRoom() {
   const location = useLocation();
@@ -41,37 +28,37 @@ export default function WaitingRoom() {
   const [isStarting, setIsStarting] = useState(false);
   
   useEffect(() => {
-    // Initialize participants list
-    if (isHost) {
-      setParticipants([{ id: "host", name: "You (Host)" }]);
-    } else {
-      setParticipants([{ id: "host", name: "Host" }, { id: "you", name: `You (${username})` }]);
-    }
+    // Listen for participants using Firebase
+    const unsubscribeParticipants = roomService.listenForParticipants(
+      roomCode,
+      (participantsData) => {
+        setParticipants(participantsData);
+      }
+    );
     
-    // Set up listener for new participants (will be replaced with Firebase)
-    mockFirebase.listenForParticipants(roomCode, (newParticipant) => {
-      setParticipants(prev => [...prev, newParticipant]);
-      toast.success(`${newParticipant.name} joined the room!`);
-    });
-    
-    // Listen for quiz start
-    const handleQuizStart = () => {
-      navigate('/group-quiz', {
-        state: {
-          roomCode,
-          isHost,
-          username: username || "Host",
-          participants,
-          questions,
-          quizTime
+    // Listen for quiz status changes
+    const unsubscribeStatus = roomService.listenForQuizStatus(
+      roomCode,
+      (status) => {
+        if (status === 'active') {
+        
+          navigate('/Group-Quiz', {
+            state: {
+              roomCode,
+              isHost,
+              username: username || "Host",
+              participants,
+              questions,
+              quizTime
+            }
+          });
         }
-      });
-    };
-    
-    window.addEventListener("quizStarted", handleQuizStart);
+      }
+    );
     
     return () => {
-      window.removeEventListener("quizStarted", handleQuizStart);
+      unsubscribeParticipants();
+      unsubscribeStatus();
     };
   }, [roomCode, isHost, username, navigate, participants, questions, quizTime]);
   
@@ -80,16 +67,23 @@ export default function WaitingRoom() {
     toast.success("Room code copied to clipboard!");
   };
   
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (!isHost) return;
     
     setIsStarting(true);
-    mockFirebase.startQuiz(roomCode);
+    try {
+      await roomService.startQuiz(roomCode);
+      // The navigation will happen automatically through the status listener
+    } catch (error) {
+      console.error('Error starting quiz:', error);
+      toast.error('Failed to start quiz');
+      setIsStarting(false);
+    }
   };
   
   return (
     <div className="relative w-full min-h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 py-12 overflow-hidden animate-fade-in">
-      {/* Glowing Background */}
+      
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
@@ -145,7 +139,7 @@ export default function WaitingRoom() {
                         <div className="h-8 w-8 rounded-full bg-orange-500/20 flex items-center justify-center mr-3">
                           {participant.name.charAt(0).toUpperCase()}
                         </div>
-                        {participant.name}
+                        {participant.name.split(' ')[0]} {participant.isHost && <span>&nbsp;(Host)</span>}
                       </li>
                     ))}
                   </ul>
@@ -164,7 +158,7 @@ export default function WaitingRoom() {
             {isHost ? (
               <Button 
                 onClick={handleStartQuiz}
-                disabled={isStarting || participants.length < 1}
+                disabled={isStarting || participants.length < 2}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl w-full flex items-center justify-center gap-2"
               >
                 {isStarting ? "Starting..." : (

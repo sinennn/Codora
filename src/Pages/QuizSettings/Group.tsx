@@ -12,7 +12,8 @@ import { Label } from "@/components/ui/label";
 import fieldsData from "../../Data/Fields.json";
 import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
-import { generateQuizQuestions } from '../../Utils/aiService';
+import { generateQuizQuestions } from '../../Services/aiService';
+import roomService from '../../Services/Rooms';
 
 interface QuizParams {
   topic: string;
@@ -63,10 +64,8 @@ export default function Index() {
     }
   
     try {
-      // Generate a unique room code
       const roomCode = generateRoomCode();
-      
-      // Prepare quiz parameters
+
       const quizParams = {
         topic: selectedOption,
         optionType: optionType,
@@ -74,17 +73,14 @@ export default function Index() {
         numberOfQuestions: numberOfQuestions
       };
   
-      // Generate quiz questions using AI service
       const result = await generateQuizQuestions(quizParams);
       const questions = result.questions;
       const rawResponse = result.rawResponse;
-      
-      // Verify we have questions before proceeding
+
       if (!questions || questions.length === 0) {
         throw new Error('No questions were generated');
       }
       
-      // Format questions for the quiz interface
       const formattedQuestions = questions.map(q => ({
         question: q.question,
         options: q.options.map((option, index) => ({
@@ -92,13 +88,19 @@ export default function Index() {
           isCorrect: index === q.correctAnswer
         }))
       }));
-      
-      // Navigate to waiting room with room code and quiz data
+
+      await roomService.createRoom({
+        roomCode,
+        roomName,
+        questions: formattedQuestions,
+        quizTime: quizDuration * 60
+      });
+ 
       navigate('/WaitingRoom', { 
         state: { 
           roomCode,
           roomName,
-          questionData: formattedQuestions,
+          questions: formattedQuestions,
           quizTime: quizDuration * 60,
           rawResponse: rawResponse,
           isHost: true
@@ -125,7 +127,7 @@ export default function Index() {
           <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
               <CardHeader className="pb-2">
                   <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
-                  Host your own Quiz ! 
+                  Host your own Quiz! 
                   </CardTitle>
                   <CardDescription className="text-orange-400 text-center pt-2">
                     <Link to="/JoinRoom">Joining one instead?</Link>  

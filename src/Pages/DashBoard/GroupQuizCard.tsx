@@ -14,7 +14,7 @@ export default function IndividualQuizCard() {
 
 function QuizCard() {
   return (
-    <Link to="/GropQuiz">
+    <Link to="/GroupQuiz">
     <div className="flex items-center justify-center sm:min-h-screen ">
       <div className="flex flex-wrap justify-center gap-2 max-w-4xl sw-full">
         <motion.div
