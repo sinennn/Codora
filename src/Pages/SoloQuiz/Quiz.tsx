@@ -108,23 +108,20 @@ export default function QuizCard() {
 
   return (
     <div className="relative w-full h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">
-      {/* Glowing Background */}
+   
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
-      {/* Timer Display */}
       <div className="absolute top-6 left-6 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg backdrop-blur-md">
         ⏱ {formatTime(timeLeft)}
       </div>
 
-      {/* Question Counter */}
       <div className="absolute top-6 right-6 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg backdrop-blur-md">
         Question {currentQuestionIndex + 1}/{allQuestions.length}
       </div>
 
-      {/* Quiz Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -214,7 +211,7 @@ export default function QuizCard() {
               <div className="space-y-6 mt-4">
                 {allQuestions.map((question, qIndex) => {
                   const userAnswer = userAnswers[qIndex];
-                  const isCorrect = userAnswer !== null && question.options[userAnswer].isCorrect;
+                  //const isCorrect = userAnswer !== null && question.options[userAnswer].isCorrect;
                   
                   return (
                     <div key={qIndex} className="border border-gray-700 rounded-xl p-4 bg-gray-800/50">
