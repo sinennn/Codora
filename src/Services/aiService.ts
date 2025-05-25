@@ -31,7 +31,7 @@ For field questions:
 Difficulty Levels:
 - Starter: Basic concepts and fundamental understanding
 - Intermediate Dev: Practical implementation and problem-solving
-- 10x Engineer: Advanced concepts and system design
+- 10x Engineer: Advanced concepts and system design, you may use trick questions
 
 Output Format:
 Return questions in JSON format with the following structure:
@@ -86,28 +86,31 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{questi
     }
 
     const data = await response.json();
-    console.log(data)
+   // console.log(data)
     const rawResponse = data.choices[0].message.content;
     console.log(rawResponse)
     if (!rawResponse) {
       throw new Error('No questions generated in the response');
     }
 
-    // Try to extract JSON content from the formatted string with code blocks
+    
     let parsedQuestions;
     const jsonMatch = rawResponse.match(/```json\n(.*?)\n```/s);
     
     if (jsonMatch && jsonMatch[1]) {
-      // If JSON is wrapped in code blocks, extract it
+
       const jsonContent = jsonMatch[1].trim();
       parsedQuestions = JSON.parse(jsonContent);
     } else {
-      // If no code blocks, try to parse the entire response as JSON
+      
       try {
         parsedQuestions = JSON.parse(rawResponse);
       } catch {
-        // If direct parsing fails, look for any JSON-like structure
+
+        // If direct parsing fails,this should look for any JSON-like structure. God abeg
+         //10x dev writing regex😂
         const possibleJson = rawResponse.match(/\{.*\}/s);
+       
         if (possibleJson) {
           parsedQuestions = JSON.parse(possibleJson[0]);
         } else {

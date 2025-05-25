@@ -19,7 +19,7 @@ export default function GroupQuiz() {
     );
   }
 
-  const { roomCode, isHost, username, participants, questions, quizTime } = state;
+  const { roomCode, isHost, username,  questions, quizTime } = state;
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
