@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/toast";
+import { Card, CardContent, CardFooter } from '../../components/ui/card'
+import { Button } from '../../components/ui/button'
+import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
+import { toast } from '../../components/ui/toast'
 import { auth } from "../../../firebase";
 import roomService from '../../Services/Rooms';
 import { ClipLoader } from 'react-spinners'; 
@@ -13,14 +13,15 @@ import { ClipLoader } from 'react-spinners';
 export default function JoinRoom() {
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
-  const [username, setUsername] = useState("");
+  //const [username, setUsername] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   
   useEffect(() => {
-    // Auto-populate username with Firebase user's display name if available
+    
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user && user.displayName) {
-        setUsername(user.displayName.split(' ')[0]); // Get first name only
+      
+       // setUsername(user.displayName.split(' ')[0]); 
       }
     });
     

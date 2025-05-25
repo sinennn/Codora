@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { firestore } from "../../../firebase";
 import { doc, onSnapshot, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from '../../components/ui/card'
+import { Button } from '../../components/ui/button'
 
 export default function GroupQuiz() {
   const location = useLocation();
@@ -227,3 +227,4 @@ export default function GroupQuiz() {
     </div>
   );
 }
+import { auth } from '../../../firebase'
