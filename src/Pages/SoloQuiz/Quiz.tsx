@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, Send, ChevronLeft, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-
-interface QuestionData {
-  question: string;
-  options: Array<{
-    text: string;
-    isCorrect: boolean;
-  }>;
-}
+import { Button } from "../../components/ui/button";
 
 export default function QuizCard() {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
-  
   if (!state || !state.questionData || !state.quizTime) {
     return (
       <div className="text-white text-center py-8">
@@ -26,13 +17,9 @@ export default function QuizCard() {
       </div>
     );
   }
-
   const questionData = state.questionData;
   const quizTime = state.quizTime;
-  const rawResponse = state.rawResponse;
-
-  // Parse the raw response to get all questions
-  const [allQuestions, setAllQuestions] = useState(Array.isArray(questionData) ? questionData : [questionData]);
+  const [allQuestions] = useState(Array.isArray(questionData) ? questionData : [questionData]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState(Array(allQuestions.length).fill(null));
   const [quizSubmitted, setQuizSubmitted] = useState(false);

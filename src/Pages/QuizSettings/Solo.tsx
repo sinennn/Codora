@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../../components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggle-group";
 import { BookOpen, Clock, Settings, ChevronRight, List } from "lucide-react";  
-import { toast } from '@/components/ui/toast';
+import { toast } from '../../components/ui/toast';
 import fieldsData from "../../Data/Fields.json";
 import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
@@ -27,7 +27,6 @@ export default function Index() {
   const [Spinning, isSpinning] = useState(false)
   const [numberOfQuestions, setNumberOfQuestions] = useState(10);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
 
   const options = useMemo(() => {
     setIsLoadingOptions(true);
@@ -86,8 +85,7 @@ export default function Index() {
       toast.error(`Failed to generate quiz: ${error instanceof Error ? error.message : 'Unknown error'}`);
       isSpinning(false);
     } finally {
-      setIsGeneratingQuiz(false);
-      isSpinning(false);
+         isSpinning(false);
     }
   };
 

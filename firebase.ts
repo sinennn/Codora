@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+
 interface ImportMetaEnv {
     readonly VITE_FIREBASE_API_KEY: string;
     readonly VITE_AUTH_DOMAIN: string;
@@ -8,11 +9,11 @@ interface ImportMetaEnv {
     readonly VITE_MESSAGING_SENDER_ID: string;
     readonly VITE_APP_ID: string;
     readonly VITE_MEASUREMENT_ID: string;
-  }
+}
 
-  declare global {
+declare global {
     interface ImportMeta {
-        readonly env: ImportMetaEnv;
+        env: ImportMetaEnv;
     }
 }
 
