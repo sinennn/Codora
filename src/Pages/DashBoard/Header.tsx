@@ -12,7 +12,7 @@ export default function Header({ user }: { user: User }) {
 
   return (
     <motion.header
-    className="w-full px-6 py-4 bg-none sticky top-0 z-30 backdrop-blur-md relative"
+    className="w-full px-6 py-4 bg-none top-0 z-30 backdrop-blur-md relative"
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6, ease: 'easeOut' }}

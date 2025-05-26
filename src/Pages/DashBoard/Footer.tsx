@@ -1,13 +1,11 @@
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, User, Users, Trophy, Settings } from 'lucide-react';
+import Home from '/assets/home.png';
+import User from '/assets/user.png';
 
 const navItems = [
-  { to: "/profile", label: "Profile", Icon: User },
-  { to: "/individual-quizzes", label: "Solo", Icon: Home },
-  { to: "/group-quizzes", label: "Group", Icon: Users },
-  { to: "/leaderboard", label: "Rank", Icon: Trophy },
-  { to: "/settings", label: "Settings", Icon: Settings },
+  { to: "/dashboard", icon: Home, label: "Home" },
+  { to: "/profile", icon: User, label: "Profile" },
 ];
 
 export default function FooterNav() {
@@ -18,21 +16,26 @@ export default function FooterNav() {
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 100 }}
-      className="fixed bottom-0 left-0 w-full bg-gray-900 text-white border-t border-gray-800 flex justify-around py-3 md:hidden z-50"
+      className="fixed left-1/2 -translate-x-1/2 bottom-6 bg-gray-900/90 text-white border border-gray-800 flex justify-around items-center py-3 px-8 rounded-full shadow-xl backdrop-blur-md ring-1 ring-gray-700 md:hidden z-50 w-auto min-w-[240px] max-w-[90vw]"
     >
-      {navItems.map(({ to, label, Icon }) => {
+      {navItems.map(({ to, icon, label }) => {
         const isActive = location.pathname === to;
 
         return (
-          <Link key={to} to={to} className="flex flex-col items-center text-sm">
+          <Link key={to} to={to} className="flex flex-col items-center mx-4">
             <motion.div
-              whileTap={{ scale: 0.85 }}
-              className={`flex flex-col items-center ${
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              className={`flex flex-col items-center transition-all duration-150 ${
                 isActive ? 'text-orange-500' : 'text-white'
               }`}
             >
-              <Icon size={22} />
-              <span className="text-xs">{label}</span>
+              <img
+                src={icon}
+                alt={label}
+                className="w-[22px] h-[22px] mb-1"
+              />
+              <span className="text-xs font-medium">{label}</span>
             </motion.div>
           </Link>
         );

@@ -9,6 +9,7 @@ import GroupQuizSettings from './Pages/QuizSettings/Group'
 import SoloComplete from './Pages/SoloQuiz/SoloComplete';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom'
+import Profile from './Pages/Profile/Profile'
 import JoinRoom from './Pages/GroupQuiz/JoinRoom'
 import { ToastProvider } from './components/ui/toast';
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/JoinRoom" element={<JoinRoom/>}/>
           <Route path="/WaitingRoom" element={<WaitingRoom/>}/>
           <Route path="/Group-Quiz" element={<GroupQuiz/>}/>

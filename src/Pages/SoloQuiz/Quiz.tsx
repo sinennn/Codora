@@ -56,8 +56,7 @@ export default function QuizCard() {
   const handleSubmitQuiz = () => {
     if (!quizSubmitted) {
       setQuizSubmitted(true);
-      
-      // Calculate score
+ 
       let newScore = 0;
       userAnswers.forEach((answer, index) => {
         if (answer !== null && allQuestions[index].options[answer].isCorrect) {
@@ -65,8 +64,7 @@ export default function QuizCard() {
         }
       });
       setScore(newScore);
-      
-      // Navigate to the SoloComplete page with the quiz results
+     
       navigate('/SoloComplete', {
         state: {
           score: newScore,
@@ -83,7 +81,6 @@ export default function QuizCard() {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  // Check if we have questions before trying to access them
   if (!allQuestions || allQuestions.length === 0) {
     return (
       <div className="text-white text-center py-8">
@@ -96,7 +93,7 @@ export default function QuizCard() {
   const currentQuestion = allQuestions[currentQuestionIndex];
   const currentAnswer = userAnswers[currentQuestionIndex];
 
-  // Add additional safety check
+
   if (!currentQuestion) {
     return (
       <div className="text-white text-center py-8">

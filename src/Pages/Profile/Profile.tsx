@@ -1,0 +1,239 @@
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { User, Mail, LogOut, Trash2, Camera, Upload } from "lucide-react";
+import { toast } from '../../components/ui/toast';
+import { ClipLoader } from 'react-spinners';
+import Footer from '../DashBoard/Footer';
+import { auth, storage, onAuthStateChanged, signOut } from '../../../firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { updateProfile, deleteUser } from 'firebase/auth';
+
+export default function Index() {
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [profilePic, setProfilePic] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setUsername(currentUser.displayName || "---");
+        setEmail(currentUser.email || "");
+        setProfilePic(currentUser.photoURL || "");
+      } else {
+        navigate('/login');
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleProfilePicUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file && user) {
+      setIsUploading(true);
+      try {
+        const storageRef = ref(storage, `profilePictures/${user.uid}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        
+        await updateProfile(user, {
+          photoURL: downloadURL
+        });
+        
+        setProfilePic(downloadURL);
+        toast.success('Profile picture updated successfully!');
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        toast.error('Failed to upload profile picture');
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut(auth);
+      toast.success('Signed out successfully!');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error('Failed to sign out');
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      setIsDeletingAccount(true);
+      try {
+        if (user) {
+          await deleteUser(user);
+          toast.success('Account deleted successfully!');
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        toast.error('Failed to delete account. You may need to re-authenticate.');
+      } finally {
+        setIsDeletingAccount(false);
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black">
+        <ClipLoader color="#f97316" size={50} cssOverride={{ borderWidth: '4px' }} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden animate-fade-in px-4 sm:px-8">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      </div>
+
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
+            User Profile
+          </CardTitle>
+          <CardDescription className="text-gray-400 text-center pt-2">
+            Manage your account settings
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-6 pt-4">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-gray-700 border-2 border-gray-600 overflow-hidden flex items-center justify-center">
+                {profilePic ? (
+                  <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
+                ) : username ? (
+                  <span className="text-4xl font-bold text-orange-400 select-none">
+                    {username.charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <User className="w-12 h-12 text-gray-400" />
+                )}
+              </div>
+              {/* <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute -bottom-1 -right-1 w-8 h-8 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors"
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <ClipLoader color="#ffffff" size={16} cssOverride={{ borderWidth: '2px' }} />
+                ) : (
+                  <Camera className="w-4 h-4 text-white" />
+                )}
+              </button> */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePicUpload}
+                className="hidden"
+              />
+            </div>
+            
+            {/* {!profilePic && (
+              <div className="text-center">
+                <p className="text-sm text-gray-400 mb-2">No profile picture</p>
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700"
+                  disabled={isUploading}
+                >
+                  {isUploading ? (
+                    <ClipLoader color="#ffffff" size={16} cssOverride={{ borderWidth: '2px' }} />
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Photo
+                    </>
+                  )}
+                </Button>
+              </div>
+            )} */}
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
+                <User className="h-4 w-4 text-orange-500" />
+                Username
+              </label>
+              <div className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 h-11 flex items-center">
+                {username}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
+                <Mail className="h-4 w-4 text-orange-500" />
+                Email
+              </label>
+              <div className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 h-11 flex items-center">
+                {email}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-4">
+            <Button
+              onClick={handleSignOut}
+              className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              disabled={isSigningOut}
+            >
+              {isSigningOut ? (
+                <ClipLoader color="#ffffff" size={20} cssOverride={{ borderWidth: '3px' }} />
+              ) : (
+                <>
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </>
+              )}
+            </Button>
+
+            <Button
+              onClick={handleDeleteAccount}
+              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? (
+                <ClipLoader color="#ffffff" size={20} cssOverride={{ borderWidth: '3px' }} />
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  Delete Account
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <div className="fixed bottom-0 left-0 w-full md:hidden">
+        <Footer/> 
+      </div>
+    </div>
+  );
+}
