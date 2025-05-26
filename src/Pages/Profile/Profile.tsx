@@ -1,22 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { User, Mail, LogOut, Trash2, Camera, Upload } from "lucide-react";
+import { User, Mail, LogOut, Trash2 } from "lucide-react";
 import { toast } from '../../components/ui/toast';
 import { ClipLoader } from 'react-spinners';
 import Footer from '../DashBoard/Footer';
-import { auth, storage, onAuthStateChanged, signOut } from '../../../firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { updateProfile, deleteUser } from 'firebase/auth';
+import { auth, onAuthStateChanged, signOut } from '../../../firebase'
+import {deleteUser } from 'firebase/auth';
 
 export default function Index() {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
   const [profilePic, setProfilePic] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [user, setUser] = useState(null);
@@ -37,30 +34,6 @@ export default function Index() {
 
     return () => unsubscribe();
   }, [navigate]);
-
-  const handleProfilePicUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file && user) {
-      setIsUploading(true);
-      try {
-        const storageRef = ref(storage, `profilePictures/${user.uid}`);
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-        
-        await updateProfile(user, {
-          photoURL: downloadURL
-        });
-        
-        setProfilePic(downloadURL);
-        toast.success('Profile picture updated successfully!');
-      } catch (error) {
-        console.error('Error uploading profile picture:', error);
-        toast.error('Failed to upload profile picture');
-      } finally {
-        setIsUploading(false);
-      }
-    }
-  };
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -144,14 +117,7 @@ export default function Index() {
                   <Camera className="w-4 h-4 text-white" />
                 )}
               </button> */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleProfilePicUpload}
-                className="hidden"
-              />
-            </div>
+                        </div>
             
             {/* {!profilePic && (
               <div className="text-center">
