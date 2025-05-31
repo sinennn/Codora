@@ -8,7 +8,6 @@ import FooterNav from './Footer';
 import { auth } from '../../../firebase';
 import { useNavigate } from 'react-router-dom'
 
-
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const Navigate = useNavigate()
@@ -19,7 +18,6 @@ export default function Dashboard() {
     });
 
     return () => unsubscribe();
-    
   }, []);
 
   useEffect(() => {
@@ -34,31 +32,26 @@ export default function Dashboard() {
     return () => unsubscribe();
   }, [Navigate]);
 
-
   return (
     <div className="overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black w-screen h-screen flex flex-col md:flex-row">
- <div  className="hidden md:block" >
-  <Sidebar/> 
-  </div>
-    <div className="flex-1 flex flex-col  md:pb-0">
-    <Header user={user || undefined} />
-    <main className="flex flex-col overflow-hidden md:flex-row justify-center items-center gap-6 md:gap-16 p-4 md:p-8 w-full max-w-7xl mx-auto ">
-   
-    <div className="pt-35 lg:pt-[0px]">
-  <IndividualQuizCard />
-</div>
-
-<div className="sm:hidden"> </div>
-
-<div className="pt-15 lg:pt-[0px] pb-30 lg:pb-[0px]  ">
-           <GroupQuizCard  />
-   </div>
-      
-    </main>
-    <div className="fixed bottom-0 left-0 w-full md:hidden" >
-    <FooterNav /> 
-  </div>
-  </div>
-</div>
+      <div className="hidden md:block">
+        <Sidebar/> 
+      </div>
+      <div className="flex-1 flex flex-col md:pb-0">
+        <Header user={user || undefined} />
+        <main className="flex flex-col overflow-hidden md:flex-row justify-center items-center gap-4 md:gap-8 p-4 md:p-8 w-full max-w-7xl mx-auto flex-grow">
+          <div className="pt-4 lg:pt-0">
+            <IndividualQuizCard />
+          </div>
+          <div className="sm:hidden"></div>
+          <div className="pt-4 lg:pt-0 pb-4 lg:pb-0">
+            <GroupQuizCard />
+          </div>
+        </main>
+        <div className="fixed bottom-0 left-0 w-full md:hidden">
+          <FooterNav /> 
+        </div>
+      </div>
+    </div>
   );
 }

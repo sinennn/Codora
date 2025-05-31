@@ -1,0 +1,15 @@
+package app.vercel.codora;
+
+import com.getcapacitor.BridgeActivity;
+import android.os.Bundle;
+import com.codetrixstudio.capacitor.GoogleAuth.GoogleAuth;
+
+public class MainActivity extends BridgeActivity {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // apparently I still have to reguster the plugin
+    registerPlugin(GoogleAuth.class);
+  }
+}

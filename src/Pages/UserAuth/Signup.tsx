@@ -72,13 +72,13 @@ const inputField =
     };
   
     return (
-      <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen min-h-screen flex justify-center items-center p-4">
-        <motion.div
-          className="flex flex-col items-center gap-8 p-10 max-w-2xl w-full mx-auto rounded-2xl bg-gray-900/60 backdrop-blur-md shadow-2xl"
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
-        >
+      <div className="w-screen h-screen overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex justify-center items-center">
+  <motion.div
+    className="w-full max-w-md flex flex-col items-center gap-10 px-6 py-10 rounded-none bg-none backdrop-blur-2xl border border-none "
+    variants={containerVariants}
+    initial="initial"
+    animate="animate"
+  >
           <motion.div className="relative" variants={childVariants}>
             <div className="absolute w-full h-full rounded-full blur-2xl bg-orange-500 opacity-30 animate-pulse -z-10 scale-125"></div>
             <motion.img
@@ -126,7 +126,7 @@ const inputField =
           </motion.div>
 
           <motion.div className="relative w-full">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" /> {/* User icon */}
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" /> 
             <motion.input
               type="password"
               placeholder="Yeah, we need a password too"
@@ -155,10 +155,9 @@ const inputField =
             >
               {loading ? 'Creating Account...' : 'Sign Up'}
             </motion.button>
-          </motion.div>
-  
-          <motion.p
-            className="text-gray-400 text-sm text-center"
+
+            <motion.p
+            className="text-gray-400 text-sm text-center "
             variants={childVariants}
           >
             Already have an account?{' '}
@@ -166,6 +165,10 @@ const inputField =
               Log In
             </a>
           </motion.p>
+
+          </motion.div>
+  
+      
         </motion.div>
       </div>
     );

@@ -26,7 +26,8 @@ useEffect(() => {
 }, [navigate]);
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen h-screen flex justify-center items-center p-4">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen min-h-dvh flex justify-center items-center p-4">
+
       <motion.div
         className="flex flex-col md:flex-row items-center gap-6"
         initial={{ opacity: 0, scale: 1.2, y: -30 }}

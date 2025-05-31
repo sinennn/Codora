@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "../../components/ui/card";
+import { CardContent, CardFooter } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
 
@@ -44,7 +44,7 @@ export default function SoloComplete() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-xl"
       >
-        <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in">
+        <div className="w-full border-none bg-gradient-to-br from-black via-gray-900 to-black backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in">
           <CardContent className="space-y-6 pt-6 px-6">
             <motion.h2
               className="text-3xl font-bold text-center text-orange-400"
@@ -119,7 +119,7 @@ export default function SoloComplete() {
               Return to Dashboard
             </Button>
           </CardFooter>
-        </Card>
+        </div>
       </motion.div>
     </div>
   );

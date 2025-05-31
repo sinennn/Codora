@@ -9,6 +9,7 @@ interface User {
 
 export default function Header({ user }: { user: User }) {
   const firstName = user?.displayName?.split(' ')[0] || 'User';
+  console.log(firstName);
 
   return (
     <motion.header
@@ -20,24 +21,26 @@ export default function Header({ user }: { user: User }) {
     
     <div className="absolute top-4 right-6 flex items-center gap-4 sm:p-4">
 
-            <div className="flex items-center gap-4 md:hidden lg:hidden">
+            <div className="flex items-center ml-[40px] gap-4 md:hidden lg:hidden">
           <motion.img
             src={logo}
             alt="Codora Logo"
-            className="h-30 w-auto"
+            className="h-30 w-auto ml-[-30px]"
             whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 300 }}
           />
-          <h2 className="text-3xl font-bold text-orange-400 tracking-tight">Codora</h2>
+          <h2 className="text-3xl font-bold text-orange-400 tracking-tight whitespace-nowrap">
+          <span className="text-orange-400 text-lg font-semibold ">
+          Hi, {firstName}
+      </span>
+          </h2>
         </div>
 
         <div className="px-15 md:hidden lg:hidden">
 
         </div>
 
-      <span className="text-white text-lg font-semibold hidden sm:inline">
-        Hi, {firstName}
-      </span>
+    
       {user?.photoURL ? (
         <motion.img
           src={user.photoURL}
