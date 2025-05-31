@@ -4,7 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AtSign, Lock } from 'lucide-react';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { isPlatform } from '@ionic/react';
-import { signInWithEmailAndPassword, signInWithPopup, auth, googleProvider } from "../../../firebase";
+import { 
+  signInWithEmailAndPassword, 
+  signInWithPopup, 
+  signInWithCredential, 
+  GoogleAuthProvider 
+} from 'firebase/auth';
+import { auth, googleProvider } from '../../../firebase';
 import { ClipLoader } from 'react-spinners';
 import Start from '/assets/Start.png';
 import GoogleLogo from '/assets/google.png';
@@ -46,7 +52,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GoogleAuth.initialize(); // Only on mobile
+    GoogleAuth.initialize();
   }, []);
 
   const handleEmailLogin = async () => {
@@ -55,9 +61,10 @@ export default function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("User signed in with email:", userCredential.user.email);
       navigate("/DashBoard");
-    } catch (error) {
-      console.error("Email Login Error:", error.message);
-      alert(error.message);
+    } catch (error: unknown) {
+      const errorMessage = (error as { message: string }).message || error;
+      console.error("Email Login-In Error:", errorMessage);
+      alert(errorMessage || "Email Login-In failed.");
     } finally {
       setLoading1(false);
     }
@@ -70,8 +77,8 @@ export default function Login() {
 
       if (isMobile) {
         const result = await GoogleAuth.signIn();
-        const credential = googleProvider.credential(result.authentication.idToken);
-        const firebaseResult = await auth.signInWithCredential(credential);
+        const credential = GoogleAuthProvider.credential(result.authentication.idToken);
+        const firebaseResult = await signInWithCredential(auth, credential);
         console.log("Google mobile login:", firebaseResult.user.email);
       } else {
         const result = await signInWithPopup(auth, googleProvider);
@@ -79,9 +86,10 @@ export default function Login() {
       }
 
       navigate("/DashBoard");
-    } catch (error) {
-      console.error("Google Sign-In Error:", error.message || error);
-      alert(error.message || "Google Sign-In failed.");
+      } catch (error: unknown) {
+        const errorMessage = (error as { message: string }).message || error;
+        console.error("Google Sign-In Error:", errorMessage);
+        alert(errorMessage || "Google Sign-In failed.");
     } finally {
       setLoading(false);
     }
