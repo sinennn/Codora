@@ -43,8 +43,7 @@ export default function Header({ user }: { user: User }) {
     
       {user?.photoURL ? (
         <motion.img
-          src={user.photoURL}
-          alt="User Avatar"
+          src={user.photoURL || "/assets/navuser.png"} 
           className="w-15 h-15 rounded-full border-2 border-orange-500 object-cover shadow-md hover:shadow-lg transition-shadow"
           whileHover={{ scale: 1.1 }}
           transition={{ type: 'spring', stiffness: 300 }}

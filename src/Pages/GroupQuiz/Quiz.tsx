@@ -94,6 +94,7 @@ export default function GroupQuiz() {
           isCorrect,
         };
       });
+      //Question
       return {
         username: (entry as { username: string }).username,
         score: participantScore,
@@ -220,8 +221,8 @@ export default function GroupQuiz() {
   }
   return (
     <div className="relative w-full h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">
-      <div className="absolute top-6 left-6 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg backdrop-blur-md">⏱ {formatTime(timeLeft)}</div>
-      <div className="absolute top-6 right-6 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg backdrop-blur-md">Question {currentQuestionIndex + 1}/{questions.length}</div>
+      <div className="absolute top-6 left-6 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg z-10 backdrop-blur-md">⏱ {formatTime(timeLeft)}</div>
+      <div className="absolute top-6 right-6 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg z-10 backdrop-blur-md">Question {currentQuestionIndex + 1}/{questions.length}</div>
       <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="w-full max-w-xl">
         <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in">
           <CardContent className="space-y-6 pt-6 px-6">

@@ -11,7 +11,7 @@ export default function GroupQuiz() {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
-  
+ 
   if (!state || !state.roomCode || !state.questions) {
     return (
       <div className="text-white text-center py-8">

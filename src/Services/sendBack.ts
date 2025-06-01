@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { App } from '@capacitor/app';
 import { useNavigate, useLocation } from 'react-router-dom';
 //Explanation: It's a capacitor app so hitting the back button closes it. This is a custom hook built using
-//the capacitor app plugin to make sure that doesn't happen
+//the capacitor app plugin to make sure that doesn't happen. God, I love coding
 function useSendBack() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,7 +18,7 @@ function useSendBack() {
             navigate('/SoloSetting')
         } else  if (location.pathname === '/dashboard') {
             App.exitApp(); 
-        } {
+        } else {
           navigate(-1);
         }
         //The entire block above customizes which screens users will be navigated to for specific screens.
