@@ -2,10 +2,12 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
+import useSendBack from  '../../Services/sendBack'
+
 
 export default function QuizResults({ score, totalQuestions }) {
   const navigate = useNavigate();
-  
+  useSendBack();
   return (
     <Card className="w-full max-w-xl border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl">
       <CardContent className="space-y-6 pt-6 px-6">

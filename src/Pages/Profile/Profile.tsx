@@ -8,8 +8,10 @@ import { ClipLoader } from 'react-spinners';
 import Footer from '../DashBoard/Footer';
 import { auth, onAuthStateChanged, signOut } from '../../../firebase'
 import {deleteUser } from 'firebase/auth';
+import useSendBack from "../../Services/sendBack";
 
 export default function Index() {
+  useSendBack();
   const navigate = useNavigate();
   const [profilePic, setProfilePic] = useState("");
   const [username, setUsername] = useState("");
@@ -76,13 +78,15 @@ export default function Index() {
   }
 
   return (
-    <div className="w-screen h-screen pt-[-20] flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden animate-fade-in px-4 sm:px-8">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
+    <div className="w-screen h-screen flex flex-col bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden px-4 sm:px-8">
 
-      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl pt-[-8] border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-2 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+     </div> 
+
+     <div className="mt-14 flex justify-center items-start">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl pt-[60px] xl:max-w-2xl  border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
         <CardHeader className="pb-2">
           <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
            Profile
@@ -197,7 +201,8 @@ export default function Index() {
           </div>
         </CardContent>
       </Card>
-      <div className="fixed bottom-0 left-0 w-full md:hidden">
+      </div>
+      <div className="fixed bottom-0 left-0 pt-[10px] w-full md:hidden">
         <Footer/> 
       </div>
     </div>

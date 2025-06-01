@@ -26,8 +26,8 @@ useEffect(() => {
 }, [navigate]);
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-black w-screen min-h-dvh flex justify-center items-center p-4">
-
+    <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
+    <div className="absolute inset-0 flex justify-center items-center p-4">
       <motion.div
         className="flex flex-col md:flex-row items-center gap-6"
         initial={{ opacity: 0, scale: 1.2, y: -30 }}
@@ -47,7 +47,7 @@ useEffect(() => {
             className="w-[160px] h-[320px] object-contain"
           />
         </motion.div>
-
+  
         <motion.h1
           className="text-orange-500 text-6xl md:text-7xl font-extrabold tracking-tight"
           initial={{ x: -40, opacity: 0 }}
@@ -61,6 +61,8 @@ useEffect(() => {
         </motion.h1>
       </motion.div>
     </div>
+  </div>
+  
   );
 };
 

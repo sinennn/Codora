@@ -9,8 +9,10 @@ import { toast } from '../../components/ui/toast'
 import { auth } from "../../../firebase";
 import roomService from '../../Services/Rooms';
 import { ClipLoader } from 'react-spinners'; 
+import useSendBack from "../../Services/sendBack";
 
 export default function JoinRoom() {
+  useSendBack();
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
   //const [username, setUsername] = useState("");
@@ -65,7 +67,7 @@ export default function JoinRoom() {
   
   return (
     <div className="relative w-full min-h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 py-12 overflow-hidden animate-fade-in">
-      {/* Glowing Background */}
+
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />

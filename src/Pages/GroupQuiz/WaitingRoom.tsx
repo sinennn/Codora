@@ -5,10 +5,11 @@ import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { toast } from "../../components/ui/toast";
 import { Users, Copy, Play } from "lucide-react";
-
+import useSendBack from "../../Services/sendBack";
 import roomService from '../../Services/Rooms';
 
 export default function WaitingRoom() {
+  useSendBack();
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;

@@ -52,7 +52,13 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GoogleAuth.initialize();
+    GoogleAuth.initialize(
+      {
+        // clientId: '459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com',
+        // scopes: ['profile', 'email'],
+        // grantOfflineAccess: true,
+      }
+    );
   }, []);
 
   const handleEmailLogin = async () => {
@@ -74,9 +80,12 @@ export default function Login() {
     setLoading(true);
     try {
       const isMobile = isPlatform("capacitor");
-
+  
       if (isMobile) {
         const result = await GoogleAuth.signIn();
+        if (!result.authentication.idToken) {
+          throw new Error('No ID token received from Google Sign-In');
+        }
         const credential = GoogleAuthProvider.credential(result.authentication.idToken);
         const firebaseResult = await signInWithCredential(auth, credential);
         console.log("Google mobile login:", firebaseResult.user.email);
@@ -84,12 +93,13 @@ export default function Login() {
         const result = await signInWithPopup(auth, googleProvider);
         console.log("Google web login:", result.user.email);
       }
-
+  
       navigate("/DashBoard");
-      } catch (error: unknown) {
-        const errorMessage = (error as { message: string }).message || error;
-        console.error("Google Sign-In Error:", errorMessage);
-        alert(errorMessage || "Google Sign-In failed.");
+    } catch (error: unknown) {
+      const errorMessage = (error as { message: string }).message || error;
+      console.error('Google Sign-In Error:', error);
+      alert(JSON.stringify(error));
+      alert(errorMessage || "Google Sign-In failed.");
     } finally {
       setLoading(false);
     }

@@ -10,6 +10,7 @@ import fieldsData from "../../Data/Fields.json";
 import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
 import { generateQuizQuestions } from '../../Services/aiService';
+import useSendBack from "../../Services/sendBack";
 
 interface QuizParams {
   topic: string;
@@ -19,6 +20,7 @@ interface QuizParams {
 }
 
 export default function Index() {
+    useSendBack();
   const navigate = useNavigate();
   const [optionType, setOptionType] = useState<'field' | 'technology'>('field');
   const [selectedOption, setSelectedOption] = useState("");

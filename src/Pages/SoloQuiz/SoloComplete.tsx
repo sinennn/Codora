@@ -3,12 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CardContent, CardFooter } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
+import useSendBack from  '../../Services/sendBack'
 
 export default function SoloComplete() {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
-  
+  useSendBack();
+
   if (!state || state.score === undefined || !state.allQuestions) {
     return (
       <div className="text-white text-center py-8">

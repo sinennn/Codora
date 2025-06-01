@@ -4,8 +4,10 @@ import { CheckCircle2, XCircle, Send, ChevronLeft, ChevronRight } from "lucide-r
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "../../components/ui/button";
+import useSendBack from  '../../Services/sendBack'
 
 export default function QuizCard() {
+  useSendBack();
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
@@ -111,11 +113,11 @@ export default function QuizCard() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
-      <div className="absolute top-6 left-6 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg backdrop-blur-md">
+      <div className="absolute top-6 left-6 z-10 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg backdrop-blur-md">
         ⏱ {formatTime(timeLeft)}
       </div>
 
-      <div className="absolute top-6 right-6 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg backdrop-blur-md">
+      <div className="absolute top-6 right-6 z-10 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg backdrop-blur-md">
         Question {currentQuestionIndex + 1}/{allQuestions.length}
       </div>
 
@@ -177,7 +179,8 @@ export default function QuizCard() {
                   onClick={handleSubmitQuiz}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl flex items-center gap-2"
                 >
-                  Submit Quiz <Send className="h-4 w-4" />
+                   <Send className="h-4 w-4" />
+                  Submit Quiz
                 </Button>
               ) : (
                 <Button 

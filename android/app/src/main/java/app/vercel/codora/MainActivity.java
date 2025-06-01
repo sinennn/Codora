@@ -11,5 +11,6 @@ public class MainActivity extends BridgeActivity {
 
     // apparently I still have to reguster the plugin
     registerPlugin(GoogleAuth.class);
+     add(GoogleAuth.class);
   }
 }

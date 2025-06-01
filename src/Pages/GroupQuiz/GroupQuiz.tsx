@@ -4,8 +4,10 @@ import { firestore } from "../../../firebase";
 import { doc, onSnapshot, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Card, CardContent } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
+import useSendBack from "../../Services/sendBack";
 
 export default function GroupQuiz() {
+  useSendBack();
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
@@ -211,7 +213,7 @@ export default function GroupQuiz() {
                 onClick={handleSubmitQuiz}
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
-                Submit Quiz
+                               Submit Quiz
               </Button>
             ) : (
               <Button 

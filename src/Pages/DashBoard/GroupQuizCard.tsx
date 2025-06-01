@@ -11,7 +11,12 @@ export default function GroupQuizCard() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2, ease: 'easeIn' }}
       >
-        <Users className="w-[53px] h-[53px] stroke-orange-500" strokeWidth={0.75} />
+        <div className="flex items-center space-x-4">
+  <Users className="w-[53px] h-[53px] stroke-orange-500" strokeWidth={0.75} />
+  <Users className="w-[53px] h-[53px] stroke-orange-500" strokeWidth={0.75} />
+  <Users className="w-[53px] h-[53px] stroke-orange-500" strokeWidth={0.75} />
+</div>
+
         <h3 className="text-xl font-bold text-orange-400 mb-2">Group Quizzes</h3>
         <p className="text-gray-400 text-base">Find out who's the better dev 🙂🔥</p>
       </motion.div>

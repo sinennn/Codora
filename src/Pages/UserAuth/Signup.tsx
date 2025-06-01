@@ -80,17 +80,17 @@ const inputField =
     animate="animate"
   >
           <motion.div className="relative" variants={childVariants}>
-            <div className="absolute w-full h-full rounded-full blur-2xl bg-orange-500 opacity-30 animate-pulse -z-10 scale-125"></div>
+            <div className="absolute w-full h-1/2 rounded-full blur-2xl bg-orange-500 opacity-30 animate-pulse -z-10 scale-125"></div>
             <motion.img
               src={Start}
               alt="Codora Owl"
-              className="w-[120px] h-[240px] object-contain"
+              className="w-[120px] h-[200px] object-contain"
               initial={{ opacity: 0, rotate: -10, scale: 1.1 }}
               animate={{ opacity: 1, rotate: 0, scale: 1 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
             />
           </motion.div>
-  
+
           <motion.h1
             className="text-white text-4xl font-extrabold tracking-tight text-center"
             style={{ textShadow: '0 2px 10px rgba(255,255,255,0.3)' }}

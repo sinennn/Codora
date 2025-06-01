@@ -14,6 +14,7 @@ import techData from "../../Data/Technologies.json";
 import { ClipLoader } from 'react-spinners'; 
 import { generateQuizQuestions } from '../../Services/aiService';
 import roomService from '../../Services/Rooms';
+import useSendBack from "../../Services/sendBack";
 
 export interface QuizParams {
   topic: string;
@@ -23,6 +24,7 @@ export interface QuizParams {
 }
 
 export default function Index() {
+  useSendBack();
   const navigate = useNavigate();
   const [optionType, setOptionType] = useState('field');
   const [roomName, setRoomName] = useState("");

@@ -7,8 +7,11 @@ import GroupQuizCard from '../DashBoard/GroupQuizCard';
 import FooterNav from './Footer';
 import { auth } from '../../../firebase';
 import { useNavigate } from 'react-router-dom'
+import useSendBack from '../../Services/sendBack';
+
 
 export default function Dashboard() {
+  useSendBack();
   const [user, setUser] = useState<User | null>(null);
   const Navigate = useNavigate()
 
