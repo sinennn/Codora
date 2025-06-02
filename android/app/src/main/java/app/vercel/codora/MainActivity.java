@@ -9,7 +9,7 @@ public class MainActivity extends BridgeActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // apparently I still have to reguster the plugin
+    // apparently I still have to register the plugin
     registerPlugin(GoogleAuth.class);
     }
 }

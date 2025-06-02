@@ -11,11 +11,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom'
 import Profile from './Pages/Profile/Profile'
 import JoinRoom from './Pages/GroupQuiz/JoinRoom'
-import { ToastProvider } from './components/ui/toast';
+
 
 function App() {
   return (
-    <ToastProvider>
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Splash />} />
@@ -32,7 +32,7 @@ function App() {
           <Route path="/SoloComplete" element={<SoloComplete />} />
         </Routes>
       </BrowserRouter>
-    </ToastProvider>
+ 
   );
 }
 
