@@ -13,7 +13,6 @@ dependencies {
     implementation project(':capacitor-app')
     implementation project(':capacitor-dialog')
     implementation project(':capacitor-local-notifications')
-    implementation project(':capacitor-toast')
     implementation project(':codetrix-studio-capacitor-google-auth')
 
 }
