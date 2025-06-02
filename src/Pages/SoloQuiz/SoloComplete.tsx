@@ -23,12 +23,12 @@ export default function SoloComplete() {
   const { score, allQuestions, userAnswers } = state;
   
   let emotionImage = "";
-  if (score >= 0 && score <= 4) {
+  const percentage = (score / allQuestions.length) * 100;
+  if (percentage >= 0 && percentage < 50) {
     emotionImage = "/assets/Sad.png";
-    
-  } else if (score >= 5 && score <= 7) {
+  } else if (percentage >= 50 && percentage < 80) {
     emotionImage = "/assets/Content.png";
-  } else if (score >= 8 && score <= 10) {
+  } else if (percentage >= 80 && percentage <= 100) {
     emotionImage = "/assets/Excited.png";
   }
 
