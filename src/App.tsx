@@ -15,11 +15,14 @@ import Profile from './Pages/Profile/Profile';
 import JoinRoom from './Pages/GroupQuiz/JoinRoom';
 import { checkForUpdate } from './Services/otaUpdater';
 import { checkAndApplyPendingUpdate  } from './Services/otaUpdater';
+import { initializeUpdateListener } from './Services/otaUpdater';
+
 
 function App() {
   useEffect(() => {
     checkForUpdate(); 
     checkAndApplyPendingUpdate();
+    initializeUpdateListener();
   }, []);
 
   return (

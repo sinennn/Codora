@@ -144,7 +144,38 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
   }
 }
 
-// New function to check and apply updates on app start
+// Add listener for app state changes to handle updates on app close
+export async function initializeUpdateListener() {
+  App.addListener('appStateChange', async ({ isActive }) => {
+    if (!isActive) {  // App is going to background/being closed
+      const updateStatus = await getUpdateStatus();
+      if (updateStatus?.updateDownloaded) {
+        try {
+          // Apply the update
+          await saveCurrentVersion(updateStatus.version);
+          
+          // Reset update status
+          await setUpdateStatus({
+            version: updateStatus.version,
+            lastCheck: Date.now(),
+            updateAvailable: false,
+            updateDownloaded: false
+          });
+
+          // Set server base path for next app start
+          await Preferences.set({
+            key: 'server_base_path',
+            value: `${UPDATE_DIRECTORY}`
+          });
+        } catch (error) {
+          console.error('Failed to apply update during app close:', error);
+        }
+      }
+    }
+  });
+}
+
+// Modify checkAndApplyPendingUpdate to remove the restart
 export async function checkAndApplyPendingUpdate() {
   const updateStatus = await getUpdateStatus();
   
@@ -161,8 +192,14 @@ export async function checkAndApplyPendingUpdate() {
         updateDownloaded: false
       });
 
-      // Restart app to apply changes
-      await App.exitApp();
+      // Set server base path for next app start
+      await Preferences.set({
+        key: 'server_base_path',
+        value: `${UPDATE_DIRECTORY}`
+      });
+      
+      // Note: Update will be applied when user closes the app
+      // No immediate restart needed
     } catch (error) {
       console.error('Failed to apply pending update:', error);
     }
