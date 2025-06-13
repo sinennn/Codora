@@ -1,0 +1,170 @@
+import axios from 'axios';
+import JSZip from 'jszip';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
+import { App } from '@capacitor/app';
+
+const VERSION_JSON_URL = 'https://codora-gamma.vercel.app/version.json';
+const BUILD_TIME_VERSION = '1.0.0';
+const UPDATE_DIRECTORY = 'capacitor_data';
+const UPDATE_STATUS_KEY = 'update_status';
+
+interface UpdateStatus {
+  version: string;
+  lastCheck: number;
+  updateAvailable: boolean;
+  updateDownloaded: boolean;
+}
+
+export async function checkForUpdate() {
+  try {
+    const currentVersion = await getCurrentVersion();
+    console.log('Current version:', currentVersion);
+
+    const response = await axios.get(VERSION_JSON_URL);
+    const remoteVersion = response.data.version;
+    const updateUrl = response.data.zipUrl;
+
+    console.log('Remote version:', remoteVersion);
+
+    if (compareVersions(remoteVersion, currentVersion) > 0) {
+      // Start background download
+      downloadUpdateInBackground(updateUrl, remoteVersion);
+    } else {
+      console.log('App is up to date.');
+    }
+  } catch (err) {
+    console.error('Error checking for update:', err);
+    throw err;
+  }
+}
+
+async function getCurrentVersion(): Promise<string> {
+  const { value } = await Preferences.get({ key: 'app_version' });
+  return value ?? BUILD_TIME_VERSION;
+}
+
+async function saveCurrentVersion(version: string) {
+  await Preferences.set({ key: 'app_version', value: version });
+}
+
+function compareVersions(v1: string, v2: string): number {
+  const a = v1.split('.').map(Number);
+  const b = v2.split('.').map(Number);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const diff = (a[i] || 0) - (b[i] || 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
+
+async function setUpdateStatus(status: UpdateStatus) {
+  await Preferences.set({
+    key: UPDATE_STATUS_KEY,
+    value: JSON.stringify(status)
+  });
+}
+
+export async function getUpdateStatus(): Promise<UpdateStatus | null> {
+  const { value } = await Preferences.get({ key: UPDATE_STATUS_KEY });
+  return value ? JSON.parse(value) : null;
+}
+
+async function downloadUpdateInBackground(updateUrl: string, newVersion: string) {
+  try {
+    // Set status to downloading
+    await setUpdateStatus({
+      version: newVersion,
+      lastCheck: Date.now(),
+      updateAvailable: true,
+      updateDownloaded: false
+    });
+
+    // Clear previous update directory
+    try {
+      await Filesystem.rmdir({
+        path: UPDATE_DIRECTORY,
+        directory: Directory.Data,
+        recursive: true
+      });
+    } catch {
+      // Directory might not exist, that's okay
+    }
+
+    // Create update directory
+    await Filesystem.mkdir({
+      path: UPDATE_DIRECTORY,
+      directory: Directory.Data,
+      recursive: true
+    });
+
+    // Download and extract update in background
+    const response = await axios.get(updateUrl, { responseType: 'arraybuffer' });
+    const zip = await JSZip.loadAsync(response.data);
+
+    // Extract files
+    const filePromises = Object.keys(zip.files).map(async (filename) => {
+      const file = zip.files[filename];
+      if (file.dir) return;
+
+      const fileData = await file.async('base64');
+      await Filesystem.writeFile({
+        path: `${UPDATE_DIRECTORY}/${filename}`,
+        data: fileData,
+        directory: Directory.Data,
+        recursive: true
+      });
+    });
+
+    await Promise.all(filePromises);
+
+    // Update status to downloaded
+    await setUpdateStatus({
+      version: newVersion,
+      lastCheck: Date.now(),
+      updateAvailable: true,
+      updateDownloaded: true
+    });
+
+    // Set server base path for next app start
+    await Preferences.set({
+      key: 'server_base_path',
+      value: `${UPDATE_DIRECTORY}`
+    });
+
+  } catch (error) {
+    console.error('Background update download failed:', error);
+    // Reset update status on failure
+    await setUpdateStatus({
+      version: newVersion,
+      lastCheck: Date.now(),
+      updateAvailable: false,
+      updateDownloaded: false
+    });
+  }
+}
+
+// New function to check and apply updates on app start
+export async function checkAndApplyPendingUpdate() {
+  const updateStatus = await getUpdateStatus();
+  
+  if (updateStatus?.updateDownloaded) {
+    try {
+      // Apply the update
+      await saveCurrentVersion(updateStatus.version);
+      
+      // Reset update status
+      await setUpdateStatus({
+        version: updateStatus.version,
+        lastCheck: Date.now(),
+        updateAvailable: false,
+        updateDownloaded: false
+      });
+
+      // Restart app to apply changes
+      await App.exitApp();
+    } catch (error) {
+      console.error('Failed to apply pending update:', error);
+    }
+  }
+}
