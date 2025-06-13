@@ -28,7 +28,7 @@ export async function checkForUpdate() {
     console.log('Remote version:', remoteVersion);
 
     if (compareVersions(remoteVersion, currentVersion) > 0) {
-      // Start background download
+      
       downloadUpdateInBackground(updateUrl, remoteVersion);
     } else {
       console.log('App is up to date.');
@@ -72,7 +72,7 @@ export async function getUpdateStatus(): Promise<UpdateStatus | null> {
 
 async function downloadUpdateInBackground(updateUrl: string, newVersion: string) {
   try {
-    // Set status to downloading
+    
     await setUpdateStatus({
       version: newVersion,
       lastCheck: Date.now(),
@@ -80,7 +80,6 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
       updateDownloaded: false
     });
 
-    // Clear previous update directory
     try {
       await Filesystem.rmdir({
         path: UPDATE_DIRECTORY,
@@ -88,21 +87,19 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
         recursive: true
       });
     } catch {
-      // Directory might not exist, that's okay
+      // Directory might not exist, that's okay...that sounds gay
     }
 
-    // Create update directory
     await Filesystem.mkdir({
       path: UPDATE_DIRECTORY,
       directory: Directory.Data,
       recursive: true
     });
 
-    // Download and extract update in background
     const response = await axios.get(updateUrl, { responseType: 'arraybuffer' });
     const zip = await JSZip.loadAsync(response.data);
 
-    // Extract files
+    
     const filePromises = Object.keys(zip.files).map(async (filename) => {
       const file = zip.files[filename];
       if (file.dir) return;
@@ -118,7 +115,6 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
 
     await Promise.all(filePromises);
 
-    // Update status to downloaded
     await setUpdateStatus({
       version: newVersion,
       lastCheck: Date.now(),
@@ -126,7 +122,6 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
       updateDownloaded: true
     });
 
-    // Set server base path for next app start
     await Preferences.set({
       key: 'server_base_path',
       value: `${UPDATE_DIRECTORY}`
@@ -134,7 +129,7 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
 
   } catch (error) {
     console.error('Background update download failed:', error);
-    // Reset update status on failure
+    // Resets update status on failure...Hope thisfunction never gets called
     await setUpdateStatus({
       version: newVersion,
       lastCheck: Date.now(),

@@ -6,39 +6,35 @@ import { execSync } from 'child_process';
 // Configuration
 const config = {
   buildCommand: 'npm run build',
-  buildDir: 'dist', // or 'dist' depending on your setup
+  buildDir: 'dist', 
   updateDir: 'public/updates',
   versionFile: 'public/version.json'
 };
 
 async function createUpdate() {
   try {
-    // 1. Build the project
+
     console.log('Building project...');
     execSync(config.buildCommand, { stdio: 'inherit' });
 
-    // 2. Create updates directory if it doesn't exist
     if (!fs.existsSync(config.updateDir)) {
       fs.mkdirSync(config.updateDir, { recursive: true });
     }
 
-    // 3. Read current version from version.json
     const versionData = JSON.parse(fs.readFileSync(config.versionFile, 'utf8'));
     const currentVersion = versionData.version;
 
-    // 4. Create zip file
     const zipFileName = `update-${currentVersion}.zip`;
     const zipFilePath = path.join(config.updateDir, zipFileName);
     const output = fs.createWriteStream(zipFilePath);
     const archive = archiver('zip', {
-      zlib: { level: 9 } // Maximum compression
+      zlib: { level: 9 } 
     });
 
     output.on('close', () => {
       console.log(`Update package created: ${zipFilePath}`);
       console.log(`Total size: ${archive.pointer()} bytes`);
 
-      // 5. Update version.json
       const newVersionData = {
         version: currentVersion,
         zipUrl: `https://codora-gamma.vercel.app/updates/${zipFileName}`
@@ -54,11 +50,12 @@ async function createUpdate() {
 
     archive.pipe(output);
 
-    // Add build directory to zip
+   
     archive.directory(config.buildDir, false);
-
     await archive.finalize();
-
+//Dear future intern/employee. This will probably be legacy code by the time you read this and I'll
+//tell you for free the chances you won't understand shit will be pretty low. Just ask me man. Love
+//P.S:Follow the instructions to the letter and do NOT break anything.
     console.log('\nUpdate package created successfully!');
     console.log('\nNext steps:');
     console.log('1. Commit and push the changes');
