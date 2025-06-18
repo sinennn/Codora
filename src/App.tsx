@@ -13,10 +13,11 @@ import SoloComplete from './Pages/SoloQuiz/SoloComplete';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom';
 import Profile from './Pages/Profile/Profile';
 import JoinRoom from './Pages/GroupQuiz/JoinRoom';
+import Report from './Pages/Report/Report'
 import { checkForUpdate } from './Services/otaUpdater';
 import { checkAndApplyPendingUpdate  } from './Services/otaUpdater';
 import { initializeUpdateListener } from './Services/otaUpdater';
-
+import { ToastProvider } from './components/ui/toast';
 
 function App() {
   useEffect(() => {
@@ -26,6 +27,7 @@ function App() {
   }, []);
 
   return (
+    <ToastProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Splash />} />
@@ -39,9 +41,11 @@ function App() {
         <Route path="/SoloSetting" element={<SoloQuizSettings />} />
         <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
         <Route path="/SoloQuiz" element={<SoloQuiz />} />
+        <Route path="/ReportBug" element={<Report />} />
         <Route path="/SoloComplete" element={<SoloComplete />} />
       </Routes>
     </BrowserRouter>
+    </ToastProvider>
   );
 }
 

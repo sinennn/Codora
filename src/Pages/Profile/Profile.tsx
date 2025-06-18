@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { User, Mail, LogOut, Trash2 } from "lucide-react";
+import { User, Mail, LogOut, Trash2, Bug } from "lucide-react";
 import { toast } from '../../components/ui/toast';
 import { ClipLoader } from 'react-spinners';
 import Footer from '../DashBoard/Footer';
 import { auth, onAuthStateChanged, signOut } from '../../../firebase'
 import {deleteUser } from 'firebase/auth';
 import useSendBack from "../../Services/sendBack";
+import {Link} from 'react-router-dom';
 
 export default function Index() {
   useSendBack();
@@ -85,7 +86,7 @@ export default function Index() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
      </div> 
 
-     <div className="mt-14 flex justify-center items-start">
+     <div className="mt-8 flex justify-center items-start">
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl pt-[60px] xl:max-w-2xl  border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
         <CardHeader className="pb-2">
           <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
@@ -192,6 +193,20 @@ export default function Index() {
                 </>
               )}
             </Button>
+
+           <Link to = "/ReportBug">
+           <div className="pb-3">
+            <Button
+                 className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-orange-500 font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                         >
+                             <>
+                  <Bug className="w-4 h-4 text-orange-500" />
+                  Report a Bug
+                </>
+                          </Button>
+                          </div>
+                          </Link>
+
 
             <Button
               onClick={handleDeleteAccount}
