@@ -59,7 +59,7 @@ export interface QuizParams {
   numberOfQuestions: number;
 }
 
-export const generateQuizQuestions = async (params: QuizParams): Promise<{questions: Question[], rawResponse: string}> => {
+export const generateQuizQuestions = async (params: QuizParams): Promise<{ questions: Question[], rawResponse: string }> => {
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -70,72 +70,97 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{questi
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-prover-v2:free",
+        model: 'deepseek/deepseek-r1-0528:free',
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { 
-            role: "user", 
-            content: `Generate ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.`
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT
+          },
+          {
+            role: 'user',
+            content: `Generate exactly ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.
+            
+            IMPORTANT: Return ONLY a valid JSON array of question objects with this exact structure:
+            [
+              {
+                "question": "Question text here",
+                "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+                "correctAnswer": 0
+              }
+            ]
+            
+            - Each question must have exactly 4 options
+            - correctAnswer must be the index of the correct option (0-3)
+            - Do not include any other text or explanations`
           }
         ]
       })
     });
 
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('OpenRouter API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData
+      });
       throw new Error(`Failed to generate quiz questions: ${response.statusText}`);
     }
 
     const data = await response.json();
-   // console.log(data)
-    const rawResponse = data.choices[0].message.content;
-    console.log(rawResponse)
+    const rawResponse = data.choices[0]?.message?.content;
+
     if (!rawResponse) {
       throw new Error('No questions generated in the response');
     }
 
-    
-    let parsedQuestions;
-    const jsonMatch = rawResponse.match(/```json\n(.*?)\n```/s);
-    
-    if (jsonMatch && jsonMatch[1]) {
+    // Clean the response to extract just the JSON
+    let jsonString = rawResponse.trim();
 
-      const jsonContent = jsonMatch[1].trim();
-      parsedQuestions = JSON.parse(jsonContent);
-    } else {
-      
-      try {
-        parsedQuestions = JSON.parse(rawResponse);
-      } catch {
+    // Remove code block markers if present
+    if (jsonString.startsWith('```')) {
+      jsonString = jsonString.replace(/^```(?:json)?\n|\n```$/g, '');
+    }
 
-        // If direct parsing fails,this should look for any JSON-like structure. God abeg
-         //10x dev writing regex😂
-        const possibleJson = rawResponse.match(/\{.*\}/s);
-       
-        if (possibleJson) {
-          parsedQuestions = JSON.parse(possibleJson[0]);
-        } else {
-          throw new Error('Could not extract valid JSON from the response');
-        }
+    // Parse the JSON
+    let questions;
+    try {
+      questions = JSON.parse(jsonString);
+    } catch (e) {
+      console.error('Error parsing JSON:', e);
+      console.log('Raw response:', rawResponse);
+      throw new Error('Could not parse the response as valid JSON');
+    }
+
+    // Validate the parsed questions
+    if (!Array.isArray(questions) || questions.length === 0) {
+      console.error('Invalid response format - expected an array of questions');
+      console.log('Raw response:', rawResponse);
+      throw new Error('Invalid response format: expected an array of questions');
+    }
+
+    // Ensure each question has the required fields
+    const validatedQuestions = questions.map((q: any, index: number) => {
+      if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctAnswer !== 'number') {
+        console.error(`Invalid question format at index ${index}:`, q);
+        throw new Error(`Invalid question format at index ${index}`);
       }
-    }
-    
-    if (!parsedQuestions || !Array.isArray(parsedQuestions.questions)) {
-      throw new Error('Invalid response format: questions array not found');
-    }
+      return q as Question;
+    });
 
     return {
-      questions: parsedQuestions.questions,
-      rawResponse: rawResponse
+      questions: validatedQuestions,
+      rawResponse: JSON.stringify(questions, null, 2)
     };
   } catch (error) {
-    console.error('Error generating questions:', error);
+    console.error('Error in generateQuizQuestions:', error);
     toast.error('Failed to generate quiz questions. Please try again.');
     throw error;
   }
 };
 
 // Mock implementation for development
-export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{questions: Question[], rawResponse: string}> => {
+export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{ questions: Question[], rawResponse: string }> => {
   console.log(params)
   return new Promise((resolve) => {
     setTimeout(() => {

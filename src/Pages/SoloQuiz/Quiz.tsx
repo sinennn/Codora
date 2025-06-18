@@ -4,7 +4,7 @@ import { CheckCircle2, XCircle, Send, ChevronLeft, ChevronRight } from "lucide-r
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "../../components/ui/button";
-import useSendBack from  '../../Services/sendBack'
+import useSendBack from '../../Services/sendBack'
 
 export default function QuizCard() {
   useSendBack();
@@ -58,7 +58,7 @@ export default function QuizCard() {
   const handleSubmitQuiz = () => {
     if (!quizSubmitted) {
       setQuizSubmitted(true);
- 
+
       let newScore = 0;
       userAnswers.forEach((answer, index) => {
         if (answer !== null && allQuestions[index].options[answer].isCorrect) {
@@ -66,7 +66,7 @@ export default function QuizCard() {
         }
       });
       setScore(newScore);
-     
+
       navigate('/SoloComplete', {
         state: {
           score: newScore,
@@ -107,7 +107,7 @@ export default function QuizCard() {
 
   return (
     <div className="relative w-full h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">
-   
+
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
@@ -128,8 +128,8 @@ export default function QuizCard() {
         className="w-full max-w-xl"
       >
         {!quizSubmitted ? (
-          <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in">
-            <CardContent className="space-y-6 pt-6 px-6">
+          <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in max-h-[80vh] flex flex-col">
+            <CardContent className="flex-1 overflow-y-auto px-6 pt-6">
               <motion.h2
                 className="text-3xl font-bold text-center text-orange-400"
                 initial={{ y: -20, opacity: 0 }}
@@ -137,9 +137,10 @@ export default function QuizCard() {
                 transition={{ delay: 0.2 }}
               >
                 {currentQuestion.question}
+                
               </motion.h2>
 
-              <div className="space-y-4">
+              <div className="space-y-4 mt-6">
                 {currentQuestion.options.map((option, index) => {
                   const isSelected = currentAnswer === index;
 
@@ -162,28 +163,27 @@ export default function QuizCard() {
             </CardContent>
 
             <CardFooter className="flex justify-between pt-4 pb-6 px-6">
-              <Button 
+              <Button
                 onClick={handlePreviousQuestion}
                 disabled={currentQuestionIndex === 0}
-                className={`px-4 py-2 rounded-xl flex items-center gap-1 ${
-                  currentQuestionIndex === 0 
-                    ? "bg-gray-700 text-gray-400" 
+                className={`px-4 py-2 rounded-xl flex items-center gap-1 ${currentQuestionIndex === 0
+                    ? "bg-gray-700 text-gray-400"
                     : "bg-gray-800 hover:bg-gray-700 text-white"
-                }`}
+                  }`}
               >
                 <ChevronLeft className="h-4 w-4" /> Previous
               </Button>
-              
+
               {currentQuestionIndex === allQuestions.length - 1 ? (
-                <Button 
+                <Button
                   onClick={handleSubmitQuiz}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl flex items-center gap-2"
                 >
-                   <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4" />
                   Submit Quiz
                 </Button>
               ) : (
-                <Button 
+                <Button
                   onClick={handleNextQuestion}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-1"
                 >
@@ -203,35 +203,35 @@ export default function QuizCard() {
               >
                 Quiz Results
               </motion.h2>
-              
+
               <div className="text-center text-2xl text-white font-bold">
                 Your Score: {score}/{allQuestions.length}
               </div>
-              
+
               <div className="space-y-6 mt-4">
                 {allQuestions.map((question, qIndex) => {
                   const userAnswer = userAnswers[qIndex];
                   //const isCorrect = userAnswer !== null && question.options[userAnswer].isCorrect;
-                  
+
                   return (
                     <div key={qIndex} className="border border-gray-700 rounded-xl p-4 bg-gray-800/50">
                       <h3 className="font-bold text-white mb-2">
                         {qIndex + 1}. {question.question}
                       </h3>
-                      
+
                       <div className="space-y-2">
                         {question.options.map((option, oIndex) => {
                           const isUserSelection = userAnswer === oIndex;
                           const isCorrectAnswer = option.isCorrect;
-                          
+
                           let bgColor = "bg-gray-700";
                           if (isUserSelection && isCorrectAnswer) bgColor = "bg-green-600/70";
                           else if (isUserSelection && !isCorrectAnswer) bgColor = "bg-red-600/70";
                           else if (isCorrectAnswer) bgColor = "bg-green-600/40";
-                          
+
                           return (
-                            <div 
-                              key={oIndex} 
+                            <div
+                              key={oIndex}
                               className={`px-3 py-2 rounded-lg ${bgColor} flex items-center`}
                             >
                               <span className="flex-1">{option.text}</span>
@@ -246,9 +246,9 @@ export default function QuizCard() {
                 })}
               </div>
             </CardContent>
-            
+
             <CardFooter className="flex justify-center pt-4 pb-6">
-              <Button 
+              <Button
                 onClick={() => navigate('/dashboard')}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl"
               >
