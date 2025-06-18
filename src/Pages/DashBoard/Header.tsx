@@ -31,7 +31,7 @@ export default function Header({ user }: { user: User }) {
           />
           <h2 className="text-3xl font-bold text-orange-400 tracking-tight whitespace-nowrap">
           <span className="text-orange-400 text-lg font-semibold ">
-          Hello, {firstName}
+          Hi, {firstName}
       </span>
           </h2>
         </div>

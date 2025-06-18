@@ -54,7 +54,7 @@ async function createUpdate() {
     archive.directory(config.buildDir, false);
     await archive.finalize();
 //Dear future intern/employee. This will probably be legacy code by the time you read this and I'll
-//tell you for free the chances you won't understand shit will be pretty low. Just ask me man. Love
+//tell you for free the chances you won't understand shit will be pretty high. Just ask me man. Love
 //P.S:Follow the instructions to the letter and do NOT break anything.
     console.log('\nUpdate package created successfully!');
     console.log('\nNext steps:');

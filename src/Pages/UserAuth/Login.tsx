@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword, 
   signInWithPopup, 
   signInWithCredential, 
+  sendPasswordResetEmail,
   GoogleAuthProvider 
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../../firebase';
@@ -75,6 +76,24 @@ export default function Login() {
       setLoading1(false);
     }
   };
+
+
+   
+const PasswordResetEmail = async () => {
+  try {
+      if (!email) {
+          window.alert('Please enter your email address');
+         return;
+      }
+     
+      await sendPasswordResetEmail(auth, email);
+      window.alert('Password reset email sent. Please check your inbox.');
+      setEmail('');
+  } catch  {
+      window.alert("Error resetting Password");
+  }
+};
+
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -173,6 +192,18 @@ export default function Login() {
               "Log In with Email"
             )}
           </motion.button>
+
+          <div className="flex justify-between items-center  text-sm">
+          <label className="text-gray-600 flex items-center">
+          <input type="checkbox" className="mr-2"/> Remember Me
+          </label>
+          <a href="#" className="hover:underline font-bold">
+            <p className="text-orange-500 " onClick={PasswordResetEmail}>
+            Forgot Password?
+            </p>
+            </a>
+        </div>
+
 
 
           <motion.button
