@@ -2,7 +2,7 @@ import axios from 'axios';
 import JSZip from 'jszip';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
-//import { App } from '@capacitor/app';
+import { App } from '@capacitor/app';
 import { Dialog } from '@capacitor/dialog';
 
 const VERSION_JSON_URL = 'https://codora-gamma.vercel.app/version.json';
@@ -95,12 +95,12 @@ export async function checkForInteractiveUpdate() {
       if (confirmResult.value) {
         const success = await downloadAndApplyUpdate(updateUrl, remoteVersion);
         if (success) {
-          await Dialog.confirm({
+          await Dialog.alert({
             title: 'Update Installed',
-            message: 'The update will apply when next the app is restarted.',
+            message: 'The app will close to apply updates!',
           });
 
-         // App.exitApp(); 
+          App.exitApp(); 
         }
       }
     } else {
