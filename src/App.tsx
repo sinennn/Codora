@@ -14,17 +14,14 @@ import WaitingRoom from './Pages/GroupQuiz/WaitingRoom';
 import Profile from './Pages/Profile/Profile';
 import JoinRoom from './Pages/GroupQuiz/JoinRoom';
 import Report from './Pages/Report/Report'
-import { checkForUpdate } from './Services/otaUpdater';
-import { checkAndApplyPendingUpdate  } from './Services/otaUpdater';
-import { initializeUpdateListener } from './Services/otaUpdater';
+import { checkForInteractiveUpdate } from './Services/otaUpdater';
+
 import { ToastProvider } from './components/ui/toast';
 
 function App() {
   useEffect(() => {
-    checkForUpdate(); 
-    checkAndApplyPendingUpdate();
-    initializeUpdateListener();
-  }, []);
+    checkForInteractiveUpdate(); 
+     }, []);
 
   return (
     <ToastProvider>
