@@ -6,14 +6,13 @@ import { execSync } from 'child_process';
 // Configuration
 const config = {
   buildCommand: 'npm run build',
-  buildDir: 'dist', 
+  buildDir: 'dist',  
   updateDir: 'public/updates',
   versionFile: 'public/version.json'
 };
 
 async function createUpdate() {
   try {
-
     console.log('Building project...');
     execSync(config.buildCommand, { stdio: 'inherit' });
 
@@ -28,11 +27,11 @@ async function createUpdate() {
     const zipFilePath = path.join(config.updateDir, zipFileName);
     const output = fs.createWriteStream(zipFilePath);
     const archive = archiver('zip', {
-      zlib: { level: 9 } 
+      zlib: { level: 9 }
     });
 
     output.on('close', () => {
-      console.log(`Update package created: ${zipFilePath}`);
+      console.log(`\nUpdate package created: ${zipFilePath}`);
       console.log(`Total size: ${archive.pointer()} bytes`);
 
       const newVersionData = {
@@ -50,12 +49,33 @@ async function createUpdate() {
 
     archive.pipe(output);
 
-   
-    archive.directory(config.buildDir, false);
+    // Get all files in the dist directory
+    const files = [];
+    const scanDir = (dir, baseDir = '') => {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        const relativePath = baseDir ? `${baseDir}/${entry.name}` : entry.name;
+        if (entry.isDirectory()) {
+          scanDir(fullPath, relativePath);
+        } else {
+          files.push({
+            path: fullPath,
+            name: relativePath
+          });
+        }
+      }
+    };
+
+    scanDir(config.buildDir);
+
+    // Add files to archive with relative paths
+    for (const file of files) {
+      archive.file(file.path, { name: file.name });
+    }
+
     await archive.finalize();
-//Dear future intern/employee. This will probably be legacy code by the time you read this and I'll
-//tell you for free the chances you won't understand shit will be pretty high. Just ask me man. Love
-//P.S:Follow the instructions to the letter and do NOT break anything.
+
     console.log('\nUpdate package created successfully!');
     console.log('\nNext steps:');
     console.log('1. Commit and push the changes');
@@ -68,4 +88,4 @@ async function createUpdate() {
   }
 }
 
-createUpdate(); 
+createUpdate();

@@ -28,7 +28,7 @@ export async function checkForUpdate() {
     console.log('Remote version:', remoteVersion);
 
     if (compareVersions(remoteVersion, currentVersion) > 0) {
-      
+
       downloadUpdateInBackground(updateUrl, remoteVersion);
     } else {
       console.log('App is up to date.');
@@ -72,7 +72,6 @@ export async function getUpdateStatus(): Promise<UpdateStatus | null> {
 
 async function downloadUpdateInBackground(updateUrl: string, newVersion: string) {
   try {
-    
     await setUpdateStatus({
       version: newVersion,
       lastCheck: Date.now(),
@@ -87,7 +86,7 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
         recursive: true
       });
     } catch {
-      // Directory might not exist, that's okay...that sounds gay
+      // Directory might not exist, that's okay
     }
 
     await Filesystem.mkdir({
@@ -99,14 +98,22 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
     const response = await axios.get(updateUrl, { responseType: 'arraybuffer' });
     const zip = await JSZip.loadAsync(response.data);
 
-    
-    const filePromises = Object.keys(zip.files).map(async (filename) => {
-      const file = zip.files[filename];
-      if (file.dir) return;
+    // Process files while maintaining directory structure
+    const filePromises = Object.entries(zip.files).map(async ([relativePath, file]) => {
+      if (file.dir) {
+        // Create directory
+        await Filesystem.mkdir({
+          path: `${UPDATE_DIRECTORY}/${relativePath}`,
+          directory: Directory.Data,
+          recursive: true
+        });
+        return;
+      }
 
+      // Get file data and write it
       const fileData = await file.async('base64');
       await Filesystem.writeFile({
-        path: `${UPDATE_DIRECTORY}/${filename}`,
+        path: `${UPDATE_DIRECTORY}/${relativePath}`,
         data: fileData,
         directory: Directory.Data,
         recursive: true
@@ -129,7 +136,6 @@ async function downloadUpdateInBackground(updateUrl: string, newVersion: string)
 
   } catch (error) {
     console.error('Background update download failed:', error);
-    // Resets update status on failure...Hope thisfunction never gets called
     await setUpdateStatus({
       version: newVersion,
       lastCheck: Date.now(),
@@ -148,7 +154,7 @@ export async function initializeUpdateListener() {
         try {
           // Apply the update
           await saveCurrentVersion(updateStatus.version);
-          
+
           // Reset update status
           await setUpdateStatus({
             version: updateStatus.version,
@@ -173,12 +179,12 @@ export async function initializeUpdateListener() {
 // Modify checkAndApplyPendingUpdate to remove the restart
 export async function checkAndApplyPendingUpdate() {
   const updateStatus = await getUpdateStatus();
-  
+
   if (updateStatus?.updateDownloaded) {
     try {
       // Apply the update
       await saveCurrentVersion(updateStatus.version);
-      
+
       // Reset update status
       await setUpdateStatus({
         version: updateStatus.version,
@@ -192,7 +198,7 @@ export async function checkAndApplyPendingUpdate() {
         key: 'server_base_path',
         value: `${UPDATE_DIRECTORY}`
       });
-      
+
       // Note: Update will be applied when user closes the app
       // No immediate restart needed
     } catch (error) {
