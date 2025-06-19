@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import {useState, useEffect} from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Start from '/assets/Start.png';
@@ -6,25 +6,45 @@ import { auth } from '../../../firebase'
 import { ClipLoader } from 'react-spinners';
 
 const Splash = () => {
+  //TODO: Disable entrance if no internet
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
-  const cast = import.meta.env.VITE_CAST;
+  const [network, noNetwork] = useState(false)
+   const cast = import.meta.env.VITE_CAST;
 console.log(cast);
 
 useEffect(() => {
- setLoading(true)
-  const timer = setTimeout(() => {
-    auth.onAuthStateChanged((currentUser) => {
-      if (currentUser) {
-        navigate('/dashboard'); 
-      } else {
-        navigate('/login'); 
-      }
-    });
-  }, 2500);
+  const handleNetworkChange = () => {
+    noNetwork(!navigator.onLine);
+  };
 
-  return () => clearTimeout(timer); 
+  noNetwork(!navigator.onLine); // Initial check
+
+  window.addEventListener('online', handleNetworkChange);
+  window.addEventListener('offline', handleNetworkChange);
+
+  if (navigator.onLine) {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      auth.onAuthStateChanged((currentUser) => {
+        if (currentUser) {
+          navigate('/dashboard');
+        } else {
+          navigate('/login');
+        }
+      });
+    }, 2500);
+    return () => clearTimeout(timer);
+  } else {
+    setLoading(false); 
+  }
+
+  return () => {
+    window.removeEventListener('online', handleNetworkChange);
+    window.removeEventListener('offline', handleNetworkChange);
+  };
 }, [navigate]);
+
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
@@ -60,11 +80,18 @@ useEffect(() => {
         >
           Codora
           <div className="pt-30 flex items-center justify-center ">
-          {loading ? (
-          <ClipLoader color="#F97316" size={22} cssOverride={{ borderWidth: '4px' }} />
+          {network ? (
+          <p className="text-lg text-orange-400 font-medium">Looks like you're offline 🥲</p>
         ) : (
           <ClipLoader color="#F97316" size={22} cssOverride={{ borderWidth: '4px' }} />
         )}
+
+      {loading ? (
+          <p ></p>
+        ) : (
+          <p></p>
+        )}
+
           </div>
         </motion.h1>
       </motion.div>

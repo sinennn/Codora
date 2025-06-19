@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import logo from '/assets/Start.png';
-
+import {Link} from "react-router-dom";
 
 interface User {
   displayName?: string;
@@ -40,7 +40,7 @@ export default function Header({ user }: { user: User }) {
 
         </div>
 
-    
+    <Link to = "/profile">
         {user?.photoURL ? (
   <motion.img 
     src={user.photoURL}
@@ -57,6 +57,7 @@ export default function Header({ user }: { user: User }) {
     {firstName[0]}
   </div>
 )}
+   </Link>
     </div>
   </motion.header>
   );
