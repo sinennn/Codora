@@ -197,11 +197,11 @@ const PasswordResetEmail = async () => {
           <label className="text-gray-600 flex items-center">
           <input type="checkbox" className="mr-2"/> Remember Me
           </label>
-          <a href="#" className="hover:underline font-bold">
+          <p className="hover:underline font-bold">
             <p className="text-orange-500 " onClick={PasswordResetEmail}>
             Forgot Password?
             </p>
-            </a>
+            </p>
         </div>
 
 

@@ -49,7 +49,8 @@ const [participants, setParticipants] = useState(false);
               username: username || "Host",
               participants,
               questions,
-              quizTime
+              quizTime,
+              replace: true,
             }
           });
         }

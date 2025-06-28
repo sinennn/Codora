@@ -54,8 +54,10 @@ export default function JoinRoom() {
           questions: roomData.questions,
           quizTime: roomData.quizTime,
           username: displayName,
-          isHost: false
+          isHost: false,
+          replace: true,
         }
+      
       });
     } catch (error) {
       console.error('Error joining room:', error);

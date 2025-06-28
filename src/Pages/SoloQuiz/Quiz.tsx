@@ -72,7 +72,8 @@ export default function QuizCard() {
           score: newScore,
           allQuestions,
           userAnswers
-        }
+        },
+        replace: true,
       });
     }
   };

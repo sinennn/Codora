@@ -87,7 +87,7 @@ export default function Index() {
      </div> 
 
      <div className="mt-8 flex justify-center items-start">
-      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl pt-[60px] xl:max-w-2xl  border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl pt-[40px] xl:max-w-2xl  border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
         <CardHeader className="pb-2">
           <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
            Profile
@@ -97,8 +97,8 @@ export default function Index() {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6 pt-4">
-          <div className="flex flex-col items-center space-y-4">
+        <CardContent className="space-y-6 ">
+          <div className="flex flex-col items-center space-y-1">
             <div className="relative">
             <div className="w-24 h-24 rounded-full bg-gray-700 border-2 border-gray-600 overflow-hidden flex items-center justify-center">
   {profilePic ? (

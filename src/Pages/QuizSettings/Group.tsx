@@ -111,10 +111,10 @@ export default function Index() {
         }
       });
        
-      toast.success(`Room created! Share code: ${roomCode}`);
+      console.log(`Room created! Share code: ${roomCode}`);
     } catch (error) {
       console.error('Error creating room:', error);
-      toast.error(`Failed to create room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.log(`Failed to create room: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
        isSpinning(false);
     }

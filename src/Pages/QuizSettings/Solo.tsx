@@ -82,10 +82,10 @@ export default function Index() {
         }
       });
        
-      toast.success(`Quiz generated successfully! ${questions.length} questions ready.`);
+      console.log(`Quiz generated successfully! ${questions.length} questions ready.`);
     } catch (error) {
       console.error('Error generating quiz:', error);
-      toast.error(`Failed to generate quiz: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Network Error, please try again`);
       isSpinning(false);
     } finally {
          isSpinning(false);
