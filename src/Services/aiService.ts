@@ -12,6 +12,8 @@ Rules:
 5. You may use trick questions or overly complex wording
 6. Ensure options are plausible but clearly differentiable
 7. Maintain consistent difficulty across questions
+8.The quesions must be written only in the english language, nothing else
+9.Only a JSON must be returned; exclude thinking process from response
 
 Question Structure:
 - Question text should be concise and direct, trick questions permitted
@@ -140,6 +142,7 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
     }
 
     // Ensure each question has the required fields
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const validatedQuestions = questions.map((q: any, index: number) => {
       if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctAnswer !== 'number') {
         console.error(`Invalid question format at index ${index}:`, q);

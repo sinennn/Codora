@@ -97,7 +97,7 @@ export async function checkForInteractiveUpdate() {
         if (success) {
           await Dialog.alert({
             title: 'Update Installed',
-            message: 'The app will close to apply updates!',
+            message: 'The app will close to apply updates',
           });
 
           App.exitApp(); 

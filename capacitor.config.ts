@@ -4,10 +4,13 @@ const config: CapacitorConfig = {
   appId: 'app.vercel.codora',
   appName: 'Codora',
   webDir: 'dist',
-  // "server": {
-  //   "url": "http://192.168.167.161:5173/",
-  //   "cleartext": true
-  // },
+  server: {
+    androidScheme: 'https',
+    allowNavigation: [
+      'openrouter.ai',
+    ],
+    cleartext: true
+  },
   plugins: {
     GoogleAuth: {
       scopes: ["profile", "email"],
@@ -15,6 +18,9 @@ const config: CapacitorConfig = {
          },
          "android": {
           "needPermission": true
+        },
+        Network: {
+          enabled: true
         }
   }
 };
