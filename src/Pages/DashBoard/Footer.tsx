@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import Home from '/assets/home.png';
+import LeaderBoard from '/assets/Leaderboard.png';
 import User from '/assets/user.png';
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Home" },
+  { to: "/leaderboard", icon: LeaderBoard, label: "LeaderBoard" },
   { to: "/profile", icon: User, label: "Profile" },
 ];
 
@@ -31,7 +33,7 @@ export default function FooterNav() {
             <img
               src={icon}
               alt={label}
-              className="w-[22px] h-[22px] mb-1"
+              className="w-[24px] h-[24px] mb-1"
             />
             <span className={`text-xs font-medium ${isActive ? 'text-orange-500' : 'text-white'}`}>
               {label}

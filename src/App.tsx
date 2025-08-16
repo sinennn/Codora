@@ -13,7 +13,8 @@ import SoloComplete from './Pages/SoloQuiz/SoloComplete';
 import WaitingRoom from './Pages/GroupQuiz/WaitingRoom';
 import Profile from './Pages/Profile/Profile';
 import JoinRoom from './Pages/GroupQuiz/JoinRoom';
-import Report from './Pages/Report/Report'
+import Report from './Pages/Report/Report';
+import LeaderBoard from './Pages/LeaderBoard/Leaderboard';
 import { checkForInteractiveUpdate } from './Services/otaUpdater';
 
 import { ToastProvider } from './components/ui/toast';
@@ -40,6 +41,7 @@ function App() {
         <Route path="/SoloQuiz" element={<SoloQuiz />} />
         <Route path="/ReportBug" element={<Report />} />
         <Route path="/SoloComplete" element={<SoloComplete />} />
+        <Route path="/leaderboard" element={<LeaderBoard />}/>
       </Routes>
     </BrowserRouter>
     </ToastProvider>

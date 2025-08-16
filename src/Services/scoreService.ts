@@ -1,10 +1,18 @@
 import { db } from '../../firebase';
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, increment, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 
 interface ScoreData {
     totalScore: number;
     username: string;
     email: string;
+}
+
+export interface LeaderboardEntry {
+    id: string;
+    name: string;
+    score: number;
+    rank: number;
+    change?: 'up' | 'down' | 'same'; 
 }
 
 export const updateUserScore = async (
@@ -61,6 +69,36 @@ export const getUserScore = async (
         return null;
     } catch (error) {
         console.error('Error getting user score:', error);
+        throw error;
+    }
+};
+
+export const getTopScores = async (count: number = 10): Promise<LeaderboardEntry[]> => {
+    try {
+        const scoresRef = collection(db, 'userScores');
+        const q = query(
+            scoresRef,
+            orderBy('totalScore', 'desc'),
+            limit(count)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const leaderboard: LeaderboardEntry[] = [];
+        let rank = 1;
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            leaderboard.push({
+                id: doc.id,
+                name: data.username || 'Anonymous',
+                score: data.totalScore || 0,
+                rank: rank++
+            });
+        });
+
+        return leaderboard;
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
         throw error;
     }
 };
