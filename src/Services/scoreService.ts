@@ -12,6 +12,7 @@ export interface LeaderboardEntry {
     name: string;
     score: number;
     rank: number;
+    photoURL?: string;
     change?: 'up' | 'down' | 'same'; 
 }
 

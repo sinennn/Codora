@@ -88,7 +88,7 @@ export default function Index() {
 
      <div className="mt-8 flex justify-center items-start">
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl pt-[40px] xl:max-w-2xl  border-gray-700 bg-gray-900/80 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] border animate-scale-in">
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-1">
           <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
            Profile
           </CardTitle>
@@ -97,7 +97,7 @@ export default function Index() {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6 ">
+        <CardContent className="space-y-4 ">
           <div className="flex flex-col items-center space-y-1">
             <div className="relative">
             <div className="w-24 h-24 rounded-full bg-gray-700 border-2 border-gray-600 overflow-hidden flex items-center justify-center">
@@ -206,6 +206,22 @@ export default function Index() {
                           </Button>
                           </div>
                           </Link>
+
+                      
+           <a href ="https://x.com/_codora_xyz">
+           <div className="pb-2">
+              <Button
+                className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                </svg>
+                Follow us on Twitter
+        
+               </Button>
+            </div>
+            </a>
 
 
             <Button

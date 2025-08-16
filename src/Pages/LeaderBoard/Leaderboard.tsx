@@ -57,7 +57,7 @@ export default function Leaderboard() {
   const otherUsers = leaderboardData.slice(3);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden px-4 sm:px-8 pb-24">
+    <div className="w-screen min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden px-4 sm:px-8 pb-30">
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-1/4 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -176,7 +176,7 @@ export default function Leaderboard() {
               transition={{ delay: 0.4 + (index * 0.05) }}
               className="group flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-colors border border-white/5 hover:border-white/10"
             >
-              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-sm font-medium text-gray-400">
                   {user.rank}
                 </div>
