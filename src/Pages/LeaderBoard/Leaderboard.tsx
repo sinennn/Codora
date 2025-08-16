@@ -77,7 +77,7 @@ export default function Leaderboard() {
             Leaderboard
           </h1>
           <p className="text-gray-400 max-w-md">
-            Top performers of the week. Climb the ranks by solving more challenges!
+            Top performers of the week. Climb the ranks by tanking more quizzes🤝!
           </p>
         </motion.div>
       </header>
