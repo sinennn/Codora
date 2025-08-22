@@ -79,7 +79,7 @@ export default function Index() {
   }
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden px-4 sm:px-8">
+    <div className="w-screen h-screen flex flex-col bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden px-4 sm:px-12">
 
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-2 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
