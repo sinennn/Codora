@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import Splash from './Pages/SplashScreen/Splash';
 import SignUp from './Pages/UserAuth/Signup';
@@ -16,34 +16,65 @@ import JoinRoom from './Pages/GroupQuiz/JoinRoom';
 import Report from './Pages/Report/Report';
 import LeaderBoard from './Pages/LeaderBoard/Leaderboard';
 import { checkForInteractiveUpdate } from './Services/otaUpdater';
-
+import Error from './Pages/Error/Error';
 import { ToastProvider } from './components/ui/toast';
 
 function App() {
-  useEffect(() => {
-    checkForInteractiveUpdate(); 
-     }, []);
+  const [isMobile, setIsMobile] = useState(true);
 
+  useEffect(() => {
+    checkForInteractiveUpdate();
+    
+    // Check if user is on a mobile device
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isMobileDevice = /android|iphone|mobile|windows phone|mobile/i.test(userAgent);
+    setIsMobile(isMobileDevice);
+
+    // Prevent navigation if not on mobile
+    if (!isMobileDevice) {
+      window.history.pushState(null, '', window.location.href);
+      window.onpopstate = () => {
+        window.history.pushState(null, '', window.location.href);
+      };
+    }
+  }, []);
+
+  // If not on mobile, show Error component for all routes
+  if (!isMobile) {
+    return (
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
+    );
+  }
+
+  // Normal routing for mobile devices
   return (
     <ToastProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Splash />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/JoinRoom" element={<JoinRoom />} />
-        <Route path="/WaitingRoom" element={<WaitingRoom />} />
-        <Route path="/Group-Quiz" element={<GroupQuiz />} />
-        <Route path="/SoloSetting" element={<SoloQuizSettings />} />
-        <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
-        <Route path="/SoloQuiz" element={<SoloQuiz />} />
-        <Route path="/ReportBug" element={<Report />} />
-        <Route path="/SoloComplete" element={<SoloComplete />} />
-        <Route path="/leaderboard" element={<LeaderBoard />}/>
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/splash" replace />} />
+          <Route path="/splash" element={<Splash />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/JoinRoom" element={<JoinRoom />} />
+          <Route path="/WaitingRoom" element={<WaitingRoom />} />
+          <Route path="/Group-Quiz" element={<GroupQuiz />} />
+          <Route path="/SoloSetting" element={<SoloQuizSettings />} />
+          <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
+          <Route path="/SoloQuiz" element={<SoloQuiz />} />
+          <Route path="/ReportBug" element={<Report />} />
+          <Route path="/SoloComplete" element={<SoloComplete />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
+          <Route path="*" element={<Navigate to="/splash" replace />} />
+        </Routes>
+      </BrowserRouter>
     </ToastProvider>
   );
 }

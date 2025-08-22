@@ -6,7 +6,7 @@ import { auth } from '../../../firebase'
 import { ClipLoader } from 'react-spinners';
 
 const Splash = () => {
-  //TODO: Disable entrance if no internet
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const [network, noNetwork] = useState(false)
