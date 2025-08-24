@@ -5,7 +5,7 @@ import { Preferences } from '@capacitor/preferences';
 import { App } from '@capacitor/app';
 import { Dialog } from '@capacitor/dialog';
 
-const VERSION_JSON_URL = 'https://codora-gamma.vercel.app/version.json';
+const VERSION_JSON_URL = 'https://gocodora.vercel.app/version.json';
 const BUILD_TIME_VERSION = '1.0.0';
 const UPDATE_DIRECTORY = 'capacitor_data';
 
