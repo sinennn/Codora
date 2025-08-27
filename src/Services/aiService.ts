@@ -42,9 +42,11 @@ Return questions in JSON format with the following structure:
     {
       question: "Question text",
       options: ["Option A", "Option B", "Option C", "Option D"],
-      correctAnswer: 0 // index of correct answer (0-3)
+      correctAnswer: 0 // index of correct answer (0-3),
+      explanation: Within the output, provide a minimal but crystal clear explanation of the answer
     }
   ]
+
 }
 `;
 
@@ -52,6 +54,7 @@ export interface Question {
   question: string;
   options: string[];
   correctAnswer: number;
+  explanation: string;
 }
 
 export interface QuizParams {
@@ -72,7 +75,7 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-r1-0528:free',
+        model: 'openai/gpt-oss-20b:free',
         messages: [
           {
             role: 'system',
@@ -88,12 +91,13 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
                 "question": "Question text here",
                 "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
                 "correctAnswer": 0
+                "explanation":"minimal and short but crystal clear explanation of the question's correct answer"
               }
             ]
             
             - Each question must have exactly 4 options
             - correctAnswer must be the index of the correct option (0-3)
-            - Do not include any other text or explanations`
+            - Within the output, provide a minimal but crystal clear explanation of the answer`
           }
         ]
       })
@@ -116,15 +120,13 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
       throw new Error('No questions generated in the response');
     }
 
-    // Clean the response to extract just the JSON
     let jsonString = rawResponse.trim();
+    console.log(jsonString)
 
-    // Remove code block markers if present
     if (jsonString.startsWith('```')) {
       jsonString = jsonString.replace(/^```(?:json)?\n|\n```$/g, '');
     }
 
-    // Parse the JSON
     let questions;
     try {
       questions = JSON.parse(jsonString);
@@ -134,21 +136,34 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
       throw new Error('Could not parse the response as valid JSON');
     }
 
-    // Validate the parsed questions
     if (!Array.isArray(questions) || questions.length === 0) {
       console.error('Invalid response format - expected an array of questions');
       console.log('Raw response:', rawResponse);
       throw new Error('Invalid response format: expected an array of questions');
     }
 
-    // Ensure each question has the required fields
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const validatedQuestions = questions.map((q: any, index: number) => {
+   const validatedQuestions = questions.map((q: any, index: number) => {
+     
+      console.log(`Processing question ${index}:`, JSON.stringify(q, null, 2));
+      
       if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctAnswer !== 'number') {
         console.error(`Invalid question format at index ${index}:`, q);
         throw new Error(`Invalid question format at index ${index}`);
       }
-      return q as Question;
+
+      // Ensure explanation exists and is a non-empty string
+      if (!q.explanation || typeof q.explanation !== 'string' || q.explanation.trim() === '') {
+        console.warn(`Missing or invalid explanation for question ${index}, generating default`);
+        q.explanation = `The correct answer is option ${String.fromCharCode(65 + q.correctAnswer)} because it best matches the question requirements.`;
+      }
+
+      return {
+        question: q.question,
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation
+      } as Question;
     });
 
     return {
@@ -176,7 +191,8 @@ export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{ q
             "C. Display graphics",
             "D. Connect to internet"
           ],
-          correctAnswer: 1
+          correctAnswer: 1,
+          explanation: "The CPU is the “brain” of the computer. Its main job is to fetch, decode, and execute instructions. In other words, it processes instructions."
         },
         {
           question: "Which data structure uses LIFO principle?",
@@ -186,7 +202,8 @@ export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{ q
             "C. Array",
             "D. Linked List"
           ],
-          correctAnswer: 1
+          correctAnswer: 1,
+          explanation: "A stack follows the Last In, First Out (LIFO) principle where the last item added is the first one removed (like a stack of plates)."
         }
       ];
       const mockRawResponse = "This is a mock raw response from the AI";

@@ -75,7 +75,8 @@ export default function Index() {
             options: q.options.map((option, index) => ({
               text: option,
               isCorrect: index === q.correctAnswer
-            }))
+            })),
+            explanation: q.explanation
           })),
           quizTime: quizDuration * 60,
           rawResponse: rawResponse

@@ -368,6 +368,10 @@
     "name": "Java"
   },
   {
+    "id": 215,
+    "name": "Java Swing"
+  },
+  {
     "id": 93,
     "name": "JavaScript"
   },
@@ -854,37 +858,5 @@
   {
     "id": 214,
     "name": "WPF"
-  },
-  {
-    "id": 215,
-    "name": "Xamarin"
-  },
-  {
-    "id": 216,
-    "name": "XML"
-  },
-  {
-    "id": 217,
-    "name": "YAML"
-  },
-  {
-    "id": 218,
-    "name": "Yarn"
-  },
-  {
-    "id": 219,
-    "name": "Yii"
-  },
-  {
-    "id": 220,
-    "name": "Zend"
-  },
-  {
-    "id": 221,
-    "name": "Zig"
-  },
-  {
-    "id": 222,
-    "name": "ZooKeeper"
   }
 ]

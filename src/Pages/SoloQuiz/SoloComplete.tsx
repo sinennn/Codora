@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CardContent, CardFooter } from "../../components/ui/card";
@@ -44,6 +45,7 @@ export default function SoloComplete() {
   
   
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   {scoreSaved && 
     console.log("Score Uploaded Succesfully");
   }
@@ -140,10 +142,18 @@ export default function SoloComplete() {
                             <span className="flex-1">{option.text}</span>
                             {isUserSelection && isCorrectAnswer && <CheckCircle2 className="h-5 w-5 text-green-300" />}
                             {isUserSelection && !isCorrectAnswer && <XCircle className="h-5 w-5 text-red-300" />}
+                           
                           </div>
+                        
                         );
                       })}
                     </div>
+                    {question.explanation && (
+                      <div className="mt-3 p-3 bg-orange-700/50 rounded-lg">
+                        <h4 className="font-semibold text-orange-300 mb-1">Explanation:</h4>
+                        <p className="text-gray-200 text-sm">{question.explanation}</p>
+                      </div>
+                    )}
                   </div>
                 );
               })}

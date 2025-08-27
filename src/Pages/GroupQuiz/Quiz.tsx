@@ -142,7 +142,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
           isCorrect,
         };
       });
-      //Question
+  
       return {
         username: (entry as { username: string }).username,
         score: participantScore,
@@ -164,6 +164,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
       const userAnswer = userAnswers[qIndex];
       return {
         question: question.question,
+        explanation: question.explanation || 'No explanation available',
         options: question.options.map((option, oIndex) => {
           const isUserSelection = userAnswer === oIndex;
           const isCorrectAnswer = option.isCorrect;
@@ -230,7 +231,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
                 <h3 className="font-bold text-white mb-2">
                   {qIndex + 1}. {correction.question}
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-2 mb-3">
                   {correction.options.map((option, oIndex) => {
                     let bgColor = "bg-gray-700";
                     if (option.isUserSelection && option.isCorrectAnswer) bgColor = "bg-green-600/70";
@@ -243,12 +244,18 @@ const GroupQuiz: React.FC = (): JSX.Element => {
                         {option.isUserSelection && option.isCorrectAnswer && <CheckCircle2 className="h-5 w-5 text-green-300" />}
                         {option.isUserSelection && !option.isCorrectAnswer && <XCircle className="h-5 w-5 text-red-300" />}
                       </div>
-                    );
+                   );
                   })}
                 </div>
+                {correction.explanation && (
+                      <div className="mt-3 p-3 bg-orange-700/50 rounded-lg">
+                        <h4 className="font-semibold text-orange-300 mb-1">Explanation:</h4>
+                        <p className="text-gray-200 text-sm">{correction.explanation}</p>
+                     </div>
+                    )}
               </div>
             ))}
-          </div>
+          </div>   
 
           <div className="flex justify-center pt-2 pb-6">
             <Button onClick={() => navigate('/dashboard')} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl">

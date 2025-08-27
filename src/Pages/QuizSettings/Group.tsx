@@ -90,7 +90,8 @@ export default function Index() {
         options: q.options.map((option, index) => ({
           text: option,
           isCorrect: index === q.correctAnswer
-        }))
+        })),
+        explanation: q.explanation
       }));
 
       await roomService.createRoom({
@@ -115,6 +116,7 @@ export default function Index() {
     } catch (error) {
       console.error('Error creating room:', error);
       console.log(`Failed to create room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Network Error, please try again`);
     } finally {
        isSpinning(false);
     }
