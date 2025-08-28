@@ -66,38 +66,38 @@ export interface QuizParams {
 
 export const generateQuizQuestions = async (params: QuizParams): Promise<{ questions: Question[], rawResponse: string }> => {
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${AI_API_KEY}`,
-        'HTTP-Referer': import.meta.env.VITE_SITE_URL || 'http://localhost:5173',
-        'X-Title': import.meta.env.VITE_SITE_NAME || 'Codora',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-goog-api-key': AI_API_KEY as string,
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b:free',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT
-          },
+            contents: [
           {
             role: 'user',
-            content: `Generate exactly ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.
-            
-            IMPORTANT: Return ONLY a valid JSON array of question objects with this exact structure:
-            [
+            parts: [
               {
-                "question": "Question text here",
-                "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-                "correctAnswer": 0
-                "explanation":"minimal and short but crystal clear explanation of the question's correct answer"
+                text:
+`${SYSTEM_PROMPT}
+
+Generate exactly ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.
+
+IMPORTANT: Return ONLY a valid JSON array of question objects with this exact structure:
+[
+  {
+    "question": "Question text here",
+    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+    "correctAnswer": 0,
+    "explanation": "minimal and short but crystal clear explanation of the question's correct answer"
+  }
+]
+
+- Each question must have exactly 4 options
+- correctAnswer must be the index of the correct option (0-3)
+- Within the output, provide a minimal but crystal clear explanation of the answer`
               }
             ]
-            
-            - Each question must have exactly 4 options
-            - correctAnswer must be the index of the correct option (0-3)
-            - Within the output, provide a minimal but crystal clear explanation of the answer`
           }
         ]
       })
@@ -105,7 +105,7 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('OpenRouter API Error:', {
+      console.error('Gemini API Error:', {
         status: response.status,
         statusText: response.statusText,
         errorData
@@ -114,26 +114,40 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
     }
 
     const data = await response.json();
-    const rawResponse = data.choices[0]?.message?.content;
+    const rawResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!rawResponse) {
       throw new Error('No questions generated in the response');
     }
 
     let jsonString = rawResponse.trim();
-    console.log(jsonString)
+    console.log(jsonString);
 
     if (jsonString.startsWith('```')) {
       jsonString = jsonString.replace(/^```(?:json)?\n|\n```$/g, '');
     }
 
-    let questions;
+    let questions: unknown;
+    let parsed: unknown;
     try {
-      questions = JSON.parse(jsonString);
+      parsed = JSON.parse(jsonString);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error('Error parsing JSON:', e);
-      console.log('Raw response:', rawResponse);
-      throw new Error('Could not parse the response as valid JSON');
+           const arrayMatch = jsonString.match(/\[([\s\S]*?)\]/);
+      if (arrayMatch) {
+        try {
+          parsed = JSON.parse(arrayMatch[0]);
+        } catch (inner) {
+          console.error('Failed to parse extracted JSON array:', inner);
+        }
+      }
+    }
+
+    if (Array.isArray(parsed)) {
+      questions = parsed;
+    } else if (parsed && typeof parsed === 'object' && 'questions' in (parsed as Record<string, unknown>)) {
+      const q = (parsed as Record<string, unknown>).questions;
+      if (Array.isArray(q)) questions = q;
     }
 
     if (!Array.isArray(questions) || questions.length === 0) {
@@ -152,7 +166,6 @@ export const generateQuizQuestions = async (params: QuizParams): Promise<{ quest
         throw new Error(`Invalid question format at index ${index}`);
       }
 
-      // Ensure explanation exists and is a non-empty string
       if (!q.explanation || typeof q.explanation !== 'string' || q.explanation.trim() === '') {
         console.warn(`Missing or invalid explanation for question ${index}, generating default`);
         q.explanation = `The correct answer is option ${String.fromCharCode(65 + q.correctAnswer)} because it best matches the question requirements.`;
