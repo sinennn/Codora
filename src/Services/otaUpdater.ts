@@ -1,5 +1,6 @@
 import axios from 'axios';
 import JSZip from 'jszip';
+import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
 import { App } from '@capacitor/app';
@@ -87,21 +88,26 @@ export async function checkForInteractiveUpdate() {
     const updateUrl = response.data.zipUrl;
 
     if (compareVersions(remoteVersion, currentVersion) > 0) {
-      const confirmResult = await Dialog.confirm({
-        title: 'Update Available',
-        message: `A new version  is available. Do you want to download and apply it now?`,
-      });
+      if (Capacitor.isNativePlatform()) {
+         const confirmResult = await Dialog.confirm({
+          title: 'Update Available',
+          message: `A new version is available. Do you want to download and apply it now?`,
+        });
 
-      if (confirmResult.value) {
-        const success = await downloadAndApplyUpdate(updateUrl, remoteVersion);
-        if (success) {
-          await Dialog.alert({
-            title: 'Update Installed',
-            message: 'The app will close to apply updates',
-          });
+        if (confirmResult.value) {
+          const success = await downloadAndApplyUpdate(updateUrl, remoteVersion);
+          if (success) {
+            await Dialog.alert({
+              title: 'Update Installed',
+              message: 'The app will close to apply updates',
+            });
 
-          App.exitApp(); 
+            App.exitApp();
+          }
         }
+      } else {
+         console.log('Updating silently on web...');
+        await downloadAndApplyUpdate(updateUrl, remoteVersion);
       }
     } else {
       console.log('App is up to date.');
