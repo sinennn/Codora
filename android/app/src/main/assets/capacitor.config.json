@@ -3,7 +3,11 @@
 	"appName": "Codora",
 	"webDir": "dist",
 	"server": {
-		"url": "http://192.168.56.1:3000"
+		"androidScheme": "https",
+		"allowNavigation": [
+			"openrouter.ai"
+		],
+		"cleartext": true
 	},
 	"plugins": {
 		"GoogleAuth": {
