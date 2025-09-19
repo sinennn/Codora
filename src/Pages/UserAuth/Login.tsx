@@ -53,13 +53,15 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GoogleAuth.initialize(
-      {
-        // clientId: '459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com',
-        // scopes: ['profile', 'email'],
-        // grantOfflineAccess: true,
-      }
-    );
+    GoogleAuth.initialize({
+      clientId: '459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true,
+    }).then(() => {
+      console.log('Google Auth initialized successfully');
+    }).catch(error => {
+      console.error('Google Auth initialization error:', error);
+    });
   }, []);
 
   const handleEmailLogin = async () => {

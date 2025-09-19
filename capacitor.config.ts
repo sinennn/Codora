@@ -15,13 +15,16 @@ const config: CapacitorConfig = {
     GoogleAuth: {
       scopes: ["profile", "email"],
       serverClientId: '459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com',
-         },
-         "android": {
-          "needPermission": true
-        },
-        Network: {
-          enabled: true
-        }
+      forceCodeForRefreshToken: true,
+      webClientId: '459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com',
+      androidClientId: '459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com'
+    },
+    android: {
+      needPermission: true
+    },
+    Network: {
+      enabled: true
+    }
   }
 };
 

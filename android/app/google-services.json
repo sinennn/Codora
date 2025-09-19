@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "459099093980",
+    "firebase_url": "https://codora-9ad8b-default-rtdb.firebaseio.com",
+    "project_id": "codora-9ad8b",
+    "storage_bucket": "codora-9ad8b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459099093980:android:1b089fa09e44e9fc962d19",
+        "android_client_info": {
+          "package_name": "app.vercel.codora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459099093980-9o9jvvbi2r77o00p5bdn6dtn3kg1ka8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.vercel.codora",
+            "certificate_hash": "12f74e842f4d1ffc5551b5e689fc5a6dd7f8b87e"
+          }
+        },
+        {
+          "client_id": "459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.vercel.codora",
+            "certificate_hash": "48701c049cbabf49eb728126f71031ce629faec1"
+          }
+        },
+        {
+          "client_id": "459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrsuwJU-7aSbrbcAqZmKUZQp6pgeP3NBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
