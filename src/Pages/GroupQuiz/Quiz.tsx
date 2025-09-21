@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, JSX } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { Send } from 'lucide-react';
 import { Button } from "../../components/ui/button";
@@ -43,10 +43,23 @@ const GroupQuiz: React.FC = (): JSX.Element => {
   const [allAnswers, setAllAnswers] = useState({});
 
   useEffect(() => {
-    if (quizSubmitted || timeLeft <= 0) return;
-    const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [timeLeft, quizSubmitted]);
+    if (quizSubmitted) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          if (!quizSubmitted) {
+            handleSubmitQuiz();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quizSubmitted]);
 
   useEffect(() => {
     const unsubscribe = roomService.listenForAnswers(roomCode, (answers) => {
@@ -132,8 +145,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
   const currentAnswer = userAnswers[currentQuestionIndex];
 
   if (quizSubmitted) {
-    // Gather all participant results
-    const participantResults = Object.values(allAnswers).map((entry) => {
+     const participantResults = Object.values(allAnswers).map((entry) => {
       let participantScore = 0;
       const participantAnswers = questions.map((q, idx) => {
         const selectedAnswer = (entry as { answers?: (number | null)[] }).answers?.[idx];
@@ -297,7 +309,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between pt-4 pb-6 px-6">
-            <Button onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0} className={`px-4 py-2 rounded-xl flex items-center gap-1 ${currentQuestionIndex === 0 ? "bg-gray-700 text-gray-400" : "bg-gray-800 hover:bg-gray-700 text-white"}`}>Previous</Button>
+            <Button onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0} className={`px-4 py-2 rounded-xl flex items-center gap-1 ${currentQuestionIndex === 0 ? "bg-gray-700 text-gray-400" : "bg-gray-800 hover:bg-gray-700 text-white"}`}><ChevronLeft className="h-4 w-4" />Previous</Button>
             {currentQuestionIndex === questions.length - 1 ? (
               <Button onClick={handleSubmitQuiz}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl flex items-center gap-2">
@@ -305,7 +317,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
                 Submit Quiz
               </Button>
             ) : (
-              <Button onClick={handleNextQuestion} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-1">Next</Button>
+              <Button onClick={handleNextQuestion} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-1">Next<ChevronRight className="h-4 w-4" /></Button>
             )}
           </CardFooter>
         </Card>

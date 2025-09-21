@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "459099093980-6bac1eimm1gbpqjt6hrq29ihsjqprl4i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.vercel.codora",
+            "certificate_hash": "39fd44dd36af349019bcb532b73a250e94b8ef69"
+          }
+        },
+        {
           "client_id": "459099093980-9o9jvvbi2r77o00p5bdn6dtn3kg1ka8a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

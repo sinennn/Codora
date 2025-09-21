@@ -34,8 +34,5 @@
       android:name="com.google.android.gms.auth.api.signin.CLIENT_ID"
       android:value="459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com" />
     </application>
-
-    <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

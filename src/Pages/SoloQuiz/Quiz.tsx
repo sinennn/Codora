@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, Send, ChevronLeft, ChevronRight } from "lucide-react";
@@ -28,12 +29,25 @@ export default function QuizCard() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(quizTime);
 
+  
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft]);
+    if (quizSubmitted) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          if (!quizSubmitted) {
+            handleSubmitQuiz();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quizSubmitted]);
 
   const handleSelect = (index) => {
     if (!quizSubmitted) {
@@ -56,26 +70,34 @@ export default function QuizCard() {
   };
 
   const handleSubmitQuiz = () => {
-    if (!quizSubmitted) {
-      setQuizSubmitted(true);
+    if (quizSubmitted) return;
+    
+    setQuizSubmitted(true);
 
-      let newScore = 0;
-      userAnswers.forEach((answer, index) => {
-        if (answer !== null && allQuestions[index].options[answer].isCorrect) {
-          newScore++;
-        }
-      });
-      setScore(newScore);
+    let newScore = 0;
+    userAnswers.forEach((answer, index) => {
+      if (answer !== null && allQuestions[index].options[answer].isCorrect) {
+        newScore++;
+      }
+    });
+    setScore(newScore);
 
-      navigate('/SoloComplete', {
-        state: {
-          score: newScore,
-          allQuestions,
-          userAnswers
-        },
-        replace: true,
-      });
+    const completedAnswers = [...userAnswers];
+    for (let i = 0; i < allQuestions.length; i++) {
+      if (completedAnswers[i] === null) {
+        completedAnswers[i] = -1; 
+      }
     }
+
+    navigate('/SoloComplete', {
+      state: {
+        score: newScore,
+        allQuestions,
+        userAnswers: completedAnswers,
+        timeUp: timeLeft <= 0
+      },
+      replace: true,
+    });
   };
 
   const formatTime = (sec) => {
