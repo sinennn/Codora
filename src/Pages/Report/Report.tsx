@@ -8,9 +8,7 @@ import { toast } from '../../components/ui/toast';
 import { useState } from 'react';
 
 export default function Report() {
- 
   const [formData, setFormData] = useState({
-   
     subject: '',
     description: '',
   });
@@ -30,7 +28,6 @@ export default function Report() {
     setIsSubmitting(true);
 
     try {
-      // Send Email via EmailJS
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
@@ -42,47 +39,46 @@ export default function Report() {
           user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
           template_params: {
             message: `Subject: ${formData.subject}\nMessage: ${formData.description}\n`,
-                     },
+          },
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to send report');
-              }
+      }
 
       toast.success("Report submitted! Thank you for your feedback. We'll look into this issue shortly.");
 
-      
       setFormData({
-         subject: '',
+        subject: '',
         description: '',
       });
     } catch (error) {
-        toast.error("Failed to submit report. Please try again.");
+      toast.error("Failed to submit report. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-4 md:p-6">
+    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-br from-black via-gray-900 to-black text-white px-4 sm:px-6 py-4 sm:py-6 safe-all">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-2xl mx-auto"
       >
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
           <Button
             asChild
             variant="ghost"
             size="icon"
-            className="text-orange-400 hover:bg-gray-800 rounded-full"
+            className="text-orange-400 hover:bg-gray-800 rounded-full min-h-[44px] min-w-[44px]"
           >
             <Link to="/profile">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold text-orange-400">Report a Bug</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-orange-400">Report a Bug</h1>
         </div>
 
         <motion.form
@@ -90,21 +86,19 @@ export default function Report() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gray-800/50 mt-30 backdrop-blur-lg rounded-2xl p-6 border border-gray-700 shadow-xl"
+          className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-4 sm:p-6 border border-gray-700 shadow-xl"
         >
-          <div className="flex items-start gap-3 mb-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+          <div className="flex items-start gap-3 mb-4 sm:mb-6 p-3 sm:p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
             <AlertTriangle className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-gray-300">
-              Please provide as much detail as possible about the issue you're experiencing. 
+            <p className="text-xs sm:text-sm text-gray-300">
+              Please provide as much detail as possible about the issue you're experiencing.
               This will help us resolve it more quickly.
             </p>
           </div>
 
           <div className="space-y-4">
-           
-
             <div className="space-y-2">
-              <label htmlFor="subject" className="text-sm font-medium text-gray-300">
+              <label htmlFor="subject" className="text-xs sm:text-sm font-medium text-gray-300">
                 Issue
               </label>
               <Input
@@ -115,12 +109,12 @@ export default function Report() {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500"
+                className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 min-h-[44px] text-sm sm:text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="description" className="text-sm font-medium text-gray-300">
+              <label htmlFor="description" className="text-xs sm:text-sm font-medium text-gray-300">
                 Detailed Description
               </label>
               <Textarea
@@ -131,7 +125,7 @@ export default function Report() {
                 value={formData.description}
                 onChange={handleChange}
                 required
-                className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500"
+                className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 text-sm sm:text-base"
               />
             </div>
 
@@ -139,7 +133,7 @@ export default function Report() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 min-h-[48px] text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <>

@@ -22,16 +22,17 @@ const GroupQuiz: React.FC = (): JSX.Element => {
 
   if (!state || !state.roomCode || !state.questions) {
     return (
-      <div className="text-white text-center py-8">
-        <h2 className="text-2xl font-bold mb-4">No quiz data available</h2>
-        <p className="text-gray-400">Please join or create a quiz room.</p>
+      <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
+        <div className="text-white text-center py-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">No quiz data available</h2>
+          <p className="text-gray-400 text-sm sm:text-base">Please join or create a quiz room.</p>
+        </div>
       </div>
     );
   }
 
-  if (scoreSaved){
-    
-     console.log("ScoreSaved")
+  if (scoreSaved) {
+    console.log("ScoreSaved")
   }
 
   const { roomCode, questions, quizTime } = state;
@@ -72,7 +73,6 @@ const GroupQuiz: React.FC = (): JSX.Element => {
     if (timeLeft === 0 && !quizSubmitted) {
       handleSubmitQuiz();
     }
-
   }, [timeLeft, quizSubmitted]);
 
   useEffect(() => {
@@ -131,7 +131,6 @@ const GroupQuiz: React.FC = (): JSX.Element => {
       await roomService.submitAnswers(roomCode, userAnswers);
     } catch (error) {
       console.error('Error submitting answers:', error);
-      // Still continue to save the score even if there's an error with room service
     }
   };
 
@@ -145,7 +144,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
   const currentAnswer = userAnswers[currentQuestionIndex];
 
   if (quizSubmitted) {
-     const participantResults = Object.values(allAnswers).map((entry) => {
+    const participantResults = Object.values(allAnswers).map((entry) => {
       let participantScore = 0;
       const participantAnswers = questions.map((q, idx) => {
         const selectedAnswer = (entry as { answers?: (number | null)[] }).answers?.[idx];
@@ -156,7 +155,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
           isCorrect,
         };
       });
-  
+
       return {
         username: (entry as { username: string }).username,
         score: participantScore,
@@ -192,15 +191,15 @@ const GroupQuiz: React.FC = (): JSX.Element => {
     });
 
     return (
-      <div className="relative w-full min-h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">
+      <div className="relative w-full min-h-screen min-h-[100dvh] flex justify-center items-start bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-6 py-6 overflow-x-hidden animate-fade-in safe-top">
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-3xl space-y-6 p-1.5"
+          className="w-full max-w-3xl space-y-4 sm:space-y-6"
         >
           <motion.h2
-            className="text-3xl font-bold text-center text-orange-400"
+            className="text-2xl sm:text-3xl font-bold text-center text-orange-400"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -213,7 +212,7 @@ const GroupQuiz: React.FC = (): JSX.Element => {
               <motion.img
                 src={emotionImage}
                 alt="Emotion"
-                className="w-32 h-32 object-contain"
+                className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
@@ -221,28 +220,28 @@ const GroupQuiz: React.FC = (): JSX.Element => {
             </div>
           )}
 
-          <div className="text-center text-2xl text-white font-bold">
+          <div className="text-center text-xl sm:text-2xl text-white font-bold">
             Your Score: {score}/{questions.length}
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-2">All Participants</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-2">All Participants</h3>
             <ul className="space-y-2">
               {participantResults.map((p, i) => (
                 <li key={i} className="bg-gray-800 rounded-lg p-3">
-                  <div className="flex justify-between">
-                    <span className="text-white">{p.username}</span>
-                    <span className="text-orange-400 font-bold">{p.score}/{questions.length}</span>
+                  <div className="flex justify-between text-sm sm:text-base">
+                    <span className="text-white truncate">{p.username}</span>
+                    <span className="text-orange-400 font-bold flex-shrink-0 ml-2">{p.score}/{questions.length}</span>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="space-y-6 mt-4 overflow-auto max-h-[65vh]">
+          <div className="space-y-4 sm:space-y-6 mt-4 overflow-auto max-h-[50vh]">
             {userCorrections.map((correction, qIndex) => (
-              <div key={qIndex} className="border border-gray-700 rounded-xl p-4 bg-gray-800/50">
-                <h3 className="font-bold text-white mb-2">
+              <div key={qIndex} className="border border-gray-700 rounded-xl p-3 sm:p-4 bg-gray-800/50">
+                <h3 className="font-bold text-white mb-2 text-sm sm:text-base">
                   {qIndex + 1}. {correction.question}
                 </h3>
                 <div className="space-y-2 mb-3">
@@ -253,71 +252,112 @@ const GroupQuiz: React.FC = (): JSX.Element => {
                     else if (option.isCorrectAnswer) bgColor = "bg-green-600/40";
 
                     return (
-                      <div key={oIndex} className={`px-3 py-2 rounded-lg ${bgColor} flex items-center`}>
+                      <div key={oIndex} className={`px-3 py-2 rounded-lg ${bgColor} flex items-center text-sm sm:text-base`}>
                         <span className="flex-1">{option.text}</span>
-                        {option.isUserSelection && option.isCorrectAnswer && <CheckCircle2 className="h-5 w-5 text-green-300" />}
-                        {option.isUserSelection && !option.isCorrectAnswer && <XCircle className="h-5 w-5 text-red-300" />}
+                        {option.isUserSelection && option.isCorrectAnswer && <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-300 flex-shrink-0 ml-2" />}
+                        {option.isUserSelection && !option.isCorrectAnswer && <XCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-300 flex-shrink-0 ml-2" />}
                       </div>
-                   );
+                    );
                   })}
                 </div>
                 {correction.explanation && (
-                      <div className="mt-3 p-3 bg-orange-700/50 rounded-lg">
-                        <h4 className="font-semibold text-orange-300 mb-1">Explanation:</h4>
-                        <p className="text-gray-200 text-sm">{correction.explanation}</p>
-                     </div>
-                    )}
+                  <div className="mt-3 p-3 bg-orange-700/50 rounded-lg">
+                    <h4 className="font-semibold text-orange-300 mb-1 text-sm">Explanation:</h4>
+                    <p className="text-gray-200 text-xs sm:text-sm">{correction.explanation}</p>
+                  </div>
+                )}
               </div>
             ))}
-          </div>   
+          </div>
 
           <div className="flex justify-center pt-2 pb-6">
-            <Button onClick={() => navigate('/dashboard')} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl">
+            <Button onClick={() => navigate('/dashboard')} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl min-h-[44px] text-sm sm:text-base">
               Return to Dashboard
             </Button>
           </div>
         </motion.div>
       </div>
-
     );
   }
 
   if (!currentQuestion) {
     return (
-      <div className="text-white text-center py-8">
-        <h2 className="text-2xl font-bold mb-4">Question data is invalid</h2>
-        <p className="text-gray-400">Please try generating a new quiz.</p>
+      <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
+        <div className="text-white text-center py-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Question data is invalid</h2>
+          <p className="text-gray-400 text-sm sm:text-base">Please try generating a new quiz.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-8 overflow-hidden animate-fade-in">
-      <div className="absolute top-6 left-6 text-orange-500 font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-orange-500 shadow-lg z-10 backdrop-blur-md">⏱ {formatTime(timeLeft)}</div>
-      <div className="absolute top-6 right-6 text-white font-bold text-xl tracking-wide bg-gray-900/60 px-4 py-2 rounded-xl border border-gray-700 shadow-lg z-10 backdrop-blur-md">Question {currentQuestionIndex + 1}/{questions.length}</div>
-      <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="w-full max-w-xl">
-        <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in">
-          <CardContent className="space-y-6 pt-6 px-6">
-            <motion.h2 className="text-3xl font-bold text-center text-orange-400" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>{currentQuestion.question}</motion.h2>
-            <div className="space-y-4">
+    <div className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black px-4 sm:px-6 py-4 overflow-x-hidden animate-fade-in safe-top">
+      {/* Timer */}
+      <div className="fixed top-4 left-4 z-20 text-orange-500 font-bold text-sm sm:text-lg tracking-wide bg-gray-900/80 px-3 sm:px-4 py-2 rounded-xl border border-orange-500 shadow-lg backdrop-blur-md safe-top">
+        ⏱ {formatTime(timeLeft)}
+      </div>
+
+      {/* Question counter */}
+      <div className="fixed top-4 right-4 z-20 text-white font-bold text-sm sm:text-lg tracking-wide bg-gray-900/80 px-3 sm:px-4 py-2 rounded-xl border border-gray-700 shadow-lg backdrop-blur-md safe-top">
+        {currentQuestionIndex + 1}/{questions.length}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-xl mt-16 sm:mt-20"
+      >
+        <Card className="w-full border border-gray-700 bg-[#131924]/90 backdrop-blur-xl shadow-xl rounded-2xl animate-scale-in max-h-[calc(100vh-120px)] max-h-[calc(100dvh-120px)] flex flex-col">
+          <CardContent className="flex-1 overflow-y-auto space-y-4 sm:space-y-6 pt-4 sm:pt-6 px-4 sm:px-6">
+            <motion.h2
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-orange-400 leading-tight"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {currentQuestion.question}
+            </motion.h2>
+            <div className="space-y-3 sm:space-y-4">
               {currentQuestion.options.map((option, index) => {
                 const isSelected = currentAnswer === index;
                 return (
-                  <motion.button key={index} onClick={() => handleSelect(index)} className={`w-full text-left px-5 py-3 rounded-xl border transition-all duration-300 ${isSelected ? "bg-orange-500/90 border-orange-400 text-white" : "bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-300"}`} whileTap={{ scale: 0.97 }}>{option.text}</motion.button>
+                  <motion.button
+                    key={index}
+                    onClick={() => handleSelect(index)}
+                    className={`w-full text-left px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl border transition-all duration-300 min-h-[44px] text-sm sm:text-base ${isSelected ? "bg-orange-500/90 border-orange-400 text-white" : "bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-300"}`}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    {option.text}
+                  </motion.button>
                 );
               })}
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between pt-4 pb-6 px-6">
-            <Button onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0} className={`px-4 py-2 rounded-xl flex items-center gap-1 ${currentQuestionIndex === 0 ? "bg-gray-700 text-gray-400" : "bg-gray-800 hover:bg-gray-700 text-white"}`}><ChevronLeft className="h-4 w-4" />Previous</Button>
+          <CardFooter className="flex justify-between pt-4 pb-4 sm:pb-6 px-4 sm:px-6 gap-2">
+            <Button
+              onClick={handlePreviousQuestion}
+              disabled={currentQuestionIndex === 0}
+              className={`px-3 sm:px-4 py-2 rounded-xl flex items-center gap-1 min-h-[44px] text-sm sm:text-base ${currentQuestionIndex === 0 ? "bg-gray-700 text-gray-400" : "bg-gray-800 hover:bg-gray-700 text-white"}`}
+            >
+              <ChevronLeft className="h-4 w-4" /><span className="hidden xs:inline">Previous</span><span className="xs:hidden">Prev</span>
+            </Button>
             {currentQuestionIndex === questions.length - 1 ? (
-              <Button onClick={handleSubmitQuiz}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl flex items-center gap-2">
-                <Send className='text-white' />
-                Submit Quiz
+              <Button
+                onClick={handleSubmitQuiz}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-6 py-2 rounded-xl flex items-center gap-2 min-h-[44px] text-sm sm:text-base"
+              >
+                <Send className='text-white h-4 w-4' />
+                Submit
               </Button>
             ) : (
-              <Button onClick={handleNextQuestion} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-1">Next<ChevronRight className="h-4 w-4" /></Button>
+              <Button
+                onClick={handleNextQuestion}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-xl flex items-center gap-1 min-h-[44px] text-sm sm:text-base"
+              >
+                Next<ChevronRight className="h-4 w-4" />
+              </Button>
             )}
           </CardFooter>
         </Card>

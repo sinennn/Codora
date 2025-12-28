@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User } from 'firebase/auth'; 
+import { User } from 'firebase/auth';
 import Sidebar from '../DashBoard/Sidebar';
 import Header from '../DashBoard/Header';
 import IndividualQuizCard from '../DashBoard/IndividualQuizCard';
@@ -8,7 +8,6 @@ import FooterNav from './Footer';
 import { auth } from '../../../firebase';
 import { useNavigate } from 'react-router-dom'
 import useSendBack from '../../Services/sendBack';
-
 
 export default function Dashboard() {
   useSendBack();
@@ -26,9 +25,9 @@ export default function Dashboard() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(currentUser => {
       if (currentUser) {
-        setUser(currentUser); 
+        setUser(currentUser);
       } else {
-        Navigate('/login'); 
+        Navigate('/login');
       }
     });
 
@@ -36,24 +35,21 @@ export default function Dashboard() {
   }, [Navigate]);
 
   return (
-    <div className="overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black w-screen h-screen flex flex-col md:flex-row">
+    <div className="overflow-x-hidden bg-gradient-to-br from-black via-gray-900 to-black w-full min-h-screen min-h-[100dvh] flex flex-col md:flex-row safe-top">
       <div className="hidden md:block">
-        <Sidebar/> 
+        <Sidebar />
       </div>
-      <div className="flex-1 flex flex-col md:pb-0">
+      <div className="flex-1 flex flex-col">
         <Header user={user || undefined} />
-        <main className="flex flex-col overflow-hidden md:flex-row justify-center items-center gap-4 md:gap-8 p-4 md:p-8 w-full max-w-7xl mx-auto flex-grow">
-          <div className="pt-4 lg:pt-0">
+        <main className="flex flex-col md:flex-row justify-center items-center gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8 w-full max-w-7xl mx-auto flex-grow pb-28 md:pb-8">
+          <div className="w-full max-w-sm">
             <IndividualQuizCard />
           </div>
-          <div className="sm:hidden"></div>
-          <div className="pt-4 lg:pt-0 pb-4 lg:pb-0">
+          <div className="w-full max-w-sm">
             <GroupQuizCard />
           </div>
         </main>
-        <div className="fixed bottom-0 left-0 w-full md:hidden">
-          <FooterNav /> 
-        </div>
+        <FooterNav />
       </div>
     </div>
   );

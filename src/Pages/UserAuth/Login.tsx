@@ -4,12 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AtSign, Lock } from 'lucide-react';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { isPlatform } from '@ionic/react';
-import { 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  signInWithCredential, 
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signInWithCredential,
   sendPasswordResetEmail,
-  GoogleAuthProvider 
+  GoogleAuthProvider
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../../firebase';
 import { ClipLoader } from 'react-spinners';
@@ -18,7 +18,7 @@ import GoogleLogo from '/assets/google.png';
 
 const containerVariants = {
   initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
 };
 
 const fadeUp = (delay = 0.3) => ({
@@ -73,35 +73,32 @@ export default function Login() {
     } catch (error: unknown) {
       const errorMessage = (error as { message: string }).message || error;
       console.error("Email Login-In Error:", errorMessage);
-      alert("Your email or password is incorrect" )
+      alert("Your email or password is incorrect")
     } finally {
       setLoading1(false);
     }
   };
 
-
-   
-const PasswordResetEmail = async () => {
-  try {
+  const PasswordResetEmail = async () => {
+    try {
       if (!email) {
-          window.alert('Please enter your email address');
-         return;
+        window.alert('Please enter your email address');
+        return;
       }
-     
+
       await sendPasswordResetEmail(auth, email);
       window.alert('Password reset email sent. Please check your inbox.');
       setEmail('');
-  } catch  {
+    } catch {
       window.alert("Error resetting Password");
-  }
-};
-
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
       const isMobile = isPlatform("capacitor");
-  
+
       if (isMobile) {
         const result = await GoogleAuth.signIn();
         if (!result.authentication.idToken) {
@@ -114,7 +111,7 @@ const PasswordResetEmail = async () => {
         const result = await signInWithPopup(auth, googleProvider);
         console.log("Google web login:", result.user.email);
       }
-  
+
       navigate("/DashBoard");
     } catch (error: unknown) {
       const errorMessage = (error as { message: string }).message || error;
@@ -127,9 +124,9 @@ const PasswordResetEmail = async () => {
   };
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex justify-center items-center">
+    <div className="w-full min-h-screen min-h-[100dvh] overflow-x-hidden bg-gradient-to-br from-black via-gray-900 to-black flex justify-center items-center px-4 sm:px-12 py-6">
       <motion.div
-        className="w-full max-w-md flex flex-col items-center gap-10 px-6 py-10 backdrop-blur-2xl"
+        className="w-full max-w-md flex flex-col items-center gap-6 sm:gap-10 backdrop-blur-2xl"
         variants={containerVariants}
         initial="initial"
         animate="animate"
@@ -141,48 +138,47 @@ const PasswordResetEmail = async () => {
           transition={{ duration: 0.8 }}
         >
           <div className="absolute w-full h-full rounded-full blur-3xl bg-orange-500 opacity-30 animate-pulse -z-10 scale-125"></div>
-          <img src={Start} alt="Codora Owl" className="w-28 h-52 object-contain" />
+          <img src={Start} alt="Codora Owl" className="w-20 h-40 sm:w-28 sm:h-52 object-contain" />
         </motion.div>
 
         <motion.h1
-          className="text-white text-4xl font-extrabold text-center"
+          className="text-white text-2xl sm:text-3xl md:text-4xl font-extrabold text-center"
           style={{ textShadow: '0 4px 20px rgba(255,255,255,0.2)' }}
           {...fadeUp(0.2)}
         >
           Welcome Back to <span className="text-orange-500">Codora</span>
         </motion.h1>
 
-        <div className="flex flex-col gap-5 w-full">
+        <div className="flex flex-col gap-4 sm:gap-5 w-full">
           <motion.div className="relative w-full">
-            <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
             <motion.input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 p-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full pl-10 p-3 min-h-[44px] rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
               variants={inputVariants(0.3)}
             />
           </motion.div>
 
           <motion.div className="relative w-full">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
             <motion.input
               type="password"
               placeholder="Password, please"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 p-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full pl-10 p-3 min-h-[44px] rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
               variants={inputVariants(0.3)}
             />
           </motion.div>
 
-                    <motion.button
-            className={`p-3 rounded-xl text-white font-semibold transition-all ${
-              email && password && !loading1
-                ? "bg-orange-500 hover:bg-orange-600"
-                : "bg-orange-500 cursor-not-allowed"
-            }`}
+          <motion.button
+            className={`p-3 min-h-[44px] rounded-xl text-white font-semibold transition-all text-sm sm:text-base ${email && password && !loading1
+              ? "bg-orange-500 hover:bg-orange-600"
+              : "bg-orange-500 cursor-not-allowed"
+              }`}
             variants={buttonVariants}
             whileHover={email && password && !loading1 ? "hover" : ""}
             onClick={handleEmailLogin}
@@ -195,21 +191,20 @@ const PasswordResetEmail = async () => {
             )}
           </motion.button>
 
-          <div className="flex justify-between items-center  text-sm">
-          <label className="text-gray-600 flex items-center">
-          <input type="checkbox" className="mr-2"/> Remember Me
-          </label>
-          <p className="hover:underline font-bold">
-            <p className="text-orange-500 " onClick={PasswordResetEmail}>
-            Forgot Password?
-            </p>
-            </p>
-        </div>
-
-
+          <div className="flex justify-between items-center text-xs sm:text-sm gap-2">
+            <label className="text-gray-600 flex items-center cursor-pointer">
+              <input type="checkbox" className="mr-2" /> Remember Me
+            </label>
+            <button
+              className="text-orange-500 hover:underline font-bold"
+              onClick={PasswordResetEmail}
+            >
+              Forgot Password?
+            </button>
+          </div>
 
           <motion.button
-            className="flex items-center justify-center gap-3 p-3 rounded-xl bg-gray-800 text-white border border-gray-700 hover:bg-gray-700 transition"
+            className="flex items-center justify-center gap-3 p-3 min-h-[44px] rounded-xl bg-gray-800 text-white border border-gray-700 hover:bg-gray-700 transition text-sm sm:text-base"
             variants={inputVariants(0.45)}
             whileHover={{ scale: 1.03 }}
             onClick={handleGoogleLogin}
@@ -226,7 +221,7 @@ const PasswordResetEmail = async () => {
         </div>
 
         <motion.p
-          className="text-gray-400 text-sm text-center"
+          className="text-gray-400 text-xs sm:text-sm text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
