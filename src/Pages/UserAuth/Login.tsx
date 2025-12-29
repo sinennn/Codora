@@ -18,7 +18,7 @@ import GoogleLogo from '/assets/google.png';
 
 const containerVariants = {
   initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
 };
 
 const fadeUp = (delay = 0.3) => ({

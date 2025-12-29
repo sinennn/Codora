@@ -17,7 +17,7 @@ const containerVariants = {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: 'easeOut', when: 'beforeChildren', staggerChildren: 0.15 },
+    transition: { duration: 0.8, ease: 'easeOut' as const, when: 'beforeChildren' as const, staggerChildren: 0.15 },
   },
 };
 
