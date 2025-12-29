@@ -61,14 +61,14 @@ export function TutorMessage({ tutor, message, onTap }: TutorMessageProps) {
         </div>
       </div>
 
-      {/* Tap hint */}
-      <motion.div
+     
+      {/* <motion.div
         className="absolute bottom-2 right-3 text-xs text-gray-500"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
         Tap to chat →
-      </motion.div>
+      </motion.div> */}
     </motion.div>
   );
 }

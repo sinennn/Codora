@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "459099093980-nlbmp8m5dsmtjr8f9v2ncq0o7o486kmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.vercel.codora",
+            "certificate_hash": "4efa8cc1de87a46778756fba38ce6c49a581d5ad"
+          }
+        },
+        {
           "client_id": "459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

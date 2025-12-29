@@ -1,6 +1,6 @@
 // ============================================
 // APP - Main Application Router
-// Includes UserProgressProvider for Firebase integration
+// Includes UserProgressProvider and CurriculumProvider for Firebase integration
 // ============================================
 
 import { useEffect, useState } from 'react';
@@ -27,6 +27,7 @@ import Error from './Pages/Error/Error';
 import { ToastProvider } from './components/ui/toast';
 import { AuthProvider } from './Context/AuthContext';
 import { UserProgressProvider } from './Context/UserProgressContext';
+import { CurriculumProvider } from './Context/CurriculumContext';
 
 // AI Tutor Pages
 import TutorSelect from './Pages/Tutor/TutorSelect';
@@ -71,34 +72,36 @@ function App() {
     <ToastProvider>
       <AuthProvider>
         <UserProgressProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate to="/splash" replace />} />
-              <Route path="/splash" element={<Splash />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Home />} />
-              <Route path="/dashboard-old" element={<DashBoard />} />
-              <Route path="/profile" element={<ProfileNew />} />
-              <Route path="/profile-old" element={<Profile />} />
-              <Route path="/JoinRoom" element={<JoinRoom />} />
-              <Route path="/WaitingRoom" element={<WaitingRoom />} />
-              <Route path="/Group-Quiz" element={<GroupQuiz />} />
-              <Route path="/SoloSetting" element={<SoloQuizSettings />} />
-              <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
-              <Route path="/SoloQuiz" element={<SoloQuiz />} />
-              <Route path="/ReportBug" element={<Report />} />
-              <Route path="/SoloComplete" element={<SoloComplete />} />
-              <Route path="/leaderboard" element={<LeaderBoard />} />
-              
-              {/* AI Tutor Routes */}
-              <Route path="/tutor" element={<TutorSelect />} />
-              <Route path="/tutor/lesson" element={<TutorLesson />} />
-              <Route path="/tutor/complete" element={<TutorComplete />} />
-              
-              <Route path="*" element={<Navigate to="/splash" replace />} />
-            </Routes>
-          </BrowserRouter>
+          <CurriculumProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Navigate to="/splash" replace />} />
+                <Route path="/splash" element={<Splash />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Home />} />
+                <Route path="/dashboard-old" element={<DashBoard />} />
+                <Route path="/profile" element={<ProfileNew />} />
+                <Route path="/profile-old" element={<Profile />} />
+                <Route path="/JoinRoom" element={<JoinRoom />} />
+                <Route path="/WaitingRoom" element={<WaitingRoom />} />
+                <Route path="/Group-Quiz" element={<GroupQuiz />} />
+                <Route path="/SoloSetting" element={<SoloQuizSettings />} />
+                <Route path="/GroupQuiz" element={<GroupQuizSettings />} />
+                <Route path="/SoloQuiz" element={<SoloQuiz />} />
+                <Route path="/ReportBug" element={<Report />} />
+                <Route path="/SoloComplete" element={<SoloComplete />} />
+                <Route path="/leaderboard" element={<LeaderBoard />} />
+                
+                {/* AI Tutor Routes */}
+                <Route path="/tutor" element={<TutorSelect />} />
+                <Route path="/tutor/lesson" element={<TutorLesson />} />
+                <Route path="/tutor/complete" element={<TutorComplete />} />
+                
+                <Route path="*" element={<Navigate to="/splash" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </CurriculumProvider>
         </UserProgressProvider>
       </AuthProvider>
     </ToastProvider>

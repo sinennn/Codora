@@ -44,7 +44,7 @@ export default function FooterNav() {
                 className="flex flex-col items-center transition-all duration-150"
               >
                 <div className={`p-1.5 rounded-xl transition-colors ${
-                  isActive ? 'bg-orange-500/20' : ''
+                  isActive ? 'bg-none' : ''
                 }`}>
                   <Icon 
                     className={`w-5 h-5 sm:w-6 sm:h-6 transition-colors ${

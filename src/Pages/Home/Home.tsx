@@ -22,11 +22,14 @@ import {
 import FooterNav from '../DashBoard/Footer';
 import { calculateLevel } from '../../Types/user';
 import { useUserProgress } from '../../Context/UserProgressContext';
+import { getMostRecentLesson, type RecentLesson } from '../../Services/tutorLessonService';
 
 export default function Home() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [tutorIndex, setTutorIndex] = useState(0);
+  const [recentLesson, setRecentLesson] = useState<RecentLesson | null>(null);
+  const [lessonLoading, setLessonLoading] = useState(true);
   
   // Get real user progress from context
   const { userProgress, loading, rank, xpToClimb, isPracticedToday } = useUserProgress();
@@ -41,6 +44,25 @@ export default function Home() {
     });
     return () => unsubscribe();
   }, [navigate]);
+
+  // Fetch most recent lesson from Firestore
+  useEffect(() => {
+    async function fetchRecentLesson() {
+      if (!userProgress?.id) {
+        setLessonLoading(false);
+        return;
+      }
+      try {
+        const lesson = await getMostRecentLesson(userProgress.id);
+        setRecentLesson(lesson);
+      } catch (error) {
+        console.error('Error fetching recent lesson:', error);
+      } finally {
+        setLessonLoading(false);
+      }
+    }
+    fetchRecentLesson();
+  }, [userProgress?.id]);
 
   // Dynamic tutor messages based on user progress
   const getTutorMessages = () => {
@@ -103,39 +125,45 @@ export default function Home() {
     return 'Good evening';
   };
 
-  // Get continue learning data from user's skills
+  // Get continue learning data from Firestore (recent lesson)
   const getContinueLearning = () => {
-    if (!userProgress || userProgress.skills.length === 0) {
+    // If we have a recent lesson from Firestore, use it
+    if (recentLesson) {
       return {
-        topic: 'JavaScript',
-        lessonName: 'Start Your Journey',
+        topic: recentLesson.topic,
+        lessonName: recentLesson.progress < 100 
+          ? `Continue: ${recentLesson.title}` 
+          : `Review: ${recentLesson.title}`,
+        progress: recentLesson.progress,
+        xpReward: recentLesson.progress < 100 ? 25 : 10,
+      };
+    }
+
+    // If user has skills but no lessons yet, suggest based on recent skill
+    if (userProgress && userProgress.skills.length > 0) {
+      const sortedSkills = [...userProgress.skills].sort((a, b) => {
+        const dateA = a.lastPracticed ? new Date(a.lastPracticed).getTime() : 0;
+        const dateB = b.lastPracticed ? new Date(b.lastPracticed).getTime() : 0;
+        return dateB - dateA;
+      });
+
+      const recentSkill = sortedSkills[0];
+      return {
+        topic: recentSkill.name,
+        lessonName: `Start ${recentSkill.name} Lesson`,
         progress: 0,
         xpReward: 25,
       };
     }
 
-    // Find the most recently practiced skill
-    const sortedSkills = [...userProgress.skills].sort((a, b) => {
-      const dateA = a.lastPracticed ? new Date(a.lastPracticed).getTime() : 0;
-      const dateB = b.lastPracticed ? new Date(b.lastPracticed).getTime() : 0;
-      return dateB - dateA;
-    });
-
-    const recentSkill = sortedSkills[0];
-    const progress = Math.min((recentSkill.completedLessons / Math.max(recentSkill.totalLessons, 1)) * 100, 100);
-
-    return {
-      topic: recentSkill.name,
-      lessonName: `Continue ${recentSkill.name}`,
-      progress: Math.round(progress),
-      xpReward: 25,
-    };
+    // No lessons and no skills - true new user
+    return null;
   };
 
   const continueLesson = getContinueLearning();
 
   // Loading state
-  if (loading) {
+  if (loading || lessonLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <motion.div
@@ -230,13 +258,23 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <ContinueLearningCard
-            topic={continueLesson.topic}
-            lessonName={continueLesson.lessonName}
-            progress={continueLesson.progress}
-            xpReward={continueLesson.xpReward}
-            onContinue={() => navigate('/tutor')}
-          />
+          {continueLesson ? (
+            <ContinueLearningCard
+              topic={continueLesson.topic}
+              lessonName={continueLesson.lessonName}
+              progress={continueLesson.progress}
+              xpReward={continueLesson.xpReward}
+              onContinue={() => navigate('/tutor')}
+            />
+          ) : (
+            <ContinueLearningCard
+              topic="Get Started"
+              lessonName="Start Your First Lesson"
+              progress={0}
+              xpReward={25}
+              onContinue={() => navigate('/tutor')}
+            />
+          )}
         </motion.section>
 
         {/* Quick Actions */}

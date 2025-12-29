@@ -189,7 +189,8 @@ export async function saveLessonProgress(
   progress: number,
   currentSection: number,
   completedExercises: string[],
-  xpEarned: number
+  xpEarned: number,
+  lessonMeta?: { topic: string; title: string; category: 'field' | 'technology'; difficulty: string; totalSections: number; totalExercises: number }
 ): Promise<void> {
   const lessonRef = doc(db, COLLECTIONS.USER_LESSONS, `${userId}_${lessonId}`);
   
@@ -201,6 +202,14 @@ export async function saveLessonProgress(
     completedExercises,
     xpEarned,
     updatedAt: serverTimestamp(),
+    ...(lessonMeta && {
+      topic: lessonMeta.topic,
+      title: lessonMeta.title,
+      category: lessonMeta.category,
+      difficulty: lessonMeta.difficulty,
+      totalSections: lessonMeta.totalSections,
+      totalExercises: lessonMeta.totalExercises,
+    }),
   }, { merge: true });
 }
 
@@ -241,6 +250,55 @@ export async function getUserLessons(userId: string, limitCount: number = 10): P
   } catch (error) {
     console.error('Error getting user lessons:', error);
     return [];
+  }
+}
+
+// Get the most recent lesson for "Continue Learning" feature
+export interface RecentLesson {
+  lessonId: string;
+  topic: string;
+  title: string;
+  category: 'field' | 'technology';
+  difficulty: string;
+  progress: number;
+  currentSection: number;
+  totalSections: number;
+  totalExercises: number;
+  completedExercises: string[];
+  xpEarned: number;
+  updatedAt: Date;
+}
+
+export async function getMostRecentLesson(userId: string): Promise<RecentLesson | null> {
+  try {
+    const q = query(
+      collection(db, COLLECTIONS.USER_LESSONS),
+      where('userId', '==', userId),
+      orderBy('updatedAt', 'desc'),
+      limit(1)
+    );
+    
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) return null;
+    
+    const data = snapshot.docs[0].data();
+    return {
+      lessonId: data.lessonId,
+      topic: data.topic || 'Unknown Topic',
+      title: data.title || 'Continue Learning',
+      category: data.category || 'technology',
+      difficulty: data.difficulty || 'beginner',
+      progress: data.progress || 0,
+      currentSection: data.currentSection || 0,
+      totalSections: data.totalSections || 1,
+      totalExercises: data.totalExercises || 1,
+      completedExercises: data.completedExercises || [],
+      xpEarned: data.xpEarned || 0,
+      updatedAt: data.updatedAt?.toDate() || new Date(),
+    };
+  } catch (error) {
+    console.error('Error getting most recent lesson:', error);
+    return null;
   }
 }
 

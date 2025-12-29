@@ -109,7 +109,22 @@ export default function TutorLesson() {
     const correctCount = exerciseResults.filter(r => r.correct).length;
     const totalExercises = lesson.exercises.length;
     try {
-      await saveLessonProgress(userProgress.id, lesson.id, 100, lesson.sections.length, lesson.exercises.map(e => e.id), xpEarned);
+      await saveLessonProgress(
+        userProgress.id, 
+        lesson.id, 
+        100, 
+        lesson.sections.length, 
+        lesson.exercises.map(e => e.id), 
+        xpEarned,
+        {
+          topic,
+          title: lesson.title,
+          category,
+          difficulty,
+          totalSections: lesson.sections.length,
+          totalExercises: lesson.exercises.length,
+        }
+      );
       await submitQuizResult({
         topic, category, difficulty,
         totalQuestions: totalExercises,
