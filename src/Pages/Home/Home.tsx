@@ -1,8 +1,3 @@
-// ============================================
-// HOME PAGE - Main Dashboard
-// Now integrated with Firebase for real user data
-// ============================================
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -34,6 +29,9 @@ export default function Home() {
   // Get real user progress from context
   const { userProgress, loading, rank, xpToClimb, isPracticedToday } = useUserProgress();
 
+  // Track if this is the initial load vs navigation
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(currentUser => {
       if (currentUser) {
@@ -50,6 +48,7 @@ export default function Home() {
     async function fetchRecentLesson() {
       if (!userProgress?.id) {
         setLessonLoading(false);
+        setInitialLoadComplete(true);
         return;
       }
       try {
@@ -59,6 +58,7 @@ export default function Home() {
         console.error('Error fetching recent lesson:', error);
       } finally {
         setLessonLoading(false);
+        setInitialLoadComplete(true);
       }
     }
     fetchRecentLesson();
@@ -162,8 +162,8 @@ export default function Home() {
 
   const continueLesson = getContinueLearning();
 
-  // Loading state
-  if (loading || lessonLoading) {
+  // Loading state - only show on very first load, not on navigation
+  if ((loading || lessonLoading) && !initialLoadComplete && !userProgress) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <motion.div
@@ -286,9 +286,8 @@ export default function Home() {
         >
           <QuickActions
             onLearn={() => navigate('/tutor')}
-            onPractice={() => navigate('/SoloSetting')}
-            onCompete={() => navigate('/GroupQuiz')}
-            onLeaderboard={() => navigate('/leaderboard')}
+            onPractice={() => navigate('/quiz/settings')}
+            onCompete={() => navigate('/quiz/group')}
           />
         </motion.section>
 

@@ -1,78 +1,66 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Zap, Users, Trophy } from 'lucide-react';
-
-interface QuickAction {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  color: string;
-  bgColor: string;
-  onClick: () => void;
-}
+import { BookOpen, Zap, Users } from 'lucide-react';
 
 interface QuickActionsProps {
   onLearn: () => void;
   onPractice: () => void;
   onCompete: () => void;
-  onLeaderboard: () => void;
 }
 
-export function QuickActions({ onLearn, onPractice, onCompete, onLeaderboard }: QuickActionsProps) {
-  const actions: QuickAction[] = [
+export function QuickActions({ onLearn, onPractice, onCompete }: QuickActionsProps) {
+  const actions = [
     {
       id: 'learn',
       label: 'Learn',
-      icon: <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />,
+      description: 'AI-guided lessons',
+      icon: <BookOpen className="w-5 h-5" />,
       color: 'text-emerald-400',
-      bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+      bgColor: 'bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20',
       onClick: onLearn,
     },
     {
       id: 'practice',
-      label: 'Practice',
-      icon: <Zap className="w-4 h-4 sm:w-5 sm:h-5" />,
+      label: 'Solo Quiz',
+      description: 'Test yourself',
+      icon: <Zap className="w-5 h-5" />,
       color: 'text-orange-400',
-      bgColor: 'bg-orange-500/10 border-orange-500/20',
+      bgColor: 'bg-orange-500/10 border-orange-500/20 hover:bg-orange-500/20',
       onClick: onPractice,
     },
     {
       id: 'compete',
-      label: 'Compete',
-      icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />,
+      label: 'Group Quiz',
+      description: 'Play with friends',
+      icon: <Users className="w-5 h-5" />,
       color: 'text-purple-400',
-      bgColor: 'bg-purple-500/10 border-purple-500/20',
+      bgColor: 'bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20',
       onClick: onCompete,
-    },
-    {
-      id: 'ranks',
-      label: 'Ranks',
-      icon: <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />,
-      color: 'text-amber-400',
-      bgColor: 'bg-amber-500/10 border-amber-500/20',
-      onClick: onLeaderboard,
     },
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-2 sm:gap-3">
+    <div className="grid grid-cols-3 gap-2">
       {actions.map((action, index) => (
         <motion.button
           key={action.id}
           className={`
-            flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl
+            flex flex-col items-center justify-center p-3 rounded-xl
             border ${action.bgColor}
-            transition-colors min-h-[60px] sm:min-h-[72px] touch-target
+            transition-colors min-h-[80px] touch-target
           `}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={action.onClick}
         >
           <span className={action.color}>{action.icon}</span>
-          <span className={`text-[10px] sm:text-xs mt-1 font-medium ${action.color}`}>
+          <span className={`text-xs mt-1.5 font-semibold ${action.color}`}>
             {action.label}
+          </span>
+          <span className="text-[9px] text-gray-500 mt-0.5">
+            {action.description}
           </span>
         </motion.button>
       ))}

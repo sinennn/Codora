@@ -1,8 +1,3 @@
-// ============================================
-// CURRICULUM SERVICE
-// Handles roadmap enrollment, progress tracking, and learning flow
-// ============================================
-
 import { db } from '../../firebase';
 import {
   doc,

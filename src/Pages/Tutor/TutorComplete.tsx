@@ -1,8 +1,3 @@
-// ============================================
-// TUTOR LESSON COMPLETE PAGE
-// Shows results after completing a lesson
-// ============================================
-
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Trophy, Star, Target, ArrowRight, Home, RotateCcw } from 'lucide-react';
@@ -161,7 +156,7 @@ export default function TutorComplete() {
               🦊
             </div>
             <div>
-              <p className="text-sm font-medium text-orange-400 mb-1">Nime says:</p>
+              <p className="text-sm font-medium text-orange-400 mb-1">Nime</p>
               <p className="text-gray-300 text-sm">
                 {isPerfect 
                   ? `Amazing work on ${topic}! You've mastered this lesson. Ready for the next challenge?`

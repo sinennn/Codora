@@ -1,13 +1,9 @@
-// ============================================
-// TUTOR LESSON PAGE - Fixed Layout
-// ============================================
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, ChevronRight, BookOpen, Code, Lightbulb, 
-  CheckCircle, XCircle, Loader2, Trophy, Sparkles 
+  CheckCircle, XCircle, Loader2, Trophy, Zap
 } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -15,12 +11,19 @@ import { toast } from 'sonner';
 import { useUserProgress } from '../../Context/UserProgressContext';
 import { generateLesson, saveLessonProgress, type LessonContent } from '../../Services/tutorLessonService';
 import { getNimeFeedback } from '../../Services/tutorService';
+import { 
+  recordLessonInteraction, 
+  recordStruggle, 
+  recordMastery,
+  type LessonInteraction,
+  type ExerciseAttemptData 
+} from '../../Services/adaptiveLearningService';
 
 export default function TutorLesson() {
   const location = useLocation();
   const navigate = useNavigate();
   const { submitQuizResult, userProgress } = useUserProgress();
-  const { topic, category, difficulty } = location.state || {};
+  const { topic, category, difficulty, roadmapId, lessonId, fromRoadmap } = location.state || {};
   
   const [lesson, setLesson] = useState<LessonContent | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +36,14 @@ export default function TutorLesson() {
   const [tutorFeedback, setTutorFeedback] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
+  
+  // Adaptive learning tracking
+  const sectionStartTime = useRef<number>(Date.now());
+  const exerciseStartTime = useRef<number>(Date.now());
+  const sectionTimes = useRef<number[]>([]);
+  const exerciseAttempts = useRef<Map<string, ExerciseAttemptData>>(new Map());
+  const sectionsRevisited = useRef<string[]>([]);
+  const currentAttemptCount = useRef<number>(0);
 
   useEffect(() => {
     async function loadLesson() {
@@ -42,9 +53,19 @@ export default function TutorLesson() {
         return;
       }
       try {
-        const generatedLesson = await generateLesson(topic, category, difficulty);
+        // Pass userId for adaptive lesson generation
+        const generatedLesson = await generateLesson(
+          topic, 
+          category, 
+          difficulty, 
+          undefined, // specificFocus
+          fromRoadmap ? roadmapId : undefined,
+          fromRoadmap ? lessonId : undefined,
+          userProgress?.id // Pass userId for adaptive learning
+        );
         setLesson(generatedLesson);
         setExerciseResults(generatedLesson.exercises.map(() => ({ correct: false, answered: false })));
+        sectionStartTime.current = Date.now();
       } catch (err) {
         console.error('Error generating lesson:', err);
         setError('Failed to generate lesson. Please try again.');
@@ -53,20 +74,36 @@ export default function TutorLesson() {
       }
     }
     loadLesson();
-  }, [topic, category, difficulty]);
+  }, [topic, category, difficulty, roadmapId, lessonId, fromRoadmap, userProgress?.id]);
 
   const handleNextSection = () => {
     if (!lesson) return;
+    
+    // Track time spent on this section
+    const timeSpent = Math.round((Date.now() - sectionStartTime.current) / 1000);
+    sectionTimes.current.push(timeSpent);
+    sectionStartTime.current = Date.now();
+    
     if (currentSection < lesson.sections.length - 1) {
       setCurrentSection(prev => prev + 1);
     } else {
       setShowExercises(true);
+      exerciseStartTime.current = Date.now();
     }
   };
 
   const handlePrevSection = () => {
-    if (showExercises) setShowExercises(false);
-    else if (currentSection > 0) setCurrentSection(prev => prev - 1);
+    if (showExercises) {
+      setShowExercises(false);
+    } else if (currentSection > 0) {
+      // Track that user revisited a previous section (indicates confusion)
+      const sectionId = lesson?.sections[currentSection]?.id;
+      if (sectionId && !sectionsRevisited.current.includes(sectionId)) {
+        sectionsRevisited.current.push(sectionId);
+      }
+      setCurrentSection(prev => prev - 1);
+      sectionStartTime.current = Date.now();
+    }
   };
 
   const handleAnswerSubmit = async () => {
@@ -74,10 +111,41 @@ export default function TutorLesson() {
     const exercise = lesson.exercises[currentExercise];
     const isCorrect = selectedAnswer === exercise.correctAnswer || 
                       selectedAnswer.toString() === exercise.correctAnswer.toString();
+    
+    // Track this attempt for adaptive learning
+    currentAttemptCount.current += 1;
+    const timeToAnswer = Math.round((Date.now() - exerciseStartTime.current) / 1000);
+    
+    const existingAttempt = exerciseAttempts.current.get(exercise.id);
+    if (existingAttempt) {
+      existingAttempt.attempts += 1;
+      existingAttempt.correct = isCorrect;
+      existingAttempt.userAnswer = selectedAnswer;
+      if (isCorrect) {
+        existingAttempt.timeToCorrect = timeToAnswer;
+      }
+    } else {
+      exerciseAttempts.current.set(exercise.id, {
+        exerciseId: exercise.id,
+        attempts: 1,
+        timeToFirstAnswer: timeToAnswer,
+        timeToCorrect: isCorrect ? timeToAnswer : 0,
+        hintsUsed: 0,
+        correct: isCorrect,
+        userAnswer: selectedAnswer,
+      });
+    }
+    
+    // Record struggle if multiple attempts
+    if (currentAttemptCount.current >= 3 && userProgress?.id) {
+      recordStruggle(userProgress.id, topic, exercise.id, currentAttemptCount.current);
+    }
+    
     const newResults = [...exerciseResults];
     newResults[currentExercise] = { correct: isCorrect, answered: true };
     setExerciseResults(newResults);
     if (isCorrect) setXpEarned(prev => prev + exercise.xpReward);
+    
     try {
       const feedback = await getNimeFeedback({
         question: exercise.question,
@@ -97,6 +165,9 @@ export default function TutorLesson() {
     setShowFeedback(false);
     setSelectedAnswer(null);
     setTutorFeedback(null);
+    currentAttemptCount.current = 0; // Reset for next exercise
+    exerciseStartTime.current = Date.now();
+    
     if (currentExercise < lesson.exercises.length - 1) {
       setCurrentExercise(prev => prev + 1);
     } else {
@@ -108,7 +179,26 @@ export default function TutorLesson() {
     if (!lesson || !userProgress) return;
     const correctCount = exerciseResults.filter(r => r.correct).length;
     const totalExercises = lesson.exercises.length;
+    
+    // Record learning interaction for adaptive learning
+    const interaction: LessonInteraction = {
+      lessonId: lesson.id,
+      sectionTimes: sectionTimes.current,
+      exerciseAttempts: Array.from(exerciseAttempts.current.values()),
+      hintsRequested: 0, // TODO: track hints
+      sectionsRevisited: sectionsRevisited.current,
+      completedAt: new Date().toISOString(),
+    };
+    
     try {
+      // Record interaction for adaptive learning
+      await recordLessonInteraction(userProgress.id, interaction);
+      
+      // Record mastery if high accuracy
+      if (correctCount / totalExercises >= 0.8) {
+        await recordMastery(userProgress.id, topic);
+      }
+      
       await saveLessonProgress(
         userProgress.id, 
         lesson.id, 
@@ -252,7 +342,7 @@ export default function TutorLesson() {
           ) : (
             <motion.div key={`exercise-${currentExercise}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
               <div className="flex items-center gap-2 text-purple-400">
-                <Sparkles className="w-4 h-4 flex-shrink-0" />
+                <Zap className="w-4 h-4 flex-shrink-0" />
                 <span className="text-xs font-medium">Exercise {currentExercise + 1} of {lesson.exercises.length}</span>
                 <span className="ml-auto text-orange-400 text-xs flex-shrink-0">+{currentExerciseData.xpReward} XP</span>
               </div>
@@ -306,7 +396,7 @@ export default function TutorLesson() {
                     <div className="flex items-start gap-2">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-sm flex-shrink-0">🦊</div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-medium text-orange-400 mb-1">Nime says:</p>
+                        <p className="text-xs font-medium text-orange-400 mb-1">Nime</p>
                         <p className="text-gray-300 text-xs break-words">{tutorFeedback}</p>
                       </div>
                     </div>
@@ -318,7 +408,6 @@ export default function TutorLesson() {
         </AnimatePresence>
       </div>
 
-      {/* Fixed Bottom Nav */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/95 to-transparent">
         <div className="max-w-lg mx-auto flex gap-3">
           <button onClick={handlePrevSection} disabled={currentSection === 0 && !showExercises} className="p-3 rounded-xl bg-gray-800/50 text-gray-400 disabled:opacity-50 flex-shrink-0">
@@ -326,7 +415,7 @@ export default function TutorLesson() {
           </button>
           {!showExercises ? (
             <button onClick={handleNextSection} className="flex-1 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm">
-              {currentSection < lesson.sections.length - 1 ? <>Continue <ChevronRight className="w-5 h-5" /></> : <>Start Exercises <Sparkles className="w-5 h-5" /></>}
+              {currentSection < lesson.sections.length - 1 ? <>Continue <ChevronRight className="w-5 h-5" /></> : <>Start Exercises <Zap className="w-5 h-5" /></>}
             </button>
           ) : !exerciseResults[currentExercise].answered ? (
             <button onClick={handleAnswerSubmit} disabled={selectedAnswer === null} className="flex-1 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-xl disabled:opacity-50 flex items-center justify-center gap-2 text-sm">

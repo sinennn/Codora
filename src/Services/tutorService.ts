@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { callGroq, parseJSONResponse } from "../lib/groqClient";
 import type {
   NimeInput,
   NimeResponse,
@@ -7,12 +8,6 @@ import type {
   TutorFeedback,
   UserStats,
 } from "../Types/tutor";
-
-const AI_API_KEY = import.meta.env.VITE_AI_API_KEY;
-
-// ============================================
-// NIME SYSTEM PROMPT - Friendly Learning Guide
-// ============================================
 
 const NIME_SYSTEM_PROMPT = `
 You are Nime, a warm, encouraging AI tutor inside Codora. Your job is to help users understand, not intimidate.
@@ -45,10 +40,6 @@ OUTPUT FORMAT (JSON only):
 }
 `;
 
-// ============================================
-// NESTO SYSTEM PROMPT - Performance Coach
-// ============================================
-
 const NESTO_SYSTEM_PROMPT = `
 You are Nesto, a focused, competitive performance coach. You push users to improve, call out weak spots, and keep them accountable — without being rude or toxic.
 
@@ -77,56 +68,6 @@ OUTPUT FORMAT (JSON only):
 }
 `;
 
-// ============================================
-// API Call Helper
-// ============================================
-
-async function callGeminiAPI(systemPrompt: string, userPrompt: string): Promise<string> {
-  const response = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-goog-api-key': AI_API_KEY as string,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
-          },
-        ],
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  const rawResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!rawResponse) {
-    throw new Error('No response from AI');
-  }
-
-  return rawResponse.trim();
-}
-
-function parseJSONResponse<T>(raw: string): T {
-  let jsonString = raw;
-  if (jsonString.startsWith('```')) {
-    jsonString = jsonString.replace(/^```(?:json)?\n|\n```$/g, '');
-  }
-  return JSON.parse(jsonString);
-}
-
-// ============================================
-// NIME - Get Friendly Feedback
-// ============================================
-
 export async function getNimeFeedback(input: NimeInput): Promise<NimeResponse> {
   try {
     const userPrompt = `
@@ -142,20 +83,18 @@ Was Correct: ${input.isCorrect}
 Respond with JSON only.
 `;
 
-    const raw = await callGeminiAPI(NIME_SYSTEM_PROMPT, userPrompt);
+    const raw = await callGroq([
+      { role: 'system', content: NIME_SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt }
+    ], { maxTokens: 512 });
     return parseJSONResponse<NimeResponse>(raw);
   } catch (error) {
     console.error('Nime feedback error:', error);
-    // Fallback response
     return input.isCorrect
       ? { message: "Nice work! You got it right. 🎉", tip: "Keep up the momentum!" }
       : { message: "Almost there! Let's break this down together.", tip: "Review the concept and try again." };
   }
 }
-
-// ============================================
-// NESTO - Get Performance Coaching
-// ============================================
 
 export async function getNestoFeedback(input: NestoInput): Promise<NestoResponse> {
   try {
@@ -176,20 +115,18 @@ ${input.sessionProgress ? `Session: ${input.sessionProgress.questionsAnswered} q
 Respond with JSON only.
 `;
 
-    const raw = await callGeminiAPI(NESTO_SYSTEM_PROMPT, userPrompt);
+    const raw = await callGroq([
+      { role: 'system', content: NESTO_SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt }
+    ], { maxTokens: 512 });
     return parseJSONResponse<NestoResponse>(raw);
   } catch (error) {
     console.error('Nesto feedback error:', error);
-    // Fallback response
     return input.recentResult === 'correct'
       ? { message: "Good. Keep pushing.", challengeSuggestion: "Ready for harder questions?" }
       : { message: "Missed it. Focus up. You've got this.", challengeSuggestion: "Review and retry." };
   }
 }
-
-// ============================================
-// Combined Feedback (Both Tutors)
-// ============================================
 
 export async function getTutorFeedback(
   nimeInput: NimeInput,

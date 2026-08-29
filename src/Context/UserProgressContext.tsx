@@ -1,11 +1,6 @@
-// ============================================
-// USER PROGRESS CONTEXT
-// Global state management for user progress, XP, streaks, achievements
-// ============================================
-
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
-import type { UserProgress, SkillProgress, Achievement } from '../Types/user';
+import type { UserProgress, SkillProgress } from '../Types/user';
 import {
   getOrCreateUserProgress,
   getUserProgress,
@@ -20,19 +15,13 @@ import {
 } from '../Services/userProgressService';
 import { toast } from 'sonner';
 
-// ============================================
-// TYPES
-// ============================================
-
 interface UserProgressContextType {
-  // State
   userProgress: UserProgress | null;
   loading: boolean;
   error: string | null;
   rank: number;
   xpToClimb: number;
   
-  // Actions
   refreshProgress: () => Promise<void>;
   submitQuizResult: (result: Omit<QuizResult, 'id' | 'userId' | 'completedAt'>) => Promise<{
     xpEarned: number;
@@ -46,16 +35,11 @@ interface UserProgressContextType {
     correctAnswers: number
   ) => Promise<SkillProgress>;
   
-  // Computed
   isPracticedToday: boolean;
   dailyGoalComplete: boolean;
 }
 
 const UserProgressContext = createContext<UserProgressContextType | undefined>(undefined);
-
-// ============================================
-// PROVIDER
-// ============================================
 
 interface UserProgressProviderProps {
   children: ReactNode;
@@ -69,7 +53,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
   const [rank, setRank] = useState(0);
   const [xpToClimb, setXpToClimb] = useState(0);
 
-  // Load user progress on auth change
   useEffect(() => {
     async function loadProgress() {
       if (!currentUser) {
@@ -83,13 +66,11 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
       setError(null);
 
       try {
-        // Try cache first for faster load
         const cached = getCachedUserProgress();
         if (cached && cached.id === currentUser.uid) {
           setUserProgress(cached);
         }
 
-        // Fetch fresh data
         const progress = await getOrCreateUserProgress(
           currentUser.uid,
           currentUser.displayName || 'Developer',
@@ -97,7 +78,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
           currentUser.photoURL || undefined
         );
 
-        // Check streak status
         const streakStatus = await checkStreakStatus(currentUser.uid);
         if (!streakStatus.streakActive && progress.currentStreak > 0) {
           progress.currentStreak = streakStatus.currentStreak;
@@ -106,7 +86,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
         setUserProgress(progress);
         cacheUserProgress(progress);
 
-        // Get rank
         const rankData = await getUserRank(currentUser.uid);
         setRank(rankData.rank);
         setXpToClimb(rankData.xpToClimb);
@@ -114,7 +93,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
         console.error('Error loading user progress:', err);
         setError('Failed to load progress');
         
-        // Fall back to cache
         const cached = getCachedUserProgress();
         if (cached) {
           setUserProgress(cached);
@@ -127,7 +105,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     loadProgress();
   }, [currentUser]);
 
-  // Refresh progress
   const refreshProgress = useCallback(async () => {
     if (!currentUser) return;
 
@@ -146,7 +123,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     }
   }, [currentUser]);
 
-  // Submit quiz result
   const submitQuizResult = useCallback(async (
     result: Omit<QuizResult, 'id' | 'userId' | 'completedAt'>
   ) => {
@@ -157,7 +133,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     try {
       const quizResult = await saveQuizResult(currentUser.uid, result);
 
-      // Show notifications
       if (quizResult.leveledUp) {
         toast.success('🎉 Level Up!', {
           description: 'Congratulations on reaching a new level!',
@@ -172,7 +147,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
         });
       }
 
-      // Refresh progress
       await refreshProgress();
 
       return quizResult;
@@ -182,7 +156,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     }
   }, [currentUser, refreshProgress]);
 
-  // Update skill
   const updateSkill = useCallback(async (
     skillName: string,
     category: 'language' | 'framework' | 'concept',
@@ -210,7 +183,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     }
   }, [currentUser, refreshProgress]);
 
-  // Computed values
   const isPracticedToday = userProgress?.lastActiveDate === new Date().toISOString().split('T')[0];
   const dailyGoalComplete = (userProgress?.dailyProgress || 0) >= (userProgress?.dailyGoal || 50);
 
@@ -233,10 +205,6 @@ export function UserProgressProvider({ children }: UserProgressProviderProps) {
     </UserProgressContext.Provider>
   );
 }
-
-// ============================================
-// HOOK
-// ============================================
 
 export function useUserProgress() {
   const context = useContext(UserProgressContext);

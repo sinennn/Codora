@@ -1,15 +1,9 @@
-// ============================================
-// TUTOR SELECT PAGE
-// Users select a field or technology to learn
-// Integrates with curriculum system for roadmap-based learning
-// ============================================
-
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, ChevronLeft, BookOpen, Code, Sparkles, GraduationCap, 
-  Lock, AlertTriangle, CheckCircle, Loader2 
+  Search, ChevronLeft, BookOpen, Code, Zap, GraduationCap,
+  Lock, AlertTriangle, Loader2 
 } from 'lucide-react';
 import FooterNav from '../DashBoard/Footer';
 import fieldsData from '../../Data/Fields.json';
@@ -47,7 +41,13 @@ export default function TutorSelect() {
   const [enrolling, setEnrolling] = useState(false);
 
   const fields = fieldsData.fields;
-  const technologies = technologiesData;
+  const technologies = technologiesData.technologies;
+
+  const getRoadmapIdForItem = (itemName: string): string | undefined => {
+    const allItems = [...fields, ...technologies];
+    const item = allItems.find(i => i.name === itemName);
+    return item?.roadmapId;
+  };
 
   // If user is enrolled and locked, show their current path
   useEffect(() => {
@@ -84,6 +84,7 @@ export default function TutorSelect() {
           topic: selectedItem,
           category: enrollment.roadmapType,
           difficulty: 'beginner', // Will be determined by roadmap
+          roadmapId: enrollment.roadmapId,
           moduleId: nextLesson.moduleId,
           lessonId: nextLesson.lessonId,
           fromRoadmap: true,
@@ -102,11 +103,14 @@ export default function TutorSelect() {
     setEnrolling(false);
 
     if (success) {
+      // After enrollment, nextLesson should be populated by the context
+      // Navigate with the topic - the lesson service will find the curriculum
       navigate('/tutor/lesson', {
         state: {
           topic: selectedItem,
           category: activeTab === 'fields' ? 'field' : 'technology',
           difficulty: selectedDifficulty,
+          roadmapId: getRoadmapIdForItem(selectedItem) || selectedItem.toLowerCase().replace(/\s+/g, '-'),
           fromRoadmap: true,
         },
       });
@@ -166,7 +170,7 @@ export default function TutorSelect() {
             onClick={handleStartLesson}
             className="w-full mt-3 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-xl flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-4 h-4" />
+            <Zap className="w-4 h-4" />
             Continue Learning
           </button>
         )}
@@ -252,7 +256,8 @@ export default function TutorSelect() {
     );
   };
 
-  if (curriculumLoading) {
+  // Only show loading on first load when no enrollment data exists yet
+  if (curriculumLoading && enrollment === null && !isEnrolled) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
@@ -458,7 +463,7 @@ export default function TutorSelect() {
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-5 h-5" />
+                        <Zap className="w-5 h-5" />
                         Start Learning {selectedItem}
                       </>
                     )}

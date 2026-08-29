@@ -1,13 +1,8 @@
-// ============================================
-// LEADERBOARD PAGE
-// Uses original userScores collection for existing data
-// ============================================
-
 import { motion } from 'framer-motion';
 import { Trophy, Award, ChevronUp, ChevronDown, User, Crown, Star, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Footer from '../DashBoard/Footer';
-import { getTopScores, getUserScore, LeaderboardEntry } from '../../Services/scoreService';
+import { getTopScores, getUserScore, type LeaderboardEntry } from '../../Services/userProgressService';
 import { auth } from '../../../firebase';
 
 export default function Leaderboard() {
@@ -15,11 +10,18 @@ export default function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [userRank, setUserRank] = useState<number | null>(null);
   const [userScore, setUserScore] = useState<number>(0);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      // Don't show loading if we already have data
+      if (hasFetched && leaderboardData.length > 0) {
+        setLoading(false);
+        return;
+      }
+      
       try {
-        setLoading(true);
+        if (!hasFetched) setLoading(true);
         const data = await getTopScores(10);
         setLeaderboardData(data);
 
@@ -37,6 +39,7 @@ export default function Leaderboard() {
             }
           }
         }
+        setHasFetched(true);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
       } finally {
@@ -45,9 +48,10 @@ export default function Leaderboard() {
     };
 
     fetchLeaderboard();
-  }, []);
+  }, [hasFetched, leaderboardData.length]);
 
-  if (loading) {
+  // Only show loading spinner on first load when no data
+  if (loading && !hasFetched && leaderboardData.length === 0) {
     return (
       <div className="w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black">
         <Loader2 className="w-12 h-12 text-orange-500 animate-spin mb-4" />

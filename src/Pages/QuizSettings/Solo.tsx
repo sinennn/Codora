@@ -35,7 +35,7 @@ export default function Index() {
     setIsLoadingOptions(true);
     const result = optionType === 'field'
       ? fieldsData.fields
-      : techData;
+      : techData.technologies;
     setIsLoadingOptions(false);
     return result;
   }, [optionType]);

@@ -1,44 +1,25 @@
-// ============================================
-// CODORA USER & PROGRESSION TYPES
-// ============================================
-
 export interface UserProgress {
   id: string;
   username: string;
   email: string;
   photoURL?: string;
-  
-  // XP & Leveling
   xp: number;
   level: number;
   levelTitle: string;
   xpToNextLevel: number;
-  
-  // Streaks
   currentStreak: number;
   longestStreak: number;
-  lastActiveDate: string; // ISO date
-  
-  // Daily Goals
-  dailyGoal: number;        // XP target per day
-  dailyProgress: number;    // XP earned today
-  
-  // Stats
+  lastActiveDate: string;
+  dailyGoal: number;
+  dailyProgress: number;
   totalQuestions: number;
   correctAnswers: number;
   accuracy: number;
-  totalTimeSpent: number;   // seconds
-  
-  // Skills
+  totalTimeSpent: number;
   skills: SkillProgress[];
   weakTopics: string[];
-  
-  // Achievements
   achievements: Achievement[];
-  
-  // Preferences
   preferredTutor: 'nime' | 'nesto' | 'both';
-  
   createdAt: string;
   updatedAt: string;
 }
@@ -47,7 +28,7 @@ export interface SkillProgress {
   skillId: string;
   name: string;
   category: 'language' | 'framework' | 'concept';
-  level: number;           // 0-5 mastery
+  level: number;
   xp: number;
   totalLessons: number;
   completedLessons: number;
@@ -62,11 +43,10 @@ export interface Achievement {
   icon: string;
   unlockedAt?: string;
   isUnlocked: boolean;
-  progress?: number;       // 0-100 for progressive achievements
+  progress?: number;
   requirement?: number;
 }
 
-// Level titles based on XP thresholds
 export const LEVEL_TITLES: Record<number, string> = {
   1: 'Novice',
   2: 'Apprentice',
@@ -80,7 +60,6 @@ export const LEVEL_TITLES: Record<number, string> = {
   10: 'Legend',
 };
 
-// XP required for each level
 export const XP_THRESHOLDS: Record<number, number> = {
   1: 0,
   2: 100,
@@ -113,7 +92,6 @@ export function calculateLevel(xp: number): { level: number; title: string; xpTo
   };
 }
 
-// Default user progress for new users
 export const defaultUserProgress: Omit<UserProgress, 'id' | 'username' | 'email'> = {
   xp: 0,
   level: 1,

@@ -1,16 +1,11 @@
-// ============================================
-// AI TUTOR LESSON SERVICE
-// Generates dynamic coding lessons based on selected field/technology
-// ============================================
-
 import { db } from '../../firebase';
 import { doc, getDoc, setDoc, collection, query, where, orderBy, limit, getDocs, serverTimestamp } from 'firebase/firestore';
-
-const AI_API_KEY = import.meta.env.VITE_AI_API_KEY;
-
-// ============================================
-// TYPES
-// ============================================
+import { loadRoadmap, getLesson as getCurriculumLesson, type Lesson, type Module } from './curriculumDataService';
+import { 
+  getLearnerProfile, 
+  buildAdaptiveSystemPrompt 
+} from './adaptiveLearningService';
+import { callGroq } from '../lib/groqClient';
 
 export interface LessonContent {
   id: string;
@@ -18,10 +13,14 @@ export interface LessonContent {
   topic: string;
   category: 'field' | 'technology';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  estimatedTime: number; // minutes
+  estimatedTime: number;
   sections: LessonSection[];
   exercises: Exercise[];
+  resources: { type: string; title: string; url: string }[];
   createdAt: string;
+  roadmapId?: string;
+  moduleId?: string;
+  moduleName?: string;
 }
 
 export interface LessonSection {
@@ -54,7 +53,7 @@ export interface TutorLesson {
   id: string;
   userId: string;
   lessonContent: LessonContent;
-  progress: number; // 0-100
+  progress: number;
   currentSection: number;
   completedExercises: string[];
   xpEarned: number;
@@ -62,33 +61,33 @@ export interface TutorLesson {
   completedAt?: string;
 }
 
-// ============================================
-// LESSON GENERATION PROMPTS
-// ============================================
+const CURRICULUM_LESSON_PROMPT = `You are an expert coding instructor. Using the provided curriculum topic and resources, create an engaging, practical lesson.
 
-const LESSON_SYSTEM_PROMPT = `You are an expert coding instructor creating structured lessons. Generate comprehensive, practical lessons that teach real coding skills.
+CURRICULUM TOPIC: {topic}
+DESCRIPTION: {description}
+RESOURCES: {resources}
 
-RULES:
-1. Content must be accurate and up-to-date
-2. Include practical, runnable code examples
-3. Explain concepts clearly with real-world analogies
-4. Progress from simple to complex
-5. Include common pitfalls and best practices
-6. Make exercises progressively challenging
+{adaptiveInstructions}
+
+Create a lesson that:
+1. Explains the concept clearly with real-world analogies
+2. Includes practical, runnable code examples
+3. Has 3-4 exercises to test understanding
+4. References the provided resources for further learning
 
 OUTPUT FORMAT (JSON only):
 {
-  "title": "Lesson title",
+  "title": "Lesson title based on topic",
   "estimatedTime": 15,
   "sections": [
     {
       "id": "section_1",
       "title": "Section title",
-      "content": "Detailed explanation with markdown formatting",
+      "content": "Detailed explanation",
       "codeExample": {
         "language": "javascript",
-        "code": "// Actual runnable code",
-        "explanation": "Line-by-line explanation"
+        "code": "// Runnable code example",
+        "explanation": "What this code does"
       },
       "tips": ["Practical tip 1", "Practical tip 2"]
     }
@@ -96,10 +95,10 @@ OUTPUT FORMAT (JSON only):
   "exercises": [
     {
       "id": "ex_1",
-      "type": "code_completion",
-      "question": "Complete the function to...",
-      "codeSnippet": "function example() {\\n  // Your code here\\n}",
-      "correctAnswer": "return value;",
+      "type": "multiple_choice",
+      "question": "Question about the topic",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correctAnswer": 0,
       "hint": "Think about...",
       "explanation": "The correct answer is... because...",
       "xpReward": 10
@@ -107,18 +106,170 @@ OUTPUT FORMAT (JSON only):
   ]
 }`;
 
-// ============================================
-// LESSON GENERATION
-// ============================================
+export async function generateLessonFromCurriculum(
+  roadmapId: string,
+  lessonId: string,
+  difficulty: 'beginner' | 'intermediate' | 'advanced' = 'beginner',
+  userId?: string
+): Promise<LessonContent> {
+  const curriculumData = await getCurriculumLesson(roadmapId, lessonId);
+  
+  if (!curriculumData) {
+    throw new Error(`Lesson not found: ${lessonId} in roadmap ${roadmapId}`);
+  }
+
+  const { lesson, module } = curriculumData;
+  
+  let adaptiveInstructions = '';
+  if (userId) {
+    try {
+      const learnerProfile = await getLearnerProfile(userId);
+      adaptiveInstructions = buildAdaptiveSystemPrompt(learnerProfile);
+    } catch (error) {
+      console.warn('Could not load learner profile, using default teaching style');
+    }
+  }
+  
+  const resourcesText = lesson.resources
+    .map(r => `- [${r.type}] ${r.title}: ${r.url}`)
+    .join('\n');
+
+  const prompt = CURRICULUM_LESSON_PROMPT
+    .replace('{topic}', lesson.title)
+    .replace('{description}', lesson.description || 'No description provided')
+    .replace('{resources}', resourcesText || 'No external resources')
+    .replace('{adaptiveInstructions}', adaptiveInstructions);
+
+  try {
+    const raw = await callGroq([
+      { role: 'user', content: prompt }
+    ], { temperature: 0.7, maxTokens: 4096 });
+    
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON in response');
+    }
+
+    const lessonData = JSON.parse(jsonMatch[0]);
+    
+    return {
+      id: lessonId,
+      topic: lesson.title,
+      category: 'technology',
+      difficulty,
+      resources: lesson.resources,
+      roadmapId,
+      moduleId: module.id,
+      moduleName: module.name,
+      createdAt: new Date().toISOString(),
+      ...lessonData,
+    };
+  } catch (error) {
+    console.error('Error generating lesson from curriculum:', error);
+    return createFallbackLesson(lesson, module, roadmapId, difficulty);
+  }
+}
+
+function createFallbackLesson(
+  lesson: Lesson,
+  module: Module,
+  roadmapId: string,
+  difficulty: string
+): LessonContent {
+  return {
+    id: lesson.id,
+    title: lesson.title,
+    topic: lesson.title,
+    category: 'technology',
+    difficulty: difficulty as 'beginner' | 'intermediate' | 'advanced',
+    estimatedTime: 15,
+    roadmapId,
+    moduleId: module.id,
+    moduleName: module.name,
+    resources: lesson.resources,
+    createdAt: new Date().toISOString(),
+    sections: [
+      {
+        id: 'section_1',
+        title: `Introduction to ${lesson.title}`,
+        content: lesson.description || `Let's learn about ${lesson.title}. This is an important concept in ${module.name}.`,
+        tips: ['Take your time to understand each concept', 'Practice with the exercises below'],
+      },
+      {
+        id: 'section_2',
+        title: 'Learning Resources',
+        content: `Here are some great resources to learn more about ${lesson.title}:\n\n${lesson.resources.map(r => `• **${r.title}** (${r.type}): ${r.url}`).join('\n')}`,
+      },
+    ],
+    exercises: [
+      {
+        id: 'ex_1',
+        type: 'multiple_choice',
+        question: `What is ${lesson.title} primarily used for?`,
+        options: [
+          'Building user interfaces',
+          'Managing application state',
+          'Handling data operations',
+          'All of the above, depending on context',
+        ],
+        correctAnswer: 3,
+        hint: 'Think about the various use cases',
+        explanation: `${lesson.title} can be used in multiple contexts depending on your needs.`,
+        xpReward: lesson.xpReward,
+      },
+    ],
+  };
+}
 
 export async function generateLesson(
   topic: string,
   category: 'field' | 'technology',
   difficulty: 'beginner' | 'intermediate' | 'advanced',
-  specificFocus?: string
+  specificFocus?: string,
+  roadmapId?: string,
+  lessonId?: string,
+  userId?: string
 ): Promise<LessonContent> {
+  if (roadmapId) {
+    try {
+      const roadmap = await loadRoadmap(roadmapId);
+      
+      if (roadmap && roadmap.modules.length > 0) {
+        const targetLessonId = lessonId || roadmap.modules[0]?.lessons[0]?.id;
+        
+        if (targetLessonId) {
+          return generateLessonFromCurriculum(roadmapId, targetLessonId, difficulty, userId);
+        }
+      }
+    } catch (error) {
+      console.warn('Could not load curriculum, falling back to AI generation:', error);
+    }
+  }
+  
+  return generateLessonPureAI(topic, category, difficulty, specificFocus, userId);
+}
+
+async function generateLessonPureAI(
+  topic: string,
+  category: 'field' | 'technology',
+  difficulty: 'beginner' | 'intermediate' | 'advanced',
+  specificFocus?: string,
+  userId?: string
+): Promise<LessonContent> {
+  let adaptiveInstructions = '';
+  if (userId) {
+    try {
+      const learnerProfile = await getLearnerProfile(userId);
+      adaptiveInstructions = buildAdaptiveSystemPrompt(learnerProfile);
+    } catch (error) {
+      console.warn('Could not load learner profile');
+    }
+  }
+
   const prompt = `Generate a ${difficulty} level coding lesson about "${topic}" ${category === 'field' ? 'in the field of' : 'using'} ${topic}.
 ${specificFocus ? `Focus specifically on: ${specificFocus}` : ''}
+
+${adaptiveInstructions}
 
 The lesson should:
 - Have 3-4 sections with clear explanations
@@ -126,33 +277,20 @@ The lesson should:
 - Have 3-4 exercises of varying difficulty
 - Be suitable for ${difficulty} level learners
 
-Return ONLY valid JSON matching the specified format.`;
+Return ONLY valid JSON with this structure:
+{
+  "title": "Lesson title",
+  "estimatedTime": 15,
+  "sections": [{ "id": "section_1", "title": "...", "content": "...", "codeExample": { "language": "javascript", "code": "...", "explanation": "..." }, "tips": ["..."] }],
+  "exercises": [{ "id": "ex_1", "type": "multiple_choice", "question": "...", "options": ["A", "B", "C", "D"], "correctAnswer": 0, "hint": "...", "explanation": "...", "xpReward": 10 }]
+}`;
 
   try {
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': AI_API_KEY as string,
-        },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: `${LESSON_SYSTEM_PROMPT}\n\n${prompt}` }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw = await callGroq([
+      { role: 'user', content: prompt }
+    ], { temperature: 0.7, maxTokens: 4096 });
     
-    // Parse JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON in response');
     }
@@ -164,6 +302,7 @@ Return ONLY valid JSON matching the specified format.`;
       topic,
       category,
       difficulty,
+      resources: [],
       createdAt: new Date().toISOString(),
       ...lessonData,
     };
@@ -172,11 +311,6 @@ Return ONLY valid JSON matching the specified format.`;
     throw error;
   }
 }
-
-
-// ============================================
-// LESSON PERSISTENCE
-// ============================================
 
 const COLLECTIONS = {
   LESSONS: 'tutorLessons',
@@ -193,6 +327,9 @@ export async function saveLessonProgress(
   lessonMeta?: { topic: string; title: string; category: 'field' | 'technology'; difficulty: string; totalSections: number; totalExercises: number }
 ): Promise<void> {
   const lessonRef = doc(db, COLLECTIONS.USER_LESSONS, `${userId}_${lessonId}`);
+  
+  const existingDoc = await getDoc(lessonRef);
+  const isNewCompletion = !existingDoc.exists() || existingDoc.data()?.progress < 100;
   
   await setDoc(lessonRef, {
     lessonId,
@@ -211,6 +348,11 @@ export async function saveLessonProgress(
       totalExercises: lessonMeta.totalExercises,
     }),
   }, { merge: true });
+
+  if (progress === 100 && xpEarned > 0 && isNewCompletion) {
+    const { addXP } = await import('./userProgressService');
+    await addXP(userId, xpEarned);
+  }
 }
 
 export async function getUserLessonProgress(
@@ -253,7 +395,6 @@ export async function getUserLessons(userId: string, limitCount: number = 10): P
   }
 }
 
-// Get the most recent lesson for "Continue Learning" feature
 export interface RecentLesson {
   lessonId: string;
   topic: string;
@@ -302,10 +443,6 @@ export async function getMostRecentLesson(userId: string): Promise<RecentLesson 
   }
 }
 
-// ============================================
-// QUIZ EXPLANATION GENERATION
-// ============================================
-
 export async function generateQuizExplanation(
   question: string,
   userAnswer: string,
@@ -340,25 +477,11 @@ Return JSON:
 }`;
 
   try {
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': AI_API_KEY as string,
-        },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
-        }),
-      }
-    );
-
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw = await callGroq([
+      { role: 'user', content: prompt }
+    ], { temperature: 0.7, maxTokens: 1024 });
     
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       return { explanation: 'Unable to generate explanation. Please try again.' };
     }
@@ -369,10 +492,6 @@ Return JSON:
     return { explanation: 'Unable to generate explanation. Please try again.' };
   }
 }
-
-// ============================================
-// LEARNING PATH GENERATION
-// ============================================
 
 export interface LearningPath {
   id: string;
@@ -408,25 +527,11 @@ Return JSON:
 }`;
 
   try {
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': AI_API_KEY as string,
-        },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
-        }),
-      }
-    );
-
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw = await callGroq([
+      { role: 'user', content: prompt }
+    ], { temperature: 0.7, maxTokens: 2048 });
     
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON in response');
     }
@@ -444,16 +549,12 @@ Return JSON:
   }
 }
 
-// ============================================
-// OFFLINE CACHE FOR LESSONS
-// ============================================
-
 const LESSON_CACHE_KEY = 'codora_cached_lessons';
 
 export function cacheLessons(lessons: LessonContent[]): void {
   try {
     const existing = getCachedLessons();
-    const merged = [...existing, ...lessons].slice(-20); // Keep last 20
+    const merged = [...existing, ...lessons].slice(-20);
     localStorage.setItem(LESSON_CACHE_KEY, JSON.stringify(merged));
   } catch (error) {
     console.error('Error caching lessons:', error);

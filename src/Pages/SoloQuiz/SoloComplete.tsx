@@ -1,13 +1,8 @@
-// ============================================
-// SOLO QUIZ COMPLETE PAGE
-// Shows results and saves to Firebase
-// ============================================
-
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CardContent, CardFooter } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { CheckCircle2, XCircle, Trophy, Sparkles, MessageCircle } from "lucide-react";
+import { CheckCircle2, XCircle, Trophy, Zap, MessageCircle } from "lucide-react";
 import useSendBack from '../../Services/sendBack';
 import { useEffect, useState, useRef } from 'react';
 import { auth } from '../../../firebase';
@@ -27,7 +22,7 @@ export default function SoloComplete() {
   const [showTutorFeedback, setShowTutorFeedback] = useState(false);
   const hasSavedScore = useRef(false);
   
-  const { submitQuizResult, userProgress } = useUserProgress();
+  const { submitQuizResult } = useUserProgress();
   useSendBack();
 
   useEffect(() => {
@@ -42,6 +37,10 @@ export default function SoloComplete() {
           hasSavedScore.current = true;
           
           // Prepare quiz result data
+          const percentage = (state.score / state.allQuestions.length) * 100;
+          const baseXp = state.allQuestions.length * 10;
+          const xpMultiplier = percentage >= 80 ? 1.5 : percentage >= 50 ? 1.0 : 0.5;
+          
           const quizResult = {
             topic: state.topic || 'General',
             category: (state.category || 'technology') as 'field' | 'technology',
@@ -50,6 +49,7 @@ export default function SoloComplete() {
             correctAnswers: state.score,
             score: state.score,
             timeSpent: state.timeSpent || 0,
+            xpEarned: Math.round(baseXp * xpMultiplier),
             questions: state.allQuestions.map((q: any, i: number) => ({
               question: q.question,
               userAnswer: state.userAnswers[i] ?? -1,
@@ -68,10 +68,10 @@ export default function SoloComplete() {
           setScoreSaved(true);
 
           // Trigger confetti for good scores
-          const percentage = (state.score / state.allQuestions.length) * 100;
-          if (percentage >= 70) {
+          const confettiPercentage = (state.score / state.allQuestions.length) * 100;
+          if (confettiPercentage >= 70) {
             confetti({
-              particleCount: percentage === 100 ? 150 : 80,
+              particleCount: confettiPercentage === 100 ? 150 : 80,
               spread: 70,
               origin: { y: 0.6 },
               colors: ['#f97316', '#fbbf24', '#22c55e'],
@@ -86,7 +86,7 @@ export default function SoloComplete() {
               correctAnswer: 'N/A',
               topic: state.topic || 'coding',
               difficulty: state.difficulty || 'beginner',
-              isCorrect: percentage >= 70,
+              isCorrect: confettiPercentage >= 70,
             });
             setTutorFeedback(feedback.message);
           } catch (err) {
@@ -199,7 +199,7 @@ export default function SoloComplete() {
                       animate={{ scale: 1 }}
                       className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-xl"
                     >
-                      <Sparkles className="w-5 h-5 text-green-400" />
+                      <Zap className="w-5 h-5 text-green-400" />
                       <span className="text-green-400 font-bold">Level Up!</span>
                     </motion.div>
                   )}
@@ -262,9 +262,6 @@ export default function SoloComplete() {
             <div className="space-y-4 sm:space-y-6 mt-4 max-h-[40vh] overflow-y-auto">
               {allQuestions.map((question: any, qIndex: number) => {
                 const userAnswer = userAnswers[qIndex];
-                const isCorrect = question.options 
-                  ? question.options[userAnswer]?.isCorrect 
-                  : userAnswer === question.correctAnswer;
 
                 return (
                   <div key={qIndex} className="border border-gray-700 rounded-xl p-3 sm:p-4 bg-gray-800/50">

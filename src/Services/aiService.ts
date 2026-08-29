@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-const AI_API_KEY = import.meta.env.VITE_AI_API_KEY;
+import { callGroq } from "../lib/groqClient";
 
 const SYSTEM_PROMPT = `
 You are a professional quiz question generator. Your task is to create multiple-choice questions for technical assessments.
@@ -66,22 +66,7 @@ export interface QuizParams {
 
 export const generateQuizQuestions = async (params: QuizParams): Promise<{ questions: Question[], rawResponse: string }> => {
   try {
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-goog-api-key': AI_API_KEY as string,
-      },
-      body: JSON.stringify({
-            contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text:
-`${SYSTEM_PROMPT}
-
-Generate exactly ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.
+    const userPrompt = `Generate exactly ${params.numberOfQuestions} questions about ${params.topic} in the ${params.optionType} category at ${params.difficulty} difficulty level.
 
 IMPORTANT: Return ONLY a valid JSON array of question objects with this exact structure:
 [
@@ -95,30 +80,12 @@ IMPORTANT: Return ONLY a valid JSON array of question objects with this exact st
 
 - Each question must have exactly 4 options
 - correctAnswer must be the index of the correct option (0-3)
-- Within the output, provide a minimal but crystal clear explanation of the answer`
-              }
-            ]
-          }
-        ]
-      })
-    });
+- Within the output, provide a minimal but crystal clear explanation of the answer`;
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Gemini API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorData
-      });
-      throw new Error(`Failed to generate quiz questions: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const rawResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!rawResponse) {
-      throw new Error('No questions generated in the response');
-    }
+    const rawResponse = await callGroq([
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt }
+    ]);
 
     let jsonString = rawResponse.trim();
     console.log(jsonString);
@@ -133,7 +100,7 @@ IMPORTANT: Return ONLY a valid JSON array of question objects with this exact st
       parsed = JSON.parse(jsonString);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-           const arrayMatch = jsonString.match(/\[([\s\S]*?)\]/);
+      const arrayMatch = jsonString.match(/\[([\s\S]*?)\]/);
       if (arrayMatch) {
         try {
           parsed = JSON.parse(arrayMatch[0]);
@@ -158,7 +125,7 @@ IMPORTANT: Return ONLY a valid JSON array of question objects with this exact st
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const validatedQuestions = questions.map((q: any, index: number) => {
-     
+      
       console.log(`Processing question ${index}:`, JSON.stringify(q, null, 2));
       
       if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctAnswer !== 'number') {
@@ -190,7 +157,6 @@ IMPORTANT: Return ONLY a valid JSON array of question objects with this exact st
   }
 };
 
-// Mock implementation for development
 export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{ questions: Question[], rawResponse: string }> => {
   console.log(params)
   return new Promise((resolve) => {
@@ -205,7 +171,7 @@ export const mockGenerateQuizQuestions = async (params: QuizParams): Promise<{ q
             "D. Connect to internet"
           ],
           correctAnswer: 1,
-          explanation: "The CPU is the “brain” of the computer. Its main job is to fetch, decode, and execute instructions. In other words, it processes instructions."
+          explanation: "The CPU is the brain of the computer. Its main job is to fetch, decode, and execute instructions. In other words, it processes instructions."
         },
         {
           question: "Which data structure uses LIFO principle?",

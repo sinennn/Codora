@@ -18,7 +18,6 @@ interface UseTutorFeedbackReturn {
   isLoading: boolean;
   error: string | null;
   
-  // Get feedback from both tutors
   getFeedback: (
     question: string,
     userAnswer: string,
@@ -29,13 +28,10 @@ interface UseTutorFeedbackReturn {
     userStats: UserStats
   ) => Promise<void>;
   
-  // Get feedback from Nime only
   getNimeOnly: (input: NimeInput) => Promise<NimeResponse | null>;
   
-  // Get feedback from Nesto only
   getNestoOnly: (userStats: UserStats, isCorrect: boolean, topic?: string) => Promise<NestoResponse | null>;
   
-  // Clear feedback
   clearFeedback: () => void;
 }
 

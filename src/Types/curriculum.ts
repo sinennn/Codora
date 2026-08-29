@@ -1,20 +1,11 @@
-// ============================================
-// CURRICULUM & ROADMAP TYPES
-// Structured learning paths with progress tracking
-// ============================================
-
-// ============================================
-// ROADMAP STRUCTURE
-// ============================================
-
 export interface Roadmap {
   id: string;
-  name: string;                    // e.g., "React", "Python", "Backend Development"
+  name: string;
   type: 'field' | 'technology';
   description: string;
   estimatedWeeks: number;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  prerequisites: string[];         // IDs of other roadmaps that should be completed first
+  prerequisites: string[];
   modules: Module[];
   createdAt: string;
   updatedAt: string;
@@ -25,10 +16,10 @@ export interface Module {
   roadmapId: string;
   name: string;
   description: string;
-  order: number;                   // Position in the roadmap
+  order: number;
   estimatedHours: number;
-  isOptional: boolean;             // Advanced/optional modules
-  prerequisites: string[];         // Module IDs that must be completed first
+  isOptional: boolean;
+  prerequisites: string[];
   lessons: Lesson[];
 }
 
@@ -53,7 +44,7 @@ export interface LessonContent {
 export interface ContentSection {
   id: string;
   title: string;
-  content: string;                 // Markdown content
+  content: string;
   order: number;
 }
 
@@ -87,43 +78,31 @@ export interface Exercise {
   isRequired: boolean;
 }
 
-// ============================================
-// USER ENROLLMENT & PROGRESS
-// ============================================
-
 export interface UserEnrollment {
   id: string;
   userId: string;
   roadmapId: string;
   roadmapName: string;
   roadmapType: 'field' | 'technology';
-  enrolledAt: string;              // ISO timestamp
-  lockedUntil: string;             // ISO timestamp (enrolledAt + 2 weeks)
+  enrolledAt: string;
+  lockedUntil: string;
   status: 'active' | 'completed' | 'paused';
   completedAt?: string;
 }
 
 export interface UserCurriculumProgress {
-  id: string;                      // `${userId}_${roadmapId}`
+  id: string;
   userId: string;
   roadmapId: string;
-  
-  // Overall progress
-  overallProgress: number;         // 0-100
+  overallProgress: number;
   currentModuleId: string;
   currentLessonId: string;
-  
-  // Detailed tracking
   moduleProgress: ModuleProgress[];
-  
-  // Stats
   totalXpEarned: number;
-  totalTimeSpent: number;          // seconds
+  totalTimeSpent: number;
   lessonsCompleted: number;
   exercisesCompleted: number;
   exercisesAttempted: number;
-  
-  // Timestamps
   startedAt: string;
   lastActivityAt: string;
   completedAt?: string;
@@ -133,7 +112,7 @@ export interface ModuleProgress {
   moduleId: string;
   moduleName: string;
   status: 'locked' | 'available' | 'in_progress' | 'completed';
-  progress: number;                // 0-100
+  progress: number;
   lessonsProgress: LessonProgress[];
   startedAt?: string;
   completedAt?: string;
@@ -143,10 +122,10 @@ export interface LessonProgress {
   lessonId: string;
   lessonName: string;
   status: 'locked' | 'available' | 'in_progress' | 'completed' | 'skipped';
-  progress: number;                // 0-100
-  sectionsCompleted: string[];     // Section IDs
+  progress: number;
+  sectionsCompleted: string[];
   exerciseAttempts: ExerciseAttempt[];
-  timeSpent: number;               // seconds
+  timeSpent: number;
   startedAt?: string;
   completedAt?: string;
   lastAccessedAt?: string;
@@ -158,14 +137,10 @@ export interface ExerciseAttempt {
   isCorrect: boolean;
   userAnswer: string | number;
   hintsUsed: number;
-  timeSpent: number;               // seconds
+  timeSpent: number;
   attemptedAt: string;
   completedAt?: string;
 }
-
-// ============================================
-// LEARNING SESSION
-// ============================================
 
 export interface LearningSession {
   id: string;
@@ -175,16 +150,12 @@ export interface LearningSession {
   lessonId: string;
   startedAt: string;
   endedAt?: string;
-  duration: number;                // seconds
+  duration: number;
   sectionsViewed: string[];
   exercisesAttempted: string[];
   exercisesCompleted: string[];
   xpEarned: number;
 }
-
-// ============================================
-// MENTOR FEEDBACK
-// ============================================
 
 export interface MentorFeedback {
   type: 'encouragement' | 'hint' | 'correction' | 'celebration' | 'guidance';
@@ -195,10 +166,6 @@ export interface MentorFeedback {
     mistakePattern?: string;
   };
 }
-
-// ============================================
-// CONSTANTS
-// ============================================
 
 export const LOCK_DURATION_DAYS = 14;
 

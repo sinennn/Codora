@@ -1,9 +1,4 @@
-// ============================================
-// CURRICULUM CONTEXT
-// Global state for roadmap enrollment and progress
-// ============================================
-
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import type {
   Roadmap,
@@ -14,24 +9,18 @@ import type {
 import {
   canEnrollInRoadmap,
   enrollInRoadmap,
-  getActiveEnrollment,
   getCurriculumProgress,
   getNextLesson,
   updateLessonProgress,
   recordExerciseAttempt,
   getResumePoint,
   generateMentorFeedback,
-  type ExerciseAttempt,
 } from '../Services/curriculumService';
+import type { ExerciseAttempt } from '../Types/curriculum';
 import { getOrCreateRoadmap, getRoadmap } from '../Services/roadmapService';
 import { toast } from 'sonner';
 
-// ============================================
-// TYPES
-// ============================================
-
 interface CurriculumContextType {
-  // State
   enrollment: UserEnrollment | null;
   roadmap: Roadmap | null;
   progress: UserCurriculumProgress | null;
@@ -40,7 +29,6 @@ interface CurriculumContextType {
   loading: boolean;
   error: string | null;
 
-  // Actions
   checkCanEnroll: () => Promise<{ allowed: boolean; message?: string }>;
   enroll: (topic: string, type: 'field' | 'technology', difficulty: 'beginner' | 'intermediate' | 'advanced') => Promise<boolean>;
   refreshProgress: () => Promise<void>;
@@ -48,17 +36,12 @@ interface CurriculumContextType {
   submitExercise: (moduleId: string, lessonId: string, attempt: Omit<ExerciseAttempt, 'attemptedAt'>) => Promise<void>;
   getMentorFeedback: (type: 'exercise_correct' | 'exercise_incorrect' | 'lesson_complete' | 'stuck', context?: Record<string, unknown>) => MentorFeedback;
 
-  // Computed
   isEnrolled: boolean;
   canSwitchRoadmap: boolean;
   daysUntilUnlock: number;
 }
 
 const CurriculumContext = createContext<CurriculumContextType | undefined>(undefined);
-
-// ============================================
-// PROVIDER
-// ============================================
 
 interface CurriculumProviderProps {
   children: ReactNode;
@@ -79,7 +62,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load enrollment and progress on auth change
   useEffect(() => {
     async function loadCurriculum() {
       if (!currentUser) {
@@ -113,13 +95,11 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     loadCurriculum();
   }, [currentUser]);
 
-  // Check if user can enroll in a new roadmap
   const checkCanEnroll = useCallback(async () => {
     if (!currentUser) return { allowed: false, message: 'Please log in first' };
     return canEnrollInRoadmap(currentUser.uid);
   }, [currentUser]);
 
-  // Enroll in a roadmap
   const enroll = useCallback(
     async (
       topic: string,
@@ -134,28 +114,23 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
       try {
         setLoading(true);
 
-        // Check if can enroll
         const canEnroll = await canEnrollInRoadmap(currentUser.uid);
         if (!canEnroll.allowed) {
           toast.error(canEnroll.message || 'Cannot enroll at this time');
           return false;
         }
 
-        // Get or create roadmap
         const roadmapData = await getOrCreateRoadmap(topic, type, difficulty);
 
-        // Enroll user
         const result = await enrollInRoadmap(currentUser.uid, roadmapData);
         if (!result.success) {
           toast.error(result.error || 'Failed to enroll');
           return false;
         }
 
-        // Update state
         setEnrollment(result.enrollment!);
         setRoadmap(roadmapData);
 
-        // Load initial progress
         const progressData = await getCurriculumProgress(currentUser.uid, roadmapData.id);
         setProgress(progressData);
 
@@ -180,7 +155,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     [currentUser]
   );
 
-  // Refresh progress
   const refreshProgress = useCallback(async () => {
     if (!currentUser || !enrollment) return;
 
@@ -195,7 +169,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     }
   }, [currentUser, enrollment]);
 
-  // Complete a lesson
   const completeLesson = useCallback(
     async (moduleId: string, lessonId: string) => {
       if (!currentUser || !enrollment) return;
@@ -208,7 +181,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
 
         await refreshProgress();
 
-        // Check if module completed
         const updatedProgress = await getCurriculumProgress(currentUser.uid, enrollment.roadmapId);
         const module = updatedProgress?.moduleProgress.find((m) => m.moduleId === moduleId);
 
@@ -229,7 +201,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     [currentUser, enrollment, refreshProgress]
   );
 
-  // Submit exercise attempt
   const submitExercise = useCallback(
     async (moduleId: string, lessonId: string, attempt: Omit<ExerciseAttempt, 'attemptedAt'>) => {
       if (!currentUser || !enrollment) return;
@@ -263,7 +234,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     [currentUser, enrollment, refreshProgress]
   );
 
-  // Get mentor feedback
   const getMentorFeedback = useCallback(
     (
       type: 'exercise_correct' | 'exercise_incorrect' | 'lesson_complete' | 'stuck',
@@ -274,7 +244,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
     []
   );
 
-  // Computed values
   const isEnrolled = !!enrollment;
 
   const canSwitchRoadmap = enrollment
@@ -311,10 +280,6 @@ export function CurriculumProvider({ children }: CurriculumProviderProps) {
 
   return <CurriculumContext.Provider value={value}>{children}</CurriculumContext.Provider>;
 }
-
-// ============================================
-// HOOK
-// ============================================
 
 export function useCurriculum() {
   const context = useContext(CurriculumContext);

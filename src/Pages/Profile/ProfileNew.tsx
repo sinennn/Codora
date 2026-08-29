@@ -1,8 +1,3 @@
-// ============================================
-// PROFILE PAGE - User Stats & Achievements
-// Now integrated with Firebase for real user data
-// ============================================
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -103,8 +98,8 @@ export default function ProfileNew() {
     { id: 'achievements', label: 'Badges' },
   ] as const;
 
-  // Loading state
-  if (loading) {
+  // Loading state - only show on very first load when no data exists
+  if (loading && !userProgress) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <motion.div

@@ -1,7 +1,5 @@
-// Tutor identities
 export type TutorType = 'nime' | 'nesto';
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
-
 
 export interface NimeInput {
   question: string;
@@ -19,12 +17,12 @@ export interface NimeResponse {
 }
 
 export interface UserStats {
-  accuracy: number;       
-  streak: number;          
-  weakTopics: string[];    
+  accuracy: number;
+  streak: number;
+  weakTopics: string[];
   totalQuestions: number;
   correctAnswers: number;
-  averageTime?: number;    
+  averageTime?: number;
 }
 
 export interface NestoInput {
@@ -42,15 +40,11 @@ export interface NestoResponse {
   challengeSuggestion?: string;
 }
 
-// Combined Tutor Response (for UI display)
-
 export interface TutorFeedback {
   nime?: NimeResponse;
   nesto?: NestoResponse;
   timestamp: number;
 }
-
-// Tutor Context (for lesson/quiz integration)
 
 export type TutorContext = 
   | 'lesson_explanation'
@@ -66,7 +60,7 @@ export interface TutorMessage {
   content: NimeResponse | NestoResponse;
   displayPriority: 'high' | 'medium' | 'low';
 }
-// Tutor Preferences (user settings)
+
 export interface TutorPreferences {
   preferredTutor: TutorType | 'both';
   showNimeExplanations: boolean;
