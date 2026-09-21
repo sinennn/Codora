@@ -125,8 +125,8 @@ export async function generateLessonFromCurriculum(
     try {
       const learnerProfile = await getLearnerProfile(userId);
       adaptiveInstructions = buildAdaptiveSystemPrompt(learnerProfile);
-    } catch (error) {
-      console.warn('Could not load learner profile, using default teaching style');
+    } catch (error:unknown) {
+      console.warn('Could not load learner profile, using default teaching style', error);
     }
   }
   
@@ -262,7 +262,7 @@ async function generateLessonPureAI(
       const learnerProfile = await getLearnerProfile(userId);
       adaptiveInstructions = buildAdaptiveSystemPrompt(learnerProfile);
     } catch (error) {
-      console.warn('Could not load learner profile');
+      console.warn('Could not load learner profile', error);
     }
   }
 

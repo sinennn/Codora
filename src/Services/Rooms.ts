@@ -9,7 +9,7 @@ interface RoomData {
   hostId: string;
   hostName: string;
   createdAt: number;
-  questions: any[];
+  questions: unknown[]; //yes, it's unknown, please don't shoot me
   quizTime: number;
   status: 'waiting' | 'active' | 'completed';
 }
@@ -152,7 +152,7 @@ const roomService = {
     return {};
   },
 
-  listenForAnswers: (roomCode: string, callback: (answers: any) => void) => {
+  listenForAnswers: (roomCode: string, callback: (answers: unknown) => void) => {
     const answersRef = ref(realtimeDatabase, `rooms/${roomCode}/answers`);
 
     const unsubscribe = onValue(answersRef, (snapshot) => {
