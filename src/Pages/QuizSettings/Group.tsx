@@ -1,284 +1,297 @@
-//group
-import { useState, useMemo } from "react";
-import {Link} from "react-router-dom"
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Button } from "../../components/ui/button";
-import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggle-group";
-import { BookOpen, Clock, Settings, ChevronRight, List, Users } from "lucide-react";  
-import { toast } from '../../components/ui/toast';
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import fieldsData from "../../Data/Fields.json";
-import techData from "../../Data/Technologies.json";
-import { ClipLoader } from 'react-spinners'; 
-import { generateQuizQuestions } from '../../Services/aiService';
+import { ArrowLeft, Users, Plus, LogIn, Loader2 } from 'lucide-react';
+import { auth } from '../../../firebase';
 import roomService from '../../Services/Rooms';
-import useSendBack from "../../Services/sendBack";
+import { generateQuizQuestions } from '../../Services/aiService';
+import { toast } from 'sonner';
+import FieldsData from '../../Data/Fields.json';
+import TechnologiesData from '../../Data/Technologies.json';
 
-export interface QuizParams {
-  topic: string;
-  optionType: 'field' | 'technology';
-  difficulty: string;
-  numberOfQuestions: number;
-}
+type Tab = 'create' | 'join';
 
-export default function Index() {
-  useSendBack();
+export default function GroupQuizSettings() {
   const navigate = useNavigate();
-  const [optionType, setOptionType] = useState('field');
-  const [roomName, setRoomName] = useState("");
-  const [selectedOption, setSelectedOption] = useState("");
-  const [quizDuration, setQuizDuration] = useState(10);
-  const [difficulty, setDifficulty] = useState("Starter");
-  const [Spinning, isSpinning] = useState(false)
-  const [numberOfQuestions, setNumberOfQuestions] = useState(10);
-  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  const [tab, setTab] = useState<Tab>('create');
+  const [loading, setLoading] = useState(false);
 
-  const options = useMemo(() => {
-    console.log("Data Released")
-    setIsLoadingOptions(true);
-    const result = optionType === 'field' 
-      ? fieldsData.fields
-      : techData;
-    setIsLoadingOptions(false);
-    return result;
-  }, [optionType]);
+  // Create room state
+  const [roomName, setRoomName] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [topicType, setTopicType] = useState<'field' | 'technology'>('technology');
+  const [questionCount, setQuestionCount] = useState(10);
+  const [quizTime, setQuizTime] = useState(120);
+
+  // Join room state
+  const [roomCode, setRoomCode] = useState('');
+
+  const topics = topicType === 'field' 
+    ? FieldsData.fields 
+    : TechnologiesData.technologies;
 
   const generateRoomCode = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   };
 
-  const handleCreateRoom = async () => {
-    isSpinning(true);
-      if (!roomName.trim()) {
-      toast.error('Please enter a room name');
-      isSpinning(false);
+  const handleCreate = async () => {
+    if (!selectedTopic) {
+      toast.error('Please select a topic');
       return;
     }
-    
-    if (!selectedOption) {
-      toast.error('Please select a field/technology');
-      isSpinning(false);
+
+    const user = auth.currentUser;
+    if (!user) {
+      toast.error('Please log in first');
+      navigate('/login');
       return;
     }
-  
+
+    setLoading(true);
     try {
-      const roomCode = generateRoomCode();
-
-      const quizParams = {
-        topic: selectedOption,
-        optionType: optionType,
-        difficulty: difficulty,
-        numberOfQuestions: numberOfQuestions
-      };
-  
+      // Generate questions
       const result = await generateQuizQuestions({
-        ...quizParams,
-        optionType: optionType as 'field' | 'technology'
+        topic: selectedTopic,
+        optionType: topicType,
+        difficulty: 'intermediate',
+        numberOfQuestions: questionCount,
       });
-      const questions = result.questions;
-      const rawResponse = result.rawResponse;
-
-      if (!questions || questions.length === 0) {
-        throw new Error('No questions were generated');
-      }
       
-      const formattedQuestions = questions.map(q => ({
-        question: q.question,
-        options: q.options.map((option, index) => ({
-          text: option,
-          isCorrect: index === q.correctAnswer
-        })),
-        explanation: q.explanation
-      }));
-
+      const code = generateRoomCode();
       await roomService.createRoom({
-        roomCode,
-        roomName,
-        questions: formattedQuestions,
-        quizTime: quizDuration * 60
+        roomCode: code,
+        roomName: roomName || `${selectedTopic} Quiz`,
+        questions: result.questions,
+        quizTime,
       });
- 
-      navigate('/WaitingRoom', { 
-        state: { 
-          roomCode,
-          roomName,
-          questions: formattedQuestions,
-          quizTime: quizDuration * 60,
-          rawResponse: rawResponse,
-          isHost: true
-        }
+
+      navigate('/quiz/group/waiting', {
+        state: {
+          roomCode: code,
+          roomData: { questions: result.questions, quizTime },
+          isHost: true,
+        },
       });
-       
-      console.log(`Room created! Share code: ${roomCode}`);
-    } catch (error) {
-      console.error('Error creating room:', error);
-      console.log(`Failed to create room: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      toast.error(`Network Error, please try again`);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create room');
     } finally {
-       isSpinning(false);
+      setLoading(false);
+    }
+  };
+
+  const handleJoin = async () => {
+    if (!roomCode.trim()) {
+      toast.error('Please enter a room code');
+      return;
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+      toast.error('Please log in first');
+      navigate('/login');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const roomData = await roomService.joinRoom(roomCode.toUpperCase(), user.displayName || 'Player');
+      navigate('/quiz/group/waiting', {
+        state: {
+          roomCode: roomCode.toUpperCase(),
+          roomData,
+          isHost: false,
+        },
+      });
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to join room');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-      <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden animate-fade-in px-4 sm:px-8 ">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black p-4 pb-24">
+      <motion.button
+        onClick={() => navigate('/dashboard')}
+        className="flex items-center gap-2 text-gray-400 mb-6"
+        whileTap={{ scale: 0.95 }}
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Back
+      </motion.button>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md mx-auto"
+      >
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Users className="w-7 h-7 text-purple-400" />
           </div>
+          <h1 className="text-2xl font-bold text-white">Group Quiz</h1>
+          <p className="text-gray-400 text-sm">Challenge your friends</p>
+        </div>
 
-          <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl  ">
-              <CardHeader className="pb-2">
-                  <CardTitle className="text-3xl font-extrabold text-center bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
-                  Host your own Quiz! 
-                  </CardTitle>
-                  <CardDescription className="text-orange-400 text-center pt-2">
-                    <Link to="/JoinRoom">Joining one instead?</Link>  
-                  </CardDescription>
-              </CardHeader>
+        {/* Tabs */}
+        <div className="flex bg-gray-800/50 rounded-xl p-1 mb-6">
+          <button
+            onClick={() => setTab('create')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+              tab === 'create' ? 'bg-purple-600 text-white' : 'text-gray-400'
+            }`}
+          >
+            <Plus className="w-4 h-4" />
+            Create Room
+          </button>
+          <button
+            onClick={() => setTab('join')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+              tab === 'join' ? 'bg-purple-600 text-white' : 'text-gray-400'
+            }`}
+          >
+            <LogIn className="w-4 h-4" />
+            Join Room
+          </button>
+        </div>
 
-              <CardContent className="space-y-6 pt-4">
-                  {/* Room Name Input */}
-                  <div className="space-y-2">
-                      <Label htmlFor="roomName" className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <Users className="h-4 w-4 text-orange-500" />
-                          Room Name
-                      </Label>
-                      <Input
-                          id="roomName"
-                          value={roomName}
-                          onChange={(e) => setRoomName(e.target.value)}
-                          placeholder="Enter a name for your quiz room"
-                          className="w-full bg-gray-800 text-white border-gray-700 focus:ring-orange-500 focus:ring-opacity-50 h-11"
-                      />
-                  </div>
+        {tab === 'create' ? (
+          <div className="space-y-4">
+            {/* Room Name */}
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Room Name (optional)</label>
+              <input
+                type="text"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+                placeholder="My Quiz Room"
+                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500"
+              />
+            </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <Settings className="h-4 w-4 text-orange-500" />
-                          Quiz Type
-                      </label>
-                      <ToggleGroup type="single" value={optionType} onValueChange={(value) => value && setOptionType(value)} className="justify-center">
-                          <ToggleGroupItem value="field" className="bg-gray-800 data-[state=on]:bg-orange-500 data-[state=on]:text-white text-gray-300 hover:bg-gray-700 border-gray-700 px-5">
-                              Field
-                          </ToggleGroupItem>
-                          <ToggleGroupItem value="technology" className="bg-gray-800 data-[state=on]:bg-orange-500 data-[state=on]:text-white text-gray-300 hover:bg-gray-700 border-gray-700 px-5">
-                              Technology
-                          </ToggleGroupItem>
-                      </ToggleGroup>
-                  </div>
+            {/* Topic Type */}
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Topic Type</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setTopicType('technology')}
+                  className={`flex-1 py-2 rounded-lg text-sm ${
+                    topicType === 'technology'
+                      ? 'bg-orange-500/20 border border-orange-500 text-orange-400'
+                      : 'bg-gray-800 border border-gray-700 text-gray-400'
+                  }`}
+                >
+                  Technology
+                </button>
+                <button
+                  onClick={() => setTopicType('field')}
+                  className={`flex-1 py-2 rounded-lg text-sm ${
+                    topicType === 'field'
+                      ? 'bg-orange-500/20 border border-orange-500 text-orange-400'
+                      : 'bg-gray-800 border border-gray-700 text-gray-400'
+                  }`}
+                >
+                  Field
+                </button>
+              </div>
+            </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <BookOpen className="h-4 w-4 text-orange-500" />
-                          Select {optionType}
-                      </label>
-                      <Select 
-                          value={selectedOption} 
-                          onValueChange={setSelectedOption}
-                      >
-                          <SelectTrigger className="w-full bg-gray-800 text-white border-gray-700 focus:ring-orange-500 focus:ring-opacity-50 h-11">
-                              <SelectValue placeholder={`Choose a ${optionType}`} />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700 text-white">
-                              {isLoadingOptions ? (
-                                  <div className="p-4 text-center text-gray-400">Loading options...</div>
-                              ) : (
-                                  options.map((opt) => (
-                                      <SelectItem key={opt.id} value={opt.name} className="focus:bg-gray-700">
-                                          {opt.name}
-                                      </SelectItem>
-                                  ))
-                              )}
-                          </SelectContent>
-                      </Select>
-                  </div>
+            {/* Topic Selection */}
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Select Topic</label>
+              <select
+                value={selectedTopic}
+                onChange={(e) => setSelectedTopic(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-500"
+              >
+                <option value="">Choose a topic...</option>
+                {topics.map((t: any) => (
+                  <option key={t.id} value={t.name}>{t.name}</option>
+                ))}
+              </select>
+            </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-orange-500" />
-                          Quiz Duration (minutes)
-                      </label>
-                      <Select 
-                          value={quizDuration.toString()} 
-                          onValueChange={(value) => setQuizDuration(parseInt(value))} 
-                      >
-                          <SelectTrigger className="w-full bg-gray-800 text-white border-gray-700 focus:ring-orange-500 focus:ring-opacity-50 h-11">
-                              <SelectValue placeholder="Select duration" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700 text-white">
-                              {[5, 10, 15, 20, 30].map((min) => (
-                                  <SelectItem key={min} value={min.toString()} className="focus:bg-gray-700">
-                                      {min} minutes
-                                  </SelectItem>
-                              ))}
-                          </SelectContent>
-                      </Select>
-                  </div>
+            {/* Question Count */}
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Questions: {questionCount}</label>
+              <input
+                type="range"
+                min={5}
+                max={20}
+                value={questionCount}
+                onChange={(e) => setQuestionCount(Number(e.target.value))}
+                className="w-full accent-purple-500"
+              />
+            </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <Settings className="h-4 w-4 text-orange-500" />
-                          Select Difficulty
-                      </label>
-                      <Select 
-                          value={difficulty} 
-                          onValueChange={setDifficulty}
-                      >
-                          <SelectTrigger className="w-full bg-gray-800 text-white border-gray-700 focus:ring-orange-500 focus:ring-opacity-50 h-11">
-                              <SelectValue placeholder="Select difficulty" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700 text-white">
-                              {['Starter', 'Intermediate Dev', '10x Engineer'].map((level) => (
-                                  <SelectItem key={level} value={level} className="focus:bg-gray-700">
-                                      {level}
-                                  </SelectItem>
-                              ))}
-                          </SelectContent>
-                      </Select>
-                  </div>
+            {/* Time Limit */}
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Time: {quizTime}s</label>
+              <input
+                type="range"
+                min={60}
+                max={300}
+                step={30}
+                value={quizTime}
+                onChange={(e) => setQuizTime(Number(e.target.value))}
+                className="w-full accent-purple-500"
+              />
+            </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                          <List className="h-4 w-4 text-orange-500" />
-                          Number of Questions
-                      </label>
-                      <Select 
-                          value={numberOfQuestions.toString()} 
-                          onValueChange={(value) => setNumberOfQuestions(parseInt(value))}
-                      >
-                          <SelectTrigger className="w-full bg-gray-800 text-white border-gray-700 focus:ring-orange-500 focus:ring-opacity-50 h-11">
-                              <SelectValue placeholder="Select number of questions" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700 text-white">
-                              {[5, 10, 15, 20, 25].map((num) => (
-                                  <SelectItem key={num} value={num.toString()} className="focus:bg-gray-700">
-                                      {num} Questions
-                                  </SelectItem>
-                              ))}
-                          </SelectContent>
-                      </Select>
-                  </div>
-              </CardContent>
-
-              <CardFooter className="pt-4">
-                  <Button 
-                      onClick={handleCreateRoom}
-                      className="w-full py-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all duration-300 group shadow-md shadow-orange-500/20"
-                  >
-                      {Spinning ? (
-                        <ClipLoader color="#ffffff" size={22} cssOverride={{ borderWidth: '4px' }} />
-                      ) : (
-                        <>
-                          <span>Create Room</span>
-                          <ChevronRight className="ml-1 group-hover:translate-x-1 transition-transform" />
-                        </>
-                      )}
-                  </Button>
-              </CardFooter>
+            <motion.button
+              onClick={handleCreate}
+              disabled={loading || !selectedTopic}
+              className="w-full py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 disabled:text-gray-500 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5" />
+                  Create Room
+                </>
+              )}
+            </motion.button>
           </div>
-      </div>
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <label className="text-gray-400 text-sm mb-2 block">Room Code</label>
+              <input
+                type="text"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+                placeholder="Enter 6-digit code"
+                maxLength={6}
+                className="w-full px-4 py-4 bg-gray-800/50 border border-gray-700 rounded-xl text-white text-center text-2xl tracking-widest uppercase placeholder:text-gray-500 placeholder:text-base placeholder:tracking-normal focus:outline-none focus:border-purple-500"
+              />
+            </div>
+
+            <motion.button
+              onClick={handleJoin}
+              disabled={loading || !roomCode.trim()}
+              className="w-full py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 disabled:text-gray-500 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Joining...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-5 h-5" />
+                  Join Room
+                </>
+              )}
+            </motion.button>
+          </div>
+        )}
+      </motion.div>
+    </div>
   );
 }

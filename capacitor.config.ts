@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
@@ -14,10 +15,10 @@ const config: CapacitorConfig = {
   plugins: {
     GoogleAuth: {
       scopes: ["profile", "email"],
-      serverClientId: '459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com',
+      serverClientId: process.env.GOOGLE_AUTH_SERVER_CLIENT_ID,
       forceCodeForRefreshToken: true,
-      webClientId: '459099093980-0v3g2k1fsvqqq71sivaff8agmjkf1pks.apps.googleusercontent.com',
-      androidClientId: '459099093980-ufqetavp37fbip4ilq9inb8mhanvpk19.apps.googleusercontent.com'
+      webClientId: process.env.GOOGLE_AUTH_WEB_CLIENT_ID,
+      androidClientId: process.env.GOOGLE_AUTH_ANDROID_CLIENT_ID
     },
     android: {
       needPermission: true

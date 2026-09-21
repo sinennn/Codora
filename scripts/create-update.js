@@ -3,7 +3,6 @@ import path from 'path';
 import archiver from 'archiver';
 import { execSync } from 'child_process';
 
-// Configuration
 const config = {
   buildCommand: 'npm run build',
   buildDir: 'dist',  
@@ -49,7 +48,6 @@ async function createUpdate() {
 
     archive.pipe(output);
 
-    // Get all files in the dist directory
     const files = [];
     const scanDir = (dir, baseDir = '') => {
       const entries = fs.readdirSync(dir, { withFileTypes: true });

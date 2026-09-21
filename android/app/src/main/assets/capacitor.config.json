@@ -3,7 +3,7 @@
 	"appName": "Codora",
 	"webDir": "dist",
 	"server": {
-		"url": "http://192.168.5.3:5173"
+		"url": "http://192.168.5.2:5173"
 	},
 	"plugins": {
 		"GoogleAuth": {

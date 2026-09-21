@@ -1,0 +1,1851 @@
+{
+  "id": "mongodb",
+  "name": "MongoDB",
+  "description": "Step by step guide to learning MongoDB in 2025",
+  "difficulty": "beginner",
+  "estimatedHours": 22,
+  "modules": [
+    {
+      "id": "mongodb_z50iixpcCMe9sTh-gwTI3",
+      "name": "MongoDB Basics",
+      "description": "MongoDB is a popular NoSQL database that is designed to store and manage large volumes of unstructured or semi-structured data. Unlike traditional relational databases that use tables and rows, MongoDB employs a document-oriented data model, where data is stored in flexible, JSON-like documents called BSON (Binary JSON). This allows for a dynamic schema, meaning that documents within the same collection can have different structures, making it easier to adapt to changing data requirements. MongoDB supports rich query capabilities, including filtering, sorting, and aggregation, enabling developers to perform complex queries efficiently.",
+      "lessons": [
+        {
+          "id": "mongodb_QcdZKNcCtKls6P4YNXR2W",
+          "title": "Object",
+          "description": "Object data type is used to store embedded documents, allowing for complex data structures within a single document. This type is essential for organizing related data hierarchically, enabling efficient querying and data manipulation.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Data Types",
+              "url": "https://www.mongodb.com/docs/mongodb-shell/reference/data-types/"
+            },
+            {
+              "type": "article",
+              "title": "Object data type in MongoDB",
+              "url": "https://www.slingacademy.com/article/object-data-type-in-mongodb-tutorial-examples/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_q6ZKxFcSAQ8bgUdGaDpuu",
+          "title": "Array",
+          "description": "Array data type in MongoDB stores ordered lists of values including mixed data types, nested arrays, and embedded documents. Arrays support indexing with multikey indexes, enabling efficient queries on array elements. Special array operators like $push, $pull, $addToSet modify arrays, while query operators like $in, $all, $elemMatch enable sophisticated array querying and element matching capabilities.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Query an Array",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/query-arrays/"
+            },
+            {
+              "type": "article",
+              "title": "Mastering the Art of Querying Arrays in MongoDB",
+              "url": "https://medium.com/dataprophet/mastering-the-art-of-querying-arrays-in-mongodb-a-comprehensive-guide-a70b83447be7"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_1UXfFROvcunyhkx0zB_1S",
+          "title": "What is MongoDB Atlas?",
+          "description": "MongoDB Atlas is a fully-managed cloud database service offered by MongoDB that simplifies database management for developers by automating tasks such as provisioning, scaling, and backups. It supports multi-cloud deployments across major providers like AWS, Google Cloud, and Azure, allowing for flexibility and resilience. With integrated data services, real-time insights, and cost efficiency, MongoDB Atlas enables developers to build intelligent applications and manage data seamlessly, empowering them to focus on application development rather than database maintenance.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "MongoDB Atlas | The Modern, Multi-Cloud Database",
+              "url": "https://www.mongodb.com/atlas"
+            },
+            {
+              "type": "official",
+              "title": "What is Atlas?",
+              "url": "https://www.mongodb.com/docs/atlas/"
+            },
+            {
+              "type": "course",
+              "title": "Atlas Essentials Course | MongoDB University",
+              "url": "https://learn.mongodb.com/learning-paths/atlas-essentials"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_kx_GOr51UMpdUAnS5u9qZ",
+          "title": "Undefined",
+          "description": "The Undefined type is a BSON data type that represents a value that is not defined. It is primarily used to indicate that a field does not have a value or that a variable has not been assigned a value. However, the Undefined type is rarely used in practice, as it has been deprecated in favor of using `null` to represent the absence of a value. The use of `null` is more common and recommended for indicating missing or non-existent data in documents.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "BSON Types",
+              "url": "https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-bson-types"
+            },
+            {
+              "type": "official",
+              "title": "Query for Null or Missing Fields",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/"
+            },
+            {
+              "type": "article",
+              "title": "Migrate Undefined Data and Queries",
+              "url": "https://www.mongodb.com/docs/manual/reference/bson-types/migrate-undefined/"
+            },
+            {
+              "type": "article",
+              "title": "Master Null Handling in MongoDB",
+              "url": "https://www.mydbops.com/blog/null-handling-in-mongodb"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_UM6jH6bAijYS0Hmw87UQ-",
+          "title": "Binary Data",
+          "description": "Binary data in MongoDB stores non-textual data like images, files, and encoded content using the BSON Binary data type. It supports various subtypes including generic binary, function code, UUID, and MD5 hashes. Binary data enables efficient storage of multimedia content, encrypted data, and arbitrary byte sequences while maintaining query and indexing capabilities within document structures.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "BinData \\(\\)",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/bindata/"
+            },
+            {
+              "type": "official",
+              "title": "BSON Types",
+              "url": "https://www.mongodb.com/docs/manual/reference/bson-types/"
+            },
+            {
+              "type": "article",
+              "title": "Understanding BSON: The Backbone of MongoDB's Data Format",
+              "url": "https://dev.to/abhay_yt_52a8e72b213be229/understanding-bson-the-backbone-of-mongodbs-data-format-11oa"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_1pCWjSvjvbox5OpyWJ8Kv",
+          "title": "MongoDB Terminology",
+          "description": "MongoDB terminology includes key concepts: databases contain collections (equivalent to tables), which store documents (equivalent to rows) composed of field-value pairs. Other terms include indexes for performance optimization, replica sets for high availability, shards for horizontal scaling, aggregation pipelines for data processing, and ObjectIds for unique document identifiers. Understanding these terms is fundamental for MongoDB development.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "MongoDB Security",
+              "url": "https://www.mongodb.com/docs/manual/security/"
+            },
+            {
+              "type": "official",
+              "title": "MongoDB Database Documentation",
+              "url": "https://www.mongodb.com/docs/manual/reference/glossary/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Basics: Basic Terminology of Mongo",
+              "url": "https://medium.com/@gurbar.sidhu/mongodb-basics-1f111004e5d3"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb__UIfRdlj6BeEESw1FW9RH",
+      "name": "Data Model & Data Types",
+      "description": "MongoDB uses a flexible document data model storing data in BSON format with rich data types including strings, numbers, dates, arrays, embedded documents, binary data, and ObjectIds. The schema-less design allows varying document structures within collections while maintaining query performance. Documents can contain nested objects and arrays, enabling complex data relationships without traditional table joins.",
+      "lessons": [
+        {
+          "id": "mongodb_hmo7zCZ1jKgobS5R0eBSD",
+          "title": "Boolean",
+          "description": "Boolean data type in MongoDB stores true or false values, representing logical states in documents. Booleans are commonly used for flags, status indicators, and conditional logic in queries and applications. They support direct comparison, logical operations with $and, $or, $not operators, and can be efficiently indexed for fast querying of true/false conditions in large datasets.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$type",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/type/"
+            },
+            {
+              "type": "official",
+              "title": "How to Index Boolean Values",
+              "url": "https://www.mongodb.com/docs/atlas/atlas-search/field-types/boolean-type/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_mxd3-l3-NtPw53dEvhqm4",
+          "title": "ObjectId",
+          "description": "ObjectId is MongoDB's default primary key type, consisting of a 12-byte identifier that includes timestamp, machine identifier, process ID, and counter components. It ensures uniqueness across distributed systems and provides automatic indexing. ObjectIds are automatically generated when documents are inserted without an explicit `_id` field, enabling efficient sorting by creation time and guaranteed uniqueness across collections.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "ObjectId",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/objectid/"
+            },
+            {
+              "type": "article",
+              "title": "Usage of ObjectId \\(\\) in MongoDB with Examples",
+              "url": "https://www.softwaretestinghelp.com/mongodb/objectid-mongodb/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_hC83jKoO_XFI83WpsdN_Z",
+          "title": "Counting Documents",
+          "description": "Counting documents in MongoDB uses methods like `countDocuments()` for accurate filtered counts and `estimatedDocumentCount()` for fast approximate totals. `countDocuments()` supports query filters and provides precise results but may be slower on large collections. `estimatedDocumentCount()` uses collection metadata for rapid estimates, making it ideal for dashboard metrics and quick statistics.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Counting Documents",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.countdocuments/"
+            },
+            {
+              "type": "official",
+              "title": "estimatedDocumentCount",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.estimateddocumentcount/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_g6AKQiFcY_8lsWRbkbZSC",
+          "title": "Null",
+          "description": "Null data type in MongoDB represents absent or undefined values, distinct from empty strings or zero values. Null fields can be queried, indexed, and participate in aggregation operations with special handling. MongoDB treats null values specifically in comparisons and provides the $exists operator to distinguish between null values and missing fields in document structures.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Query for Null or Missing Fields",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/"
+            },
+            {
+              "type": "article",
+              "title": "Master Null Handling in MongoDB",
+              "url": "https://www.mydbops.com/blog/null-handling-in-mongodb"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_T6cq--pute6-8aG7z6QKN",
+          "title": "Date",
+          "description": "`Date` data type in MongoDB stores timestamps as 64-bit integers representing milliseconds since Unix epoch (January 1, 1970 UTC). Dates support range queries, sorting, and date arithmetic operations in aggregation pipelines. MongoDB automatically converts JavaScript Date objects and ISO date strings to BSON dates, providing timezone-aware date manipulation and efficient chronological data querying.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Date and Datetime",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/date/"
+            },
+            {
+              "type": "official",
+              "title": "Data Types",
+              "url": "https://www.mongodb.com/docs/mongodb-shell/reference/data-types/"
+            },
+            {
+              "type": "article",
+              "title": "Working with dates and times in MongoDB",
+              "url": "https://www.prisma.io/dataguide/mongodb/working-with-dates"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_mXdn4u5CiQRDE83qMiWZX",
+          "title": "insert() and Related Methods",
+          "description": "Insert operations add new documents to MongoDB collections using `insertOne()` for single documents and `insertMany()` for multiple documents. These methods support options like ordered/unordered inserts, write concerns, and automatic ObjectId generation. MongoDB also provides legacy `insert()` method and supports upsert operations through update methods when documents don't exist.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Insert Commands",
+              "url": "https://www.mongodb.com/docs/manual/reference/command/insert/"
+            },
+            {
+              "type": "official",
+              "title": "MongoDB CRUD Operations: Insert and Find Documents",
+              "url": "https://learn.mongodb.com/courses/mongodb-crud-operations-insert-and-find-documents"
+            },
+            {
+              "type": "article",
+              "title": "A Comprehensive Guide to MongoDB Methods",
+              "url": "https://medium.com/@coderwithtools/a-comprehensive-guide-to-mongodb-methods-syntax-and-examples-feee0ac07599"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_z6I9XgIGQYWUd5l9DIZRX",
+          "title": "Regular Expression",
+          "description": "Regular expressions in MongoDB are patterns used to match strings within documents in a collection. They are implemented using the Perl Compatible Regular Expressions (PCRE) syntax, allowing for complex string matching capabilities. In MongoDB queries, regular expressions can be utilized with the `$regex` operator to filter documents based on specific string patterns. For example, a query like `{ \"field\": { \"$regex\": \"^abc\" } }` would match documents where the \"field\" starts with \"abc\". Additionally, options such as case insensitivity can be specified using the `$options` operator, enhancing the flexibility of string searches. Regular expressions are particularly useful for tasks like validation, searching, and data extraction within text fields.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$regex",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/regex/"
+            },
+            {
+              "type": "article",
+              "title": "Mastering Regex in MongoDB: A Beginner's Guide",
+              "url": "https://medium.com/@jaydeepdnai.imscit20/mastering-regex-in-mongodb-a-beginners-guide-886bcb404725"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_iMpCEXRDXg0Kq9OFNywbI",
+          "title": "find() and Related Methods",
+          "description": "The `find()` method retrieves documents from MongoDB collections using query filters, projections, and modifiers. Related methods include `findOne()` for single documents, `findOneAndUpdate()` for atomic updates, `findOneAndDelete()` for atomic deletions, and cursor methods like `limit(), skip(), sort()` for result manipulation. These methods support complex queries with operators, field projections, and cursor iteration.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Query Documents",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/query-documents/"
+            },
+            {
+              "type": "official",
+              "title": "find\\(\\)",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.find/"
+            },
+            {
+              "type": "official",
+              "title": "Cursors",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/js-cursor/"
+            },
+            {
+              "type": "official",
+              "title": "findOneAndUpdate\\(\\)",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.findoneandupdate/"
+            },
+            {
+              "type": "article",
+              "title": "A Complete Guide to MongoDB Queries with Examples",
+              "url": "https://dev.to/rajrathod/a-complete-guide-to-mongodb-queries-with-examples-ik4"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_XAS4jQlsHkttLDuSSsD2o",
+          "title": "Symbol",
+          "description": "The symbol is often used in the context of BSON (Binary JSON) data types, which allows for the representation of various data structures. While MongoDB does not have a specific \"symbol\" data type like some programming languages, it utilizes BSON to store data efficiently, enabling developers to work with complex data types and structures seamlessly.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Field Names with Periods and Dollar Signs",
+              "url": "https://www.mongodb.com/docs/manual/core/dot-dollar-considerations/"
+            },
+            {
+              "type": "official",
+              "title": "Symbols - MongoDB Meta Documents",
+              "url": "https://www.mongodb.com/docs/meta/style-guide/style/symbols/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_UXO5i6nPa5CRW1z7FAn_S",
+          "title": "JavaScript",
+          "description": "The JavaScript data type in MongoDB allows you to store JavaScript code as BSON values within documents, enabling the execution of server-side JavaScript functions for operations like map-reduce, stored procedures, and complex data transformations. This type can store JavaScript functions or code snippets that can be executed within the MongoDB server environment, making it useful for scenarios where you need to perform complex calculations, business logic, or custom aggregation operations directly on the database server. However, the JavaScript type is primarily legacy functionality and is generally discouraged in modern MongoDB applications due to security concerns and performance implications, with the aggregation framework being the preferred approach for complex data processing tasks that previously required server-side JavaScript execution.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Javascript Function on Server",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/store-javascript-function-on-server/"
+            },
+            {
+              "type": "article",
+              "title": "Unleash Data Magic with MongoDB Custom JavaScript Functions",
+              "url": "https://thelinuxcode.com/mongodb-custom-function/"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_7SGYNo3oHlgm_1cwhWfw7",
+      "name": "Collections & Methods",
+      "description": "Collection methods in MongoDB provide comprehensive operations for data manipulation including CRUD operations (find, insert, update, delete), index management, and administrative functions. Key methods include `createIndex()`, `drop()`, `count()`, `distinct()`, and `bulkWrite()` for batch operations. These methods offer flexible options for data processing, schema validation, and collection maintenance.",
+      "lessons": [
+        {
+          "id": "mongodb_liGbnGyQaG-Vqt6cuB91N",
+          "title": "update() and Related Methods",
+          "description": "Update operations modify existing documents using `updateOne()`, `updateMany()`, and `replaceOne()` methods with update operators like `$set`, `$unset`, `$inc`, and `$push`. These methods support upsert operations, array modifications, field updates, and atomic operations. Advanced features include `findOneAndUpdate()` for atomic read-modify-write operations and update pipelines for complex transformations using aggregation operators.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Update Operations",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/update/"
+            },
+            {
+              "type": "official",
+              "title": "Collection Update Methods",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.update/"
+            },
+            {
+              "type": "article",
+              "title": "How to Update Data in Mongodb in 2025?",
+              "url": "https://dev.to/cristianalex_17/how-to-update-data-in-mongodb-in-2025-3b0a"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_xKFZSKG2GPD-phY2HLMsx",
+          "title": "Int32",
+          "description": "Int32 data type in MongoDB stores 32-bit signed integers ranging from -2,147,483,648 to 2,147,483,647. This type provides exact integer representation without floating-point precision issues and takes less storage space than doubles. Int32 is ideal for counters, IDs, and whole numbers where precision is critical and the value range fits within 32-bit limits.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Int32",
+              "url": "https://www.mongodb.com/docs/mongodb-shell/reference/data-types/#int32"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Int32 and Long Data Types",
+              "url": "https://www.slingacademy.com/article/mongodb-int32-and-long-data-types-a-practical-guide-with-examples/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_iJFDFdIN_N4-DlJwrFIiB",
+          "title": "Int64 / Long",
+          "description": "Int64 (Long) data type in MongoDB stores 64-bit signed integers with a range from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. This type handles large integer values that exceed Int32 limits while maintaining exact precision. Long integers are essential for timestamps, large counters, and applications requiring precise integer arithmetic with very large numbers.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Long",
+              "url": "https://www.mongodb.com/docs/mongodb-shell/reference/data-types/#long"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Int64",
+              "url": "https://www.tedblob.com/mongodb-query-int64/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_qjoLxSkfKbzG1sZUXnyw9",
+          "title": "delete() and Related Methods",
+          "description": "Delete operations remove documents from MongoDB collections using `deleteOne()` for single document removal and `deleteMany()` for multiple documents. These methods use query filters to specify which documents to delete and support write concerns for reliability. Additional methods include `findOneAndDelete()` for atomic read-and-delete operations and `drop()` for removing entire collections.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Delete Operations",
+              "url": "https://www.mongodb.com/docs/manual/reference/command/delete/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Delete Documents",
+              "url": "https://boxoflearn.com/mongodb-delete-documents/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_OGtR5D_DUCSci1lFBT83z",
+          "title": "Decimal128",
+          "description": "`Decimal128` data type in MongoDB provides exact decimal representation for financial and monetary calculations requiring precision. Based on IEEE 754-2008 standard, it supports 34 decimal digits with exact arithmetic operations. `Decimal128` eliminates floating-point precision errors, making it essential for applications handling currency, accounting, and scientific computations where decimal accuracy is critical.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Data Types",
+              "url": "https://www.mongodb.com/docs/mongodb-shell/reference/data-types/#decimal128"
+            },
+            {
+              "type": "article",
+              "title": "decimal128",
+              "url": "https://pymongo.readthedocs.io/en/stable/api/bson/decimal128.html"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_zbFH2NRHZEOv5eKLL_HR0",
+          "title": "Timestamp",
+          "description": "The Timestamp type in MongoDB is a special BSON data type used internally for operations like replication and sharding. It consists of a 32-bit second counter and an incrementing ordinal counter (also 32 bits), representing UTC time accurate to the second. Unlike the Date type, Timestamp values in MongoDB are unique and monotonically increasing, making them ideal for tracking changes and ordering events.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Timestamp",
+              "url": "https://www.mongodb.com/docs/manual/reference/bson-types/#timestamps"
+            },
+            {
+              "type": "article",
+              "title": "Working with Dates",
+              "url": "https://www.prisma.io/dataguide/mongodb/working-with-dates"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_yc2HqhjhIV6UU_2P-ykKB",
+          "title": "bulkWrite() and Related Methods",
+          "description": "`bulkWrite()` in MongoDB performs multiple write operations in a single command, improving performance through reduced network round trips. It supports mixed operations including inserts, updates, deletes, and replaces with options for ordered or unordered execution. Bulk operations provide error handling, write concern configuration, and significant performance benefits for high-volume data manipulation tasks.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "db.collection.bulkWrite\\(\\)",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkwrite/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB: InsertMany vs BulkWrite",
+              "url": "https://medium.com/@msbytedev/mongodb-insertmany-vs-bulkwrite-2f9da91b544c"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_QF7SL237FyBQdqvKUzop6",
+          "title": "Max Key",
+          "description": "MaxKey is the counterpart to MinKey in MongoDB, representing the highest possible value for a field. It is considered to be greater than all other values in the database. MaxKey is particularly useful in scenarios where you need to set an upper bound in queries or sorting operations. For example, when looking for documents with a field that is less than a certain value, using MaxKey allows you to include all documents, as it acts as the largest possible value.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Multikey Indexes",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/"
+            },
+            {
+              "type": "article",
+              "title": "MaxKey Class",
+              "url": "https://mongodb.github.io/node-mongodb-native/4.2/classes/MaxKey.html"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB max() and min() Example",
+              "url": "https://examples.javacodegeeks.com/software-development/mongodb/mongodb-max-and-min-example/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_jQSMLd6gG158tJDzo1k_1",
+          "title": "Min Key",
+          "description": "MinKey is a special value in MongoDB that represents the lowest possible value for a field. It is considered to be less than all other values in the database. This makes MinKey useful in queries and sorting operations where you want to establish a lower bound. For instance, when searching for documents with a field that is greater than a certain value, you can use MinKey to ensure that all documents are included, as it effectively acts as the smallest possible value.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Multikey Indexes",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/"
+            },
+            {
+              "type": "article",
+              "title": "MinKey Class",
+              "url": "https://mongodb.github.io/node-mongodb-native/4.2/classes/MinKey.html"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB max() and min() Example",
+              "url": "https://examples.javacodegeeks.com/software-development/mongodb/mongodb-max-and-min-example/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_4h8NdcdXmNqJxLkVJqPtX",
+          "title": "validate()",
+          "description": "The `validate()` method in MongoDB is a database administration command that checks the integrity and consistency of a collection's data structures, indexes, and storage format, providing detailed information about potential corruption, missing records, or structural issues. This method performs comprehensive validation by examining the collection's namespace, scanning all documents and indexes for consistency, checking BSON document structure validity, and verifying that index entries correctly correspond to their associated documents. The `validate()` operation is crucial for database maintenance and troubleshooting, especially after hardware failures, unexpected shutdowns, or when experiencing unusual query behavior, as it helps identify data corruption early and provides detailed reports that can guide repair operations or data recovery procedures.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Validate",
+              "url": "https://www.mongodb.com/docs/manual/reference/command/validate/"
+            },
+            {
+              "type": "article",
+              "title": "Real-World Example: MongoDB Data Validation and Sanitization",
+              "url": "https://codezup.com/mongodb-data-validation-sanitization-example/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_thOckmrCJ45NVNPNxm4eg",
+          "title": "Read & Write Concerns",
+          "description": "Read and write concerns in MongoDB control data consistency and acknowledgment levels for operations. Write concerns specify acknowledgment requirements from replica set members, while read concerns determine data consistency guarantees for queries. Options range from unacknowledged writes to majority confirmation, and from local reads to causally consistent reads, balancing performance with data reliability requirements.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Read Concerns",
+              "url": "https://www.mongodb.com/docs/manual/reference/read-concern/"
+            },
+            {
+              "type": "official",
+              "title": "Replication in MongoDB",
+              "url": "https://learn.mongodb.com/learn/course/replication-in-mongodb/lesson-5-read-and-write-concerns-with-mongodb-deployments/learn?client=customer&page=2"
+            },
+            {
+              "type": "official",
+              "title": "Set Global Read and Write Concerns in MongoDB 4.4",
+              "url": "https://www.mongodb.com/developer/products/mongodb/global-read-write-concerns/"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_B8SFhoVV8ei1Yz6vl57l_",
+      "name": "Query Operators",
+      "description": "Query operators in MongoDB enable sophisticated document filtering and selection using comparison, logical, element, evaluation, and array operators. These include equality operators ($eq, $ne), comparison operators ($gt, $lt, $gte, $lte), logical operators ($and, $or, $not), and specialized operators for arrays ($in, $nin, $all) and existence checks ($exists), providing powerful and flexible querying capabilities.",
+      "lessons": [
+        {
+          "id": "mongodb_K9x7yQP59cB764Q5PqAs_",
+          "title": "Cursors",
+          "description": "Cursors in MongoDB are pointers to query result sets that enable efficient iteration through large datasets without loading all documents into memory. They support methods like `hasNext(), next(), forEach(), and limit()` for result manipulation. Cursors automatically handle batching, provide lazy loading of results, and can be configured with timeouts and batch sizes for optimal performance.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Cursors",
+              "url": "https://www.mongodb.com/docs/manual/reference/method/js-cursor/"
+            },
+            {
+              "type": "article",
+              "title": "Understanding Cursor in MongoDB",
+              "url": "https://medium.com/@satyamguptaece/understanding-cursor-in-mongodb-b8a9e1a8cb0c"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_s8El0Q22GD_rOZGlDtkgH",
+          "title": "Retryable Reads / Writes",
+          "description": "Retryable reads and writes in MongoDB are client-side features that automatically retry certain database operations when they encounter transient network errors or temporary server unavailability, improving application resilience and user experience. The MongoDB drivers can automatically retry read operations and specific write operations (like inserts, updates, deletes, and findAndModify) exactly once when they fail due to network issues, replica set elections, or other recoverable errors, without requiring changes to application code. This feature is particularly valuable in distributed environments, cloud deployments, and replica set configurations where temporary connectivity issues or failover events are common, as it reduces the likelihood of application errors and provides a better user experience by handling transient failures transparently.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Retryable Reads",
+              "url": "https://www.mongodb.com/docs/manual/core/retryable-writes/"
+            },
+            {
+              "type": "official",
+              "title": "Retryable Writes",
+              "url": "https://www.mongodb.com/docs/manual/core/retryable-reads/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_gakF5Zfgk7QIgg_UwqG_Y",
+          "title": "$project",
+          "description": "The `$project` stage in MongoDB aggregation pipelines is used to reshape documents by including, excluding, or transforming fields, allowing you to control exactly which data is passed to subsequent pipeline stages. It can perform field selection (similar to SQL SELECT), create computed fields using expressions, rename fields, nest or flatten document structures, and apply various transformations like mathematical operations, string manipulations, or date formatting.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Pipeline",
+              "url": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline/"
+            },
+            {
+              "type": "official",
+              "title": "\\$project",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/"
+            },
+            {
+              "type": "official",
+              "title": "\\$group",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_sxDyp3bP-YhgmDMVUFTaA",
+          "title": "$include",
+          "description": "The `$include` projection operator in MongoDB allows you to explicitly specify which fields should be included in query results, providing precise control over the data returned from the database. When using `$include` (or simply setting fields to 1 or true in a projection document), only the specified fields and the _id field (unless explicitly excluded) will be present in the returned documents, which helps reduce network traffic, improve query performance, and enhance security by limiting data exposure. This operator is essential for optimizing applications that only need specific fields from large documents, especially in scenarios where documents contain many fields or large nested objects that would unnecessarily consume bandwidth and processing resources.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Project Fields to Return from Query",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/project-fields-from-query-results/"
+            },
+            {
+              "type": "official",
+              "title": "\\$include",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/create-wildcard-index-multiple-fields/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_Wd20OKQYYuW_bT6U-yRxT",
+          "title": "$in",
+          "description": "The `$in` operator in MongoDB selects documents where a field value matches any value in a specified array. It provides efficient multiple value matching without using multiple $or conditions. `$in` supports all BSON data types and is particularly useful for filtering by lists of IDs, categories, or enumerated values, offering better performance than equivalent $or queries.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "official",
+              "title": "\\$in",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_ZKHUCskdKQf4IaMUTN_e7",
+          "title": "$nin",
+          "description": "The `$nin` (not in) operator in MongoDB selects documents where a field value does not match any value in a specified array. It's the logical opposite of $in and excludes documents with field values present in the given array. `$nin` is useful for filtering out unwanted values, excluding specific categories, and creating blacklist-style queries.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$nin",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/nin/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_hPPoO8ysGeEGEQhdveiDO",
+          "title": "$all",
+          "description": "The `$all` operator in MongoDB selects documents where an array field contains all specified elements, regardless of order or additional elements. It's useful for tag-based filtering and ensuring multiple required values exist in arrays. `$all` performs element-wise matching and can work with arrays of different data types, making it essential for multi-criteria array filtering.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$all",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/all/"
+            },
+            {
+              "type": "article",
+              "title": "\\$all and \\$elemMatch in MongoDB",
+              "url": "https://dev.to/kawsarkabir/all-and-elemmatch-in-mongodb-4od6"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_haA1ltV6VzgJVJcJNMK0W",
+      "name": "Creating Indexes",
+      "description": "Creating indexes in MongoDB uses the `createIndex()` method to build data structures that improve query performance. Indexes can be created on single fields, multiple fields (compound), or with special types like text, geospatial, or hashed. Best practices include analyzing query patterns, creating indexes before large data imports, and monitoring index usage to ensure optimal performance without over-indexing.",
+      "lessons": [
+        {
+          "id": "mongodb_nk0V3o3oKuIb8A0gDECFJ",
+          "title": "$exclude",
+          "description": "The `$exclude` projection operator in MongoDB is used to explicitly exclude specific fields from query results, allowing you to return all fields of a document except those that are explicitly excluded. When using $exclude, you specify which fields to omit by setting them to 0 or false in the projection document, and all other fields will be automatically included in the result set. This operator is particularly useful when you want to retrieve most of a document's data while excluding sensitive information like passwords, internal metadata, or large fields that are not needed for a particular operation, helping reduce network bandwidth and improve query performance by transferring only the necessary data.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Include or Exclude Fields in a Wildcard Index",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/create-wildcard-index-multiple-fields/"
+            },
+            {
+              "type": "official",
+              "title": "Project Fields to Return from Query",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/project-fields-from-query-results/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_9mmxYBtvPYZlvFjQvE-2N",
+          "title": "$slice",
+          "description": "The `$slice` projection operator in MongoDB returns a subset of array elements from documents. It supports positive values for elements from the beginning, negative values from the end, and skip/limit combinations for pagination within arrays. `$slice` is essential for managing large arrays in documents, implementing array pagination, and reducing network traffic by returning only required array portions.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$slice",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB slice - Syntax & Examples",
+              "url": "https://database.guide/mongodb-slice/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_TJHVY8DRWbDKeT_pIPJay",
+          "title": "$elemMatch",
+          "description": "The `$elemMatch` operator in MongoDB matches documents containing array elements that satisfy multiple specified criteria within a single array element. It ensures all conditions apply to the same array element rather than different elements. $elemMatch is crucial for querying arrays of embedded documents, complex array filtering, and maintaining logical consistency in multi-condition array queries.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$elemMatch",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/elemmatch/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB \\$elemMatch Query Operator",
+              "url": "https://codeforgeek.com/elemmatch-in-mongodb/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_-VMIkV6S6H1blngxLXk7Y",
+          "title": "$size",
+          "description": "The `$size` operator in MongoDB matches documents where an array field has exactly the specified number of elements. It only works with arrays and requires an exact count match, not range queries. `$size` is useful for validating array lengths, filtering documents by array dimensions, and ensuring data consistency in array-based document structures.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$size",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/size/"
+            },
+            {
+              "type": "article",
+              "title": "5 Ways to Check the Size of a Collection in MongoDB",
+              "url": "https://database.guide/5-ways-to-check-the-size-of-a-collection-in-mongodb/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_SjPzR6JjdBeiqFsrRJPfW",
+          "title": "Single Field Indexes",
+          "description": "Single field indexes in MongoDB are created on individual document fields to optimize queries filtering, sorting, or ranging on that specific field. They can be ascending (1) or descending (-1) and automatically optimize equality, range, and sort operations. Single field indexes are the simplest index type and form the foundation for more complex indexing strategies.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Single Field Indexes",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-single/"
+            },
+            {
+              "type": "article",
+              "title": "How to Create Single-Field Indexes in MongoDB for Faster Queries",
+              "url": "https://javascript.plainenglish.io/how-to-create-single-field-indexes-in-mongodb-for-faster-queries-a9b816924b5a"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_eSb4WAfWxJu6R95pPX6wm",
+          "title": "Compound Indexes",
+          "description": "Compound indexes in MongoDB are built on multiple fields in a specified order, optimizing queries that filter on multiple fields. Field order matters significantly as it determines which queries can efficiently use the index. Compound indexes support prefix patterns, meaning they can optimize queries on any left subset of the indexed fields, making them versatile for various query patterns.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Compound Indexes",
+              "url": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/"
+            },
+            {
+              "type": "article",
+              "title": "Single vs Compound Mongodb Index",
+              "url": "https://medium.com/@rakeebnazar/single-vs-compound-mongodb-index-in-depth-analysis-5319cfdd2ce"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_PV_3TEYdtVZ2VCDZEOsu_",
+          "title": "$text",
+          "description": "The `$text` operator in MongoDB performs full-text search on fields with text indexes. It supports phrase matching, stemming, stop words, and relevance scoring. `$text` searches across all text-indexed fields simultaneously and provides score-based ranking of results. This operator requires a text index on the collection and enables efficient search functionality for text-heavy applications.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$text",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/text/"
+            },
+            {
+              "type": "article",
+              "title": "Full-Text Search in MongoDB",
+              "url": "https://devforid.medium.com/full-text-search-in-mongodb-655169b59fce"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_butGgZXGPTZI-sWx24bOr",
+          "title": "Expiring",
+          "description": "Expiring indexes (TTL - Time To Live) in MongoDB automatically delete documents from a collection after a specified period, making them ideal for managing time-sensitive data like session information, log entries, temporary caches, or any data that becomes obsolete after a certain duration. These indexes are created on date fields and use a background process that runs every 60 seconds to remove expired documents, helping maintain optimal collection size and performance by preventing the accumulation of outdated data. TTL indexes are particularly useful for applications that generate large volumes of transient data, as they provide an automated cleanup mechanism that reduces storage costs and improves query performance without requiring manual intervention or complex application logic to handle data expiration.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Expire Data from Collections by Setting TTL",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/expire-data/"
+            },
+            {
+              "type": "article",
+              "title": "Understanding TTL in MongoDB",
+              "url": "https://medium.com/@darshitanjaria/understanding-ttl-in-mongodb-automatically-expiring-documents-e8b1defc1158"
+            },
+            {
+              "type": "article",
+              "title": "Understanding MongoDB Indexes and Expiry",
+              "url": "https://stenzr.medium.com/understanding-mongodb-indexes-and-expiry-019831790542"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_2h8z2mrgRKSLKI-eBc3zM",
+          "title": "$eq",
+          "description": "The `$eq`operator in MongoDB matches documents where a field value equals a specified value. It performs exact equality comparison and is the default behavior when using field: value syntax. `$eq`supports all BSON data types including nested documents and arrays, enabling precise matching in queries. It's fundamental for filtering documents by specific field values in find operations.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$eq",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/eq/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB \\$eq Aggregation Pipeline Operator",
+              "url": "https://database.guide/mongodb-eq/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_wbZb0RwmANH4ssF07cAar",
+          "title": "$gt",
+          "description": "The `$gt` (greater than) operator in MongoDB selects documents where a field value is greater than a specified value. It works with numbers, dates, strings (lexicographically), and other comparable BSON types. `$gt` is essential for range queries, date filtering, and numeric comparisons. Combined with other operators, it enables complex filtering conditions for data analysis and reporting.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "official",
+              "title": "\\$gt",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_5-MLEEigFPRloN7wLa05T",
+          "title": "$lt",
+          "description": "The $lt (less than) operator in MongoDB selects documents where a field value is less than a specified value. It supports comparison operations on numbers, dates, strings, and other ordered BSON types. $lt is commonly used in range queries, date boundaries, and filtering datasets by numeric thresholds. It combines well with $gt to create range-based queries.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$lt",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_12kfpSapv2uNxpHzLkFSL",
+          "title": "$exists",
+          "description": "The `$exists` operator in MongoDB matches documents based on the presence or absence of a specified field. When set to true, it finds documents containing the field regardless of value (including null), and when false, it finds documents missing the field entirely. `$exists` is useful for schema validation, data quality checks, and filtering documents with optional fields.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$exists",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/exists/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB \\$exists Operator",
+              "url": "https://sparkbyexamples.com/mongodb/using-mongodb-exists-operator/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_BxzMbF7cdvGPuy1EcRvWd",
+          "title": "$type",
+          "description": "The `$type` operator in MongoDB selects documents based on the BSON data type of a specified field. It accepts either BSON type numbers or string aliases like \"string\", \"int\", \"array\", \"object\". `$type` is useful for data validation, schema analysis, and filtering documents by field data types, especially when working with collections containing varied or dynamic schemas.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "$\\type",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/type/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "official",
+              "title": "BSON Types",
+              "url": "https://www.mongodb.com/docs/manual/reference/bson-types/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_bqXlDnPuMQIKulD9cTvPf",
+          "title": "Geospatial Indexes",
+          "description": "Geospatial indexes in MongoDB enable efficient querying of geographic coordinate data using 2d, 2dsphere, and geoHaystack index types. They support location-based queries like finding points within a specific distance, polygon intersection, and nearest neighbor searches. These indexes work with GeoJSON objects and legacy coordinate pairs for mapping applications and location services.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Geospatial Queries",
+              "url": "https://www.mongodb.com/docs/manual/geospatial-queries/"
+            },
+            {
+              "type": "article",
+              "title": "Geospatial Indexes in MongoDB",
+              "url": "https://netsharpdev.com/2021/09/09/geoindexes-in-mongodb/"
+            },
+            {
+              "type": "article",
+              "title": "Geospatial Data in MongoDB: Storage, Indexing, and Queries",
+              "url": "https://medium.com/@AbbasPlusPlus/geospatial-data-in-mongodb-storage-indexing-and-queries-1c6db21b7970"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_eOfsrmOQI0dJW6HV_myVH",
+          "title": "$lte",
+          "description": "The `$lte` (less than or equal to) operator in MongoDB selects documents where a field value is less than or equal to a specified value. It provides inclusive upper bound comparison for range queries, end date filtering, and maximum value constraints. `$lte` is essential for creating inclusive upper limits in queries and combining with $gte for complete range specifications.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$lte",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_kV5Tmu9ocDnuPQvkx2W0u",
+          "title": "$gte",
+          "description": "The `$gte` (greater than or equal to) operator in MongoDB selects documents where a field value is greater than or equal to a specified value. It provides inclusive comparison for range queries, date boundaries, and numeric filtering. `$gte` is particularly useful for minimum threshold queries, start date filtering, and creating inclusive lower bounds in data selection criteria.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "official",
+              "title": "\\$gte",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_Q8dr1JPEnLX0z4DiQwnAz",
+          "title": "$ne",
+          "description": "The `$ne` (not equal) operator in MongoDB selects documents where a field value is not equal to a specified value. It performs inverse equality comparison and excludes documents with matching values, including exact matches and type equivalence. `$ne` is fundamental for exclusion filtering, finding outliers, and creating queries that avoid specific values or patterns.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$ne",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_PmfjHFz-DW69pNh_t13Nm",
+          "title": "$regex",
+          "description": "The `$regex` operator in MongoDB provides regular expression pattern matching for string fields. It supports Perl-compatible regular expressions (PCRE) with options for case sensitivity, multiline matching, and extended syntax. `$regex` enables sophisticated text searching, pattern validation, and complex string filtering, though it may impact performance on large datasets without proper indexing.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$regex",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/regex/"
+            },
+            {
+              "type": "article",
+              "title": "Mastering Regex in MongoDB: A Beginner's Guide",
+              "url": "https://medium.com/@jaydeepdnai.imscit20/mastering-regex-in-mongodb-a-beginners-guide-886bcb404725"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_-62S4wRxHpIM2I59xjGun",
+          "title": "$and",
+          "description": "The `$and` operator in MongoDB performs logical AND operation on multiple query expressions, returning documents that satisfy all specified conditions. It accepts an array of query expressions and is implicitly used when multiple conditions are provided at the same level. `$and` is explicit when combining complex expressions or when the same field needs multiple conditions.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$and",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/query/and/"
+            },
+            {
+              "type": "article",
+              "title": "\\$and operator",
+              "url": "https://codeforgeek.com/and-operator-in-mongodb/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_43BfjlUju-yJaGv-FaJty",
+          "title": "$or",
+          "description": "The `$or` operator in MongoDB performs logical OR operation on multiple query expressions, returning documents that satisfy at least one of the specified conditions. It accepts an array of query expressions and enables alternative matching criteria. `$or` is essential for flexible querying when documents can match any of several different conditions or field combinations.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$or",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_qaUj9916Fh4BtiLz_pwQs",
+          "title": "$not",
+          "description": "The `$not` operator in MongoDB performs logical negation on a query expression, returning documents that do not match the specified condition. It accepts a single query expression and inverts its result. $not is useful for excluding specific patterns, finding documents that don't meet certain criteria, and creating inverse filters in complex queries.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$not",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_7xq_mdQOlUTuhfnogOl8h",
+          "title": "$nor",
+          "description": "The `$nor` operator in MongoDB performs logical NOR operation, selecting documents that fail to match any of the specified query expressions. It's the inverse of $or and returns documents that don't satisfy any of the given conditions. `$nor` is useful for complex exclusion logic and finding documents that don't match multiple alternative criteria.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$nor",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/nor/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_A9W2LsivDc0ialLp83fYP",
+      "name": "Performance Optimization",
+      "description": "Performance optimization in MongoDB involves proper indexing strategies, query optimization, schema design, and hardware configuration. Key techniques include creating appropriate indexes, using explain plans, optimizing aggregation pipelines, proper sharding strategies, and connection pooling. Regular monitoring of query performance, index usage, and database metrics helps identify bottlenecks and improve overall system efficiency.",
+      "lessons": [
+        {
+          "id": "mongodb_YidhAuVk_VGukx_FfJSz2",
+          "title": "Atlas Search Indexes",
+          "description": "Atlas Search indexes in MongoDB Atlas provide full-text search capabilities using Apache Lucene technology. They enable sophisticated text search with relevance scoring, autocomplete, faceted search, and synonyms. These indexes support complex search queries across multiple fields, fuzzy matching, and advanced text analysis features for building modern search experiences in applications.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Atlas Search Indexes",
+              "url": "https://www.mongodb.com/docs/atlas/atlas-search/manage-indexes/"
+            },
+            {
+              "type": "article",
+              "title": "Atlas Search Made Easy: A Summary Guide for Developers",
+              "url": "https://medium.com/@sumitkessar/atlas-search-made-easy-a-summary-guide-for-developers-883c27886987"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_gpihoIJkzSS1WOvmH2ueo",
+      "name": "Aggregation",
+      "description": "Aggregation in MongoDB is a powerful framework for data processing and transformation using a pipeline of stages. Each stage performs specific operations like filtering, grouping, sorting, or computing values, allowing complex data analytics and reporting. The aggregation pipeline offers operators for mathematical calculations, string manipulation, date operations, and advanced data transformations.",
+      "lessons": [
+        {
+          "id": "mongodb_eDks8Jmsbq3_nHgLydyxP",
+          "title": "Pipelines, Stages and Operators",
+          "description": "MongoDB aggregation pipelines are composed of sequential stages that process and transform documents, where each stage performs a specific operation using various operators before passing results to the next stage. Stages like `$match` (filtering), `$group` (grouping and aggregating), `$project` (field selection and transformation), `$sort` (ordering), `$lookup` (joins), and `$unwind` (array expansion) can be combined in any order to create complex data processing workflows. Operators within these stages include arithmetic operators ($add, $multiply), comparison operators ($eq, $gt), array operators ($push, $addToSet), date operators ($dateToString, $year), and conditional operators ($cond, $ifNull), providing a powerful and flexible framework for data analysis, reporting, and ETL operations directly within the database.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Pipeline",
+              "url": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Stages",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/"
+            },
+            {
+              "type": "official",
+              "title": "\\$project",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/"
+            },
+            {
+              "type": "official",
+              "title": "\\$group",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_kG0ZeGatgvC1azZKMQiA_",
+          "title": "Query Optimization",
+          "description": "Query optimization in MongoDB involves analyzing and improving query performance through various techniques including proper indexing strategies, query plan analysis, and efficient query structure design. It encompasses understanding how MongoDB's query planner works, using tools like `explain()` to analyze query execution, creating appropriate indexes to support common query patterns, avoiding inefficient operations like full collection scans, and structuring queries to take advantage of MongoDB's document model and aggregation framework for optimal performance and resource utilization.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Optimize Query Performance",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/optimize-query-performance-with-indexes-and-projections/"
+            },
+            {
+              "type": "official",
+              "title": "Query Optimization",
+              "url": "https://learn.mongodb.com/courses/query-optimization"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb__c7itVw1R1_UB-NPtL-WI",
+          "title": "$match",
+          "description": "The `$match` aggregation stage filters documents in the pipeline, similar to the find() query operation. It should be placed early in the pipeline to reduce document count and improve performance. `$match` supports all query operators and can use indexes when positioned at the beginning of the pipeline, making it essential for efficient data filtering in aggregation workflows.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$match",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "article",
+              "title": "How to use match inside lookup in Mongo Aggregation",
+              "url": "https://medium.com/@arashramy/how-to-use-match-inside-lookup-in-mongo-aggregation-2431a8920ec6"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_nz048lC4Q4S7fMVbxLGEk",
+          "title": "$group",
+          "description": "The `$group` aggregation stage groups documents by specified identifier expressions and applies accumulator operators like `$sum, $avg, $max, $min, and $push`. It's essential for data aggregation, calculating statistics, and creating summary reports. `$group` can group by single or multiple fields and supports complex expressions for dynamic grouping criteria.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            },
+            {
+              "type": "official",
+              "title": "\\$group",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB \\$group (aggregation) Usage with Examples",
+              "url": "https://sparkbyexamples.com/mongodb/mongodb-group-aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_BCWS8uV2pSWe7CX-VlnTg",
+          "title": "$sort",
+          "description": "The `$sort` aggregation stage orders documents by specified field values in ascending (1) or descending (-1) order. It can sort by multiple fields with different directions and supports sorting by computed values from previous pipeline stages. Placing `$sort` early in the pipeline can leverage indexes for better performance, while late sorting applies to aggregated results.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$sort",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/"
+            },
+            {
+              "type": "article",
+              "title": "Sort Records: How to Sort by Date, Name, and More",
+              "url": "https://www.prisma.io/dataguide/mongodb/mongodb-sorting"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_aHcmsaqAfG5fC90VV-EHP",
+      "name": "Transactions",
+      "description": "Transactions in MongoDB provide ACID guarantees for multi-document operations, ensuring data consistency across multiple operations. They support read and write operations spanning multiple documents, collections, and databases within a single atomic unit. Transactions use snapshot isolation and optimistic concurrency control, making them essential for applications requiring strict data integrity and consistency.",
+      "lessons": [
+        {
+          "id": "mongodb_73REfcB_T0yBP-KQ0EYmF",
+          "title": "Language Drivers",
+          "description": "MongoDB language drivers are official and community-maintained libraries that provide idiomatic APIs for interacting with MongoDB databases from various programming languages including Python (PyMongo), JavaScript/Node.js, Java, C#, Go, PHP, Ruby, and many others. These drivers handle the low-level communication protocols, connection management, authentication, and data serialization between applications and MongoDB servers, while providing language-specific features like object mapping, connection pooling, and async/await support. They abstract away the complexity of the MongoDB wire protocol and BSON encoding, allowing developers to work with MongoDB using familiar programming patterns and data structures native to their chosen language, making database integration seamless and efficient.",
+          "resources": [
+            {
+              "type": "roadmap",
+              "title": "Visit Dedicated Python Roadmap",
+              "url": "https://roadmap.sh/python"
+            },
+            {
+              "type": "roadmap",
+              "title": "Visit Dedicated JavaScript Roadmap",
+              "url": "https://roadmap.sh/javascript"
+            },
+            {
+              "type": "roadmap",
+              "title": "Visit Dedicated Go Roadmap",
+              "url": "https://roadmap.sh/golang"
+            },
+            {
+              "type": "official",
+              "title": "Start Developing with MongoDB",
+              "url": "https://www.mongodb.com/docs/drivers/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Driver Performance in Several Languages",
+              "url": "https://medium.com/clarityai-engineering/mongodb-driver-performance-in-several-languages-888899494b88"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_dO2mJejkWBH903LG0dWgN",
+          "title": "$project",
+          "description": "The `$project` stage in MongoDB aggregation pipelines is used to reshape documents by including, excluding, or transforming fields, allowing you to control exactly which data is passed to subsequent pipeline stages. It can perform field selection (similar to SQL SELECT), create computed fields using expressions, rename fields, nest or flatten document structures, and apply various transformations like mathematical operations, string manipulations, or date formatting.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Aggregation Pipeline",
+              "url": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline/"
+            },
+            {
+              "type": "official",
+              "title": "\\$project",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/"
+            },
+            {
+              "type": "official",
+              "title": "\\$group",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_4CjjGPOy-385Bco_PeQwa",
+          "title": "$skip",
+          "description": "The `$skip` aggregation stage skips a specified number of documents before passing the remaining documents to the next pipeline stage. It's commonly used with $limit for pagination implementation, allowing applications to skip previous pages and retrieve specific result sets. `$skip `should be used carefully with large skip values as it can impact performance.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$skip",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Skip Documents - Syntax & Examples ",
+              "url": "https://www.tutorialkart.com/mongodb/mongodb-skip-documents/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_AzUVaGnGv9uypJ31alR9r",
+          "title": "$limit",
+          "description": "The `$limit` aggregation stage restricts the number of documents passed to the next stage in the pipeline. It's commonly used with $sort to get top N results, implement pagination, or reduce data processing overhead. `$limit` is efficient when combined with indexes and should be placed strategically in the pipeline to minimize document processing in subsequent stages.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$limit",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_AY-8KJGA9ZA6ay3rbURt3",
+          "title": "$unwind",
+          "description": "The `$unwind` aggregation stage deconstructs array fields, creating separate documents for each array element. It's essential for processing documents with embedded arrays by flattening them into individual records. `$unwind` supports options for preserving null/empty arrays and including array indices, enabling detailed analysis of array-based data structures and normalization workflows.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$unwind",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/"
+            },
+            {
+              "type": "article",
+              "title": "Advanced Techniques with MongoDB: Mastering Lookup",
+              "url": "https://medium.com/@akshatgupta1903/advanced-techniques-with-mongodb-mastering-lookup-and-unwind-acfc8a8ad5b9"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_strw_oGTkZEH-o8zA4IRP",
+          "title": "$lookup",
+          "description": "The `$lookup` aggregation stage performs left outer joins between collections, similar to SQL JOINs. It adds an array field containing matching documents from the \"joined\" collection based on specified local and foreign fields. `$lookup` supports pipeline-based lookups for complex matching conditions and enables denormalization of related data for efficient querying and reporting.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$limit",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_CfM0iyd2bNRIiDWTUkspd",
+          "title": "$sum",
+          "description": "The `$sum` aggregation operator calculates the total sum of numeric values across grouped documents or array elements. It's commonly used with $group to aggregate numeric data, create totals, and perform mathematical operations in aggregation pipelines. `$sum` ignores non-numeric values and can sum field values, literal numbers, or results from expressions, making it essential for financial and statistical calculations.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "\\$sum",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/"
+            },
+            {
+              "type": "official",
+              "title": "Aggregation Operators",
+              "url": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_JAosQ9tFj7y70lGQ0vHzC",
+          "title": "Kafka",
+          "description": "Apache Kafka is a distributed event streaming platform designed for high-throughput, fault-tolerant, and scalable data streaming. It is primarily used for building real-time data pipelines and streaming applications. Kafka allows you to publish and subscribe to streams of records, store those records in a fault-tolerant way, and process them in real-time.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Kafka Connector v1.15 - MongoDB Docs",
+              "url": "https://www.mongodb.com/docs/kafka-connector/current/"
+            },
+            {
+              "type": "official",
+              "title": "Data Streaming with Apache Kafka & MongoDB",
+              "url": "https://www.mongodb.com/resources/products/integrations/data-streaming-with-apache-kafka-and-mongodb"
+            },
+            {
+              "type": "article",
+              "title": "Unleash Data Magic with MongoDB Custom JavaScript Functions",
+              "url": "https://thelinuxcode.com/mongodb-custom-function/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_K09-nD6xF5YJUQBBpFXMz",
+          "title": "Spark",
+          "description": "Spark refers to the integration of Apache Spark, a powerful data processing engine, with MongoDB, a NoSQL database. This integration allows users to perform real-time analytics and data processing on MongoDB data using Spark's capabilities, enabling efficient data manipulation and analysis without the need for extensive ETL processes.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Apache Spark™ - Unified Engine for large-scale data analytics",
+              "url": "https://spark.apache.org/?ref=producthunt"
+            },
+            {
+              "type": "official",
+              "title": "MongoDB Connector for Spark",
+              "url": "https://www.mongodb.com/docs/spark-connector/current/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Configuration with Spark",
+              "url": "https://medium.com/@ahmiihassan354/mongodb-configuration-with-spark-38e3d464d6ffhttps://www.prisma.io/dataguide/mongodb/mongodb-sorting"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_6H2MMnEfS6uHGS-6pFo8u",
+      "name": "Developer Tools",
+      "description": "MongoDB developer tools include MongoDB Compass (GUI), MongoDB Shell (mongosh), VS Code extensions, and various language drivers. These tools provide visual database exploration, query building, performance monitoring, and development assistance. Additional tools include MongoDB Atlas for cloud management, migration utilities, and third-party tools for enhanced productivity and database administration.",
+      "lessons": [
+        {
+          "id": "mongodb_kJJ-W6BV1ofIvuFT_PCcz",
+          "title": "Elastic Search",
+          "description": "The MongoDB Elasticsearch connector enables seamless integration between MongoDB and Elasticsearch, allowing you to automatically synchronize data from MongoDB collections to Elasticsearch indices for powerful full-text search, analytics, and visualization capabilities. This connector streams data changes in real-time using MongoDB's change streams, transforms documents as needed, and maintains data consistency between the two systems, making it ideal for applications that need both MongoDB's flexible document storage and Elasticsearch's advanced search and aggregation features. It's particularly useful for building search-heavy applications, log analytics systems, and business intelligence dashboards that require complex text search, faceted search, and real-time data analysis capabilities.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Elasticsearch: The Official Distributed Search & Analytics Engine",
+              "url": "https://www.elastic.co/elasticsearch"
+            },
+            {
+              "type": "official",
+              "title": "Elasticsearch vs MongoDB Atlas Search",
+              "url": "https://www.mongodb.com/resources/compare/mongodb-atlas-search-vs-elastic-elasticsearch"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB vs Elasticsearch",
+              "url": "https://medium.com/@emmaw4430/mongodb-vs-elasticsearch-deciding-the-right-database-solution-for-your-project-c6c8fb89cbfe"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_QrHT-H12AV4-V-y_nzmNk",
+          "title": "Replica Sets",
+          "description": "Replica Sets in MongoDB provide high availability and data redundancy through a group of mongod instances that maintain identical data copies. The primary node handles write operations while secondary nodes replicate data and can serve read operations. Automatic failover ensures continuous service if the primary becomes unavailable, with secondary nodes electing a new primary to maintain database availability.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Replication",
+              "url": "https://www.mongodb.com/docs/manual/replication/"
+            },
+            {
+              "type": "official",
+              "title": "Replication in MongoDB",
+              "url": "https://learn.mongodb.com/learn/course/replication-in-mongodb/lesson-5-read-and-write-concerns-with-mongodb-deployments/learn?client=customer&page=2"
+            },
+            {
+              "type": "article",
+              "title": "Replica Sets and Shards in MongoDB: Architecture and Benefits",
+              "url": "https://dev-aditya.medium.com/replica-sets-and-shards-in-mongodb-architecture-and-benefits-a3c83f39e4f0"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_CijW3HCjVRZHQIBsQ9_0H",
+          "title": "Sharded Clusters",
+          "description": "Sharded Clusters enable horizontal scaling by distributing data across multiple servers based on a shard key. MongoDB automatically partitions collections and balances data distribution across shards, allowing databases to handle massive datasets and high throughput workloads. Sharding includes config servers for metadata management and mongos routers for query distribution across the cluster.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Deploy a Self-Managed Sharded Cluster",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/deploy-shard-cluster/"
+            },
+            {
+              "type": "official",
+              "title": "Sharding",
+              "url": "https://www.mongodb.com/docs/manual/sharding/"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Sharding: A Step by Step Guide to Setup A MongoDB Shard Cluster",
+              "url": "https://medium.com/@sanklecha.harsh/mongodb-sharding-a-step-by-step-guide-to-setup-a-mongodb-shard-cluster-98668f53a078"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_xaWDHCkcGm4oovPPxVMB9",
+          "title": "mongodump",
+          "description": "mongodump is a MongoDB utility that creates binary backups of database content by exporting data in BSON format. It supports selective backup options including specific databases, collections, and query-based filtering. mongodump preserves data types, indexes metadata, and can perform live backups without stopping the database, making it essential for backup strategies and data migration workflows.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "mongodump",
+              "url": "https://www.mongodb.com/docs/database-tools/mongodump/"
+            },
+            {
+              "type": "article",
+              "title": "How To Use mongodump for MongoDB Backups",
+              "url": "https://www.bmc.com/blogs/mongodb-mongodump/3"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_TKngxMNGMgrdO26D7eeSg",
+          "title": "mongorestore",
+          "description": "mongorestore is a MongoDB utility that restores data from binary BSON dumps created by mongodump. It can restore entire databases, specific collections, or subsets of data with options for data transformation and index rebuilding. mongorestore supports various restore modes including replacement, merge, and upsert operations, making it crucial for disaster recovery and data migration scenarios.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "mongorestore",
+              "url": "https://www.mongodb.com/docs/database-tools/mongorestore/"
+            },
+            {
+              "type": "article",
+              "title": "Mongorestore Examples for Restoring MongoDB Backups",
+              "url": "https://www.bmc.com/blogs/mongodb-mongorestore/"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_cOKQQ7SaiawWF49MdCGTh",
+      "name": "Scaling MongoDB",
+      "description": "Scaling MongoDB involves vertical scaling (upgrading hardware) and horizontal scaling through sharding and replica sets. Horizontal scaling distributes data across multiple servers using shard keys, while replica sets provide high availability and read scaling. Effective scaling strategies include proper shard key selection, monitoring performance metrics, and balancing data distribution for optimal throughput and reliability.",
+      "lessons": [
+        {
+          "id": "mongodb_iVDxuERBjKMBHueEfqP0x",
+          "title": "Tuning Configuration",
+          "description": "MongoDB tuning configuration involves optimizing various server parameters and settings to maximize performance, efficiency, and resource utilization based on your specific workload patterns and hardware environment. Key configuration areas include memory management (WiredTiger cache size, storage engine settings), connection pooling (maximum connections, timeout values), journaling options, read/write concerns, chunk size for sharded clusters, and operating system-level optimizations like file descriptor limits and memory allocation. Proper tuning requires analyzing metrics like query performance, memory usage, disk I/O patterns, and network throughput to adjust parameters such as index builds, background operations, and replication lag, ensuring your MongoDB deployment can handle peak loads while maintaining optimal response times and resource efficiency.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Comprehensive Guide to Optimising MongoDB Performance",
+              "url": "https://www.mongodb.com/developer/products/mongodb/guide-to-optimizing-mongodb-performance/"
+            },
+            {
+              "type": "article",
+              "title": "Optimizing Performance in MongoDB",
+              "url": "https://medium.com/@halimebardakci/optimizing-performance-in-mongodb-tips-and-tricks-b1d635220eec"
+            },
+            {
+              "type": "article",
+              "title": "How To Optimize MongoDB Performance & Security",
+              "url": "https://medium.com/@noel.benji/how-to-optimize-mongodb-performance-security-6fd3ba1304c1"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_XjB0uOnsYl4edzZWpQ-nm",
+          "title": "Indexing",
+          "description": "Indexing in MongoDB creates data structures that improve query performance by creating shortcuts to documents. Indexes are built on specific fields and allow the database to quickly locate data without scanning entire collections. MongoDB supports various index types including single field, compound, multikey, geospatial, text, and hashed indexes to optimize different query patterns and use cases.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Indexing",
+              "url": "https://www.mongodb.com/docs/manual/indexes/"
+            },
+            {
+              "type": "article",
+              "title": "How To Use Indexes in MongoDB",
+              "url": "https://www.digitalocean.com/community/tutorials/how-to-use-indexes-in-mongodb"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_4L9UQ4oaaK3wZwOLIMa6T",
+          "title": "Query Optimization",
+          "description": "Query optimization in MongoDB involves analyzing and improving query performance through various techniques including proper indexing strategies, query plan analysis, and efficient query structure design. It encompasses understanding how MongoDB's query planner works, using tools like `explain()` to analyze query execution, creating appropriate indexes to support common query patterns, avoiding inefficient operations like full collection scans, and structuring queries to take advantage of MongoDB's document model and aggregation framework for optimal performance and resource utilization.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Optimize Query Performance",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/optimize-query-performance-with-indexes-and-projections/"
+            },
+            {
+              "type": "official",
+              "title": "Query Optimization",
+              "url": "https://learn.mongodb.com/courses/query-optimization"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_yRJ6jeysFXBpwLEqvrdKk",
+          "title": "Role-based Access Control",
+          "description": "Role-Based Access Control (RBAC) in MongoDB is a security framework that manages user permissions by assigning roles that define specific privileges and access levels to database resources. It allows administrators to create custom roles with granular permissions for actions like read, write, or administrative operations on specific databases, collections, or even individual fields, ensuring users only have access to the resources they need for their job functions. This approach simplifies security management by grouping permissions into logical roles rather than managing individual user permissions, making it easier to maintain consistent security policies and comply with the principle of least privilege in enterprise environments.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Role-Based Access Control",
+              "url": "http://www.mongodb.com/docs/manual/core/authorization/"
+            },
+            {
+              "type": "article",
+              "title": "Understanding MongoDB Role-based Access Control",
+              "url": "https://medium.com/mongodb/understanding-mongodb-role-based-access-control-rbac-in-action-a-step-by-step-guide-8c679241f8b6"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_NV39oWwr7iB_dnlnD_Q6Y",
+          "title": "x.509 Certificate Authentication",
+          "description": "x.509 certificate authentication in MongoDB provides secure, certificate-based client and cluster authentication without passwords. It uses public key infrastructure (PKI) for strong identity verification and supports both client authentication and internal cluster member authentication. This method offers enhanced security through certificate validation, expiration management, and integration with existing PKI infrastructures.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Use X.509 Certificates to Authenticate Clients",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/configure-x509-client-authentication/"
+            },
+            {
+              "type": "article",
+              "title": "Secure MongoDB with X.509 TLS/SSL certificates",
+              "url": "https://medium.com/@studio3t/secure-mongodb-with-x-509-tls-ssl-certificates-42ff4290d9f3"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    },
+    {
+      "id": "mongodb_LC923iJhfiUDIs_0-9rc7",
+      "name": "MongoDB Security",
+      "description": "MongoDB security encompasses authentication, authorization, encryption, auditing, and network security features. It includes role-based access control (RBAC), field-level security, encryption in transit and at rest, and comprehensive audit logging. MongoDB provides multiple authentication mechanisms including SCRAM, x.509 certificates, LDAP, and Kerberos to secure database access and protect sensitive data from unauthorized access.",
+      "lessons": [
+        {
+          "id": "mongodb_YuzMOO7kf2tO6V6WehqF_",
+          "title": "Kerberos Authentication",
+          "description": "Kerberos authentication in MongoDB provides enterprise-grade security through ticket-based authentication protocol. It integrates with existing Active Directory or Kerberos infrastructures, allowing centralized user management and single sign-on capabilities. This authentication method eliminates password transmission over networks and provides strong mutual authentication between clients and MongoDB servers using encrypted tickets.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Kerberos Authentication on Self-Managed Deployments",
+              "url": "https://www.mongodb.com/docs/manual/core/kerberos/"
+            },
+            {
+              "type": "article",
+              "title": "Configure MongoDB with Kerberos Authentication",
+              "url": "https://hackernoon.com/mongodb-kerberos-a3dfdf322d1c"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_iJjqlTgXxHWC-8bh6uCGQ",
+          "title": "Encryption at Rest",
+          "description": "Encryption at Rest in MongoDB protects data stored on disk by encrypting database files, indexes, and logs using industry-standard encryption algorithms. This security feature prevents unauthorized access to physical storage media and ensures compliance with data protection regulations. MongoDB supports both enterprise-grade WiredTiger storage engine encryption and file system-level encryption options.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Encryption at Rest",
+              "url": "https://www.mongodb.com/docs/manual/core/security-encryption-at-rest/"
+            },
+            {
+              "type": "official",
+              "title": "Encrypted Fields and Enabled Queries",
+              "url": "https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/"
+            },
+            {
+              "type": "article",
+              "title": "Encryption at Rest and In Transit in MongoDB",
+              "url": "https://syskool.com/encryption-at-rest-and-in-transit-in-mongodb/"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_NoDNdno9UOlMrOC0Wga9E",
+          "title": "LDAP Proxy Auth",
+          "description": "LDAP Proxy Authentication in MongoDB allows the database to authenticate users through an external LDAP (Lightweight Directory Access Protocol) server, enabling organizations to integrate MongoDB with their existing directory services like Active Directory. This authentication method acts as a proxy between MongoDB and the LDAP server, allowing users to authenticate using their corporate credentials while maintaining centralized user management, making it particularly valuable for enterprise environments that need to enforce consistent security policies and user access controls across multiple systems.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Self-Managed LDAP Proxy Authentication",
+              "url": "https://www.mongodb.com/docs/manual/core/security-ldap/"
+            },
+            {
+              "type": "article",
+              "title": "LDAP Authorization — MongoDB Manual",
+              "url": "https://www.xuchao.org/docs/mongodb/core/security-ldap-external.html"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_LpfuM6SuhlNNjBcHM68ee",
+          "title": "Queryable Encryption",
+          "description": "Queryable Encryption is MongoDB's advanced security feature that allows you to encrypt sensitive data while still being able to query it efficiently without decrypting the entire dataset. This cryptographic technique enables applications to perform equality queries on encrypted fields using deterministic encryption and range queries using order-preserving encryption, providing a balance between data security and functionality. It's particularly valuable for applications that need to comply with strict data protection regulations while maintaining the ability to search and filter encrypted data, such as healthcare systems handling patient records or financial applications managing sensitive transaction data.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Queryable Encryption",
+              "url": "https://www.mongodb.com/docs/manual/core/queryable-encryption/"
+            },
+            {
+              "type": "article",
+              "title": "Queryable Encryption in MongoDB",
+              "url": "https://www.geopits.com/blog/intro-to-queryable-encryption-in-mongodb.html"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_w1L-yFBM2AyeNBFyH5skW",
+          "title": "MongoDB Audit",
+          "description": "MongoDB Audit is a security feature that enables comprehensive logging and monitoring of database activities, including authentication attempts, authorization failures, CRUD operations, and administrative actions. It provides detailed audit trails that track who accessed what data, when operations occurred, and whether they succeeded or failed, which is essential for compliance with regulatory requirements like GDPR, HIPAA, or SOX, and helps organizations detect suspicious activities, investigate security incidents, and maintain accountability in their database operations.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Configure Auditing - Database Manual",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/configure-auditing/"
+            },
+            {
+              "type": "article",
+              "title": "Auditing and Monitoring MongoDB for Security",
+              "url": "https://medium.com/@platform.engineers/auditing-and-monitoring-mongodb-for-security-0981df3cc22b"
+            },
+            {
+              "type": "article",
+              "title": "MongoDB Auditing for Enhanced Security and Compliance",
+              "url": "https://www.mydbops.com/blog/mongodb-auditing-for-enhanced-security-and-compliance"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_YJiWemHO1l5q9WhgoHyYd",
+          "title": "Client-Side Field Level Encryption",
+          "description": "Client-Side Field Level Encryption (CSFLE) allows applications to encrypt sensitive data fields before storing them in MongoDB. The database receives only encrypted data and remains unaware of the encryption keys, ensuring zero-trust security. This feature provides deterministic and randomized encryption algorithms, enabling both exact match queries and enhanced security for highly sensitive information.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "Client-Side Field Level Encryption",
+              "url": "https://www.mongodb.com/docs/manual/core/csfle/"
+            },
+            {
+              "type": "article",
+              "title": "Integrating with MongoDB Client Side Field Level Encryption",
+              "url": "https://mongoosejs.com/docs/field-level-encryption.html"
+            }
+          ],
+          "xpReward": 25
+        },
+        {
+          "id": "mongodb_5F7zAAnvnVTTnBzOB7TSu",
+          "title": "TLS / SSL Encryption",
+          "description": "TLS/SSL encryption in MongoDB provides secure communication channels between clients and the database server, as well as between replica set members and sharded cluster components, ensuring that data transmitted over networks is protected from eavesdropping and tampering. This transport layer security encrypts all network traffic using industry-standard cryptographic protocols, supports certificate-based authentication for enhanced security, and can be configured for mutual authentication where both client and server verify each other's identities. Implementing TLS/SSL is essential for production deployments, especially in cloud environments or when MongoDB instances communicate across untrusted networks, as it prevents man-in-the-middle attacks and ensures data confidentiality during transmission.",
+          "resources": [
+            {
+              "type": "official",
+              "title": "TLS / SSL Encryption",
+              "url": "https://www.mongodb.com/docs/manual/core/security-transport-encryption/"
+            },
+            {
+              "type": "official",
+              "title": "Configure mongod and mongos for TLS/SSL",
+              "url": "https://www.mongodb.com/docs/manual/tutorial/configure-ssl/"
+            },
+            {
+              "type": "article",
+              "title": "How to Enable TLS/SSL on MongoDB",
+              "url": "https://medium.com/mongoaudit/how-to-enable-tls-ssl-on-mongodb-d973a92cefa6"
+            }
+          ],
+          "xpReward": 25
+        }
+      ]
+    }
+  ],
+  "relatedRoadmaps": [
+    "postgresql-dba",
+    "backend",
+    "nodejs",
+    "redis"
+  ]
+}

@@ -4,6 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Safe area CSS variables for Capacitor */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -114,8 +122,119 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
+  
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  #root {
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+/* Responsive container utility */
+.container-responsive {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Safe area padding utilities */
+.safe-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: var(--safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: var(--safe-area-inset-right);
+}
+
+.safe-x {
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+.safe-y {
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.safe-all {
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Touch-friendly button minimum size */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Responsive text utilities */
+.text-responsive-sm {
+  @apply text-xs sm:text-sm;
+}
+
+.text-responsive-base {
+  @apply text-sm sm:text-base;
+}
+
+.text-responsive-lg {
+  @apply text-base sm:text-lg md:text-xl;
+}
+
+.text-responsive-xl {
+  @apply text-lg sm:text-xl md:text-2xl;
+}
+
+.text-responsive-2xl {
+  @apply text-xl sm:text-2xl md:text-3xl;
+}
+
+.text-responsive-3xl {
+  @apply text-2xl sm:text-3xl md:text-4xl;
+}
+
+/* Card responsive padding */
+.card-padding {
+  @apply p-4 sm:p-6;
+}
+
+/* Scrollbar styling for mobile */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
   }
 }
