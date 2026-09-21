@@ -8,43 +8,39 @@ function useSendBack() {
   const location = useLocation();
 
   useEffect(() => {
-    let listener: any;
+   
+    let listener;
 
     const setupBackButton = async () => {
       listener = await App.addListener('backButton', () => {
         const path = location.pathname;
-        
-        // Exit app from dashboard
+       
         if (path === '/dashboard') {
           App.exitApp();
           return;
         }
         
-        // Quiz complete -> back to dashboard
         if (path === '/quiz/complete') {
           navigate('/dashboard');
           return;
         }
         
-        // Group quiz complete -> back to dashboard
         if (path === '/quiz/group/results') {
           navigate('/dashboard');
           return;
         }
         
-        // Tutor complete -> back to dashboard
         if (path === '/tutor/complete') {
           navigate('/dashboard');
           return;
         }
 
-        // Group quiz waiting/play -> back to group settings
         if (path === '/quiz/group/waiting' || path === '/quiz/group/play') {
           navigate('/quiz/group');
           return;
         }
         
-        // Default: go back
+        // Default
         navigate(-1);
       });
     };
